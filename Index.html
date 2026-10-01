@@ -53,7 +53,7 @@ function ATR(highs, lows, closes, period) {
 // ===== Main Bot =====
 async function getSignal() {
 
-    let url = "https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=60&apikey=YOUR_API_KEY";
+    let url = "https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=60&apikey=7bc91d2bdbb54f94811142506bc155f8";
 
     let res = await fetch(url);
     let data = await res.json();
