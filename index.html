@@ -1,1 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>⚡ Ultra-Optimized 1-Min Multi-Pair Signal Bot</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+    .pair-box {
+      margin: 15px 0;
+      padding: 12px;
+      background: #1e1e1e;
+      border-radius: 12px;
+      color: #fff;
+    }
+    .pair-box label {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+    #pairSelector {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: #2c2c2c;
+      color: #fff;
+      font-size: 17px;
+      outline: none;
+    }
+    #pairSelector optgroup {
+      color: #00eaff;
+      font-weight: bold;
+    }
+    #pairSelector option {
+      background: #2c2c2c;
+      color: #fff;
+    }
+    .card {
+      background: #111;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 10px;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 4px 0;
+    }
+    .label {
+      color: #aaa;
+    }
+    .value {
+      font-weight: bold;
+    }
+    .signal {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .signal-buy {
+      background: #003300;
+      color: #00ff66;
+      border: 1px solid #00ff66;
+    }
+    .signal-sell {
+      background: #330000;
+      color: #ff3333;
+      border: 1px solid #ff3333;
+    }
+    .signal-none {
+      background: #333;
+      color: #ccc;
+    }
+    #localTime {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>⚡ Ultra-Optimized Multi-Pair Signal Bot</h2>
 
+    <!-- Local Time Auto Detect -->
+    <div class="card">
+      <div class="title">Local Time</div>
+      <div class="value" id="localTime">Loading...</div>
+    </div>
+
+    <!-- Dropdown Multi-Pair -->
+    <div class="pair-box">
+      <label>Select Market Pair</label>
+      <select id="pairSelector">
+
+        <optgroup label="Major Pairs (Live)">
+          <option value="EUR/USD">EUR/USD</option>
+          <option value="GBP/USD">GBP/USD</option>
+          <option value="USD/JPY">USD/JPY</option>
+          <option value="USD/CHF">USD/CHF</option>
+          <option value="USD/CAD">USD/CAD</option>
+          <option value="AUD/USD">AUD/USD</option>
+          <option value="NZD/USD">NZD/USD</option>
+        </optgroup>
+
+        <optgroup label="Minor Pairs (Live)">
+          <option value="EUR/GBP">EUR/GBP</option>
+          <option value="EUR/JPY">EUR/JPY</option>
+          <option value="GBP/JPY">GBP/JPY</option>
+          <option value="AUD/JPY">AUD/JPY</option>
+          <option value="CHF/JPY">CHF/JPY</option>
+          <option value="EUR/AUD">EUR/AUD</option>
+          <option value="EUR/CAD">EUR/CAD</option>
+          <option value="CAD/JPY">CAD/JPY</option>
+        </optgroup>
+
+        <optgroup label="Exotic Pairs (Live)">
+          <option value="USD/TRY">USD/TRY</option>
+          <option value="USD/ZAR">USD/ZAR</option>
+          <option value="USD/MXN">USD/MXN</option>
+          <option value="USD/INR">USD/INR</option>
+          <option value="USD/BDT">USD/BDT</option>
+          <option value="USD/PKR">USD/PKR</option>
+          <option value="USD/BRL">USD/BRL</option>
+          <option value="AUD/ZAR">AUD/ZAR</option>
+        </optgroup>
+
+        <optgroup label="OTC Market">
+          <option value="EUR/USD_otc">EUR/USD OTC</option>
+          <option value="GBP/USD_otc">GBP/USD OTC</option>
+          <option value="USD/JPY_otc">USD/JPY OTC</option>
+          <option value="AUD/USD_otc">AUD/USD OTC</option>
+          <option value="USD/CHF_otc">USD/CHF OTC</option>
+          <option value="NZD/USD_otc">NZD/USD OTC</option>
+          <option value="USD/CAD_otc">USD/CAD OTC</option>
+          <option value="XAU/USD_otc">Gold OTC</option>
+          <option value="BTC/USD_otc">BTC OTC</option>
+          <option value="USD/BDT_otc">USD/BDT OTC</option>
+          <option value="USD/PKR_otc">USD/PKR OTC</option>
+          <option value="USD/BRL_otc">USD/BRL OTC</option>
+          <option value="USD/INR_otc">USD/INR OTC</option>
+          <option value="USD/ZAR_otc">USD/ZAR OTC</option>
+          <option value="AUD/ZAR_otc">AUD/ZAR OTC</option>
+        </optgroup>
+
+      </select>
+    </div>
+
+    <!-- Signal Card -->
+    <div class="card">
+      <div class="title" id="pairName">PAIR: EUR/USD</div>
+      <div class="row"><div class="label">Trend:</div><div class="value" id="trend">Loading...</div></div>
+      <div class="row"><div class="label">Mode:</div><div class="value" id="mode">Loading...</div></div>
+      <div class="row"><div class="label">Status:</div><div class="value" id="status">Loading...</div></div>
+      <div class="row"><div class="label">Filtered:</div><div class="value" id="filter">Loading...</div></div>
+      <div class="row"><div class="label">Next Signal in:</div><div class="value" id="nextSignal">--</div></div>
+
+      <div id="signalBox" class="signal signal-none">Waiting...</div>
+    </div>
+  </div>
+
+  <script>
+    const apiKey = "7bc91d2bdbb54f94811142506bc155f8";
+
+    // Auto Time Zone Detect
+    function updateLocalTimeAuto() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-US', { hour12: true });
+      document.getElementById("localTime").innerText = timeString;
+    }
+    setInterval(updateLocalTimeAuto, 1000);
+    updateLocalTimeAuto();
+
+    let symbol = document.getElementById("pairSelector").value;
+    let nextSignalSeconds = 10;
+
+    function buildUrl(sym) {
+      if (sym.endsWith("_otc")) sym = sym.replace("_otc", "");
+      return `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=1min&outputsize=60&apikey=${apiKey}`;
+    }
+
+    function updateNextSignalTimer() {
+      nextSignalSeconds = 10;
+      document.getElementById("nextSignal").innerText = nextSignalSeconds + "s";
+      setInterval(() => {
+        nextSignalSeconds--;
+        if (nextSignalSeconds <= 0) {
+          nextSignalSeconds = 10;
+          fetchData();
+        }
+        document.getElementById("nextSignal").innerText = nextSignalSeconds + "s";
+      }, 1000);
+    }
+
+    async function fetchData() {
+      document.getElementById("pairName").innerText = "PAIR: " + symbol;
+
+      try {
+        const res = await fetch(buildUrl(symbol));
+        const data = await res.json();
+
+        if (!data.values || data.values.length < 10) {
+          document.getElementById("trend").innerText = "No Data";
+          document.getElementById("mode").innerText = "N/A";
+          document.getElementById("status").innerText = "No Trade";
+          document.getElementById("filter").innerText = "Insufficient data.";
+          document.getElementById("signalBox").className = "signal signal-none";
+          document.getElementById("signalBox").innerText = "No Trade";
+          return;
+        }
+
+        const candles = data.values.reverse();
+        const closes = candles.map(v => parseFloat(v.close));
+
+        // EMA20 Calculation
+        let ema = closes[0];
+        const k = 2 / (20 + 1);
+        for (let i = 1; i < closes.length; i++) {
+          ema = closes[i] * k + ema * (1 - k);
+        }
+
+        const last = closes[closes.length - 1];
+        const prev = closes[closes.length - 2];
+
+        // Trend Detection
+        let trend = "Sideways";
+        if (ema < last && ema < closes[closes.length - 5]) trend = "Bullish";
+        else if (ema > last && ema > closes[closes.length - 5]) trend = "Bearish";
+
+        // Mode Detection
+        let mode = "Reversal";
+        const bodySize = Math.abs(last - prev);
+        const avgBody = Math.abs(closes[closes.length - 5] - closes[closes.length - 10]);
+
+        if (bodySize > avgBody * 1.5) mode = "Breakout";
+
+        // Signal Logic (High Accuracy)
+        let status = "No Trade";
+        let filter = "";
+        let signalClass = "signal signal-none";
+        let signalText = "No Trade";
+
+        if (trend === "Bullish" && last > ema && bodySize > avgBody * 0.8) {
+          status = "BUY";
+          filter = "Strong bullish reversal.";
+          signalClass = "signal signal-buy";
+          signalText = "BUY";
+        }
+        else if (trend === "Bearish" && last < ema && bodySize > avgBody * 0.8) {
+          status = "SELL";
+          filter = "Strong bearish reversal.";
+          signalClass = "signal signal-sell";
+          signalText = "SELL";
+        }
+        else if (mode === "Breakout" && bodySize > avgBody * 1.2) {
+          status = trend === "Bullish" ? "BUY" : "SELL";
+          filter = "Breakout momentum.";
+          signalClass = trend === "Bullish" ? "signal signal-buy" : "signal signal-sell";
+          signalText = status;
+        }
+
+        document.getElementById("trend").innerText = trend;
+        document.getElementById("mode").innerText = mode;
+        document.getElementById("status").innerText = status;
+        document.getElementById("filter").innerText = filter;
+        document.getElementById("signalBox").className = signalClass;
+        document.getElementById("signalBox").innerText = signalText;
+
+      } catch (e) {
+        document.getElementById("trend").innerText = "Error";
+        document.getElementById("mode").innerText = "Error";
+        document.getElementById("status").innerText = "No Trade";
+        document.getElementById("filter").innerText = "API error.";
+        document.getElementById("signalBox").className = "signal signal-none";
+        document.getElementById("signalBox").innerText = "Error";
+      }
+    }
+
+    document.getElementById("pairSelector").addEventListener("change", function () {
+      symbol = this.value;
+      fetchData();
+    });
+
+    fetchData();
+    updateNextSignalTimer();
+  </script>
+</body>
+</html>
