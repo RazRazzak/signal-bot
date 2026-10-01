@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Final Ultra-Optimized Signal Bot</title>
+<style>
+body { background:#0d0d12; color:#fff; font-family:Arial; text-align:center; }
+.box { width:480px; margin:40px auto; padding:20px; background:#1a1a25; border-radius:12px; }
+.signal { font-size:32px; margin:10px; }
+.green { color:#00ff99; }
+.red { color:#ff4444; }
+.small { font-size:14px; color:#bbb; }
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>⚡ Final Ultra-Optimized 1-Min Signal Bot</h2>
+<p id="pair">PAIR: EURUSD</p>
+<p id="trend">Trend: Loading...</p>
+<p id="mode" class="small">Mode: Auto Adaptive</p>
+<p id="signal" class="signal">Signal: Loading...</p>
+<p id="confirm"></p>
+<p id="filter"></p>
+<p id="next">Next Signal in: 10s</p>
+</div>
+
+<script>
+// ===== EMA =====
+function EMA(values, period) {
+    let k = 2 / (period + 1);
+    let ema = values[0];
+    for (let i = 1; i < values.length; i++) {
+        ema = values[i] * k + ema * (1 - k);
+    }
+    return ema;
+}
+
+// ===== ATR =====
+function ATR(highs, lows, closes, period) {
+    let trs = [];
+    for (let i = 1; i < highs.length; i++) {
+        let tr = Math.max(
+            highs[i] - lows[i],
+            Math.abs(highs[i] - closes[i-1]),
+            Math.abs(lows[i] - closes[i-1])
+        );
+        trs.push(tr);
+    }
+    let slice = trs.slice(-period);
+    return slice.reduce((a,b)=>a+b,0) / slice.length;
+}
+
+// ===== Main Bot =====
+async function getSignal() {
+
+    let url = "https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=1min&outputsize=60&apikey=YOUR_API_KEY";
+
+    let res = await fetch(url);
+    let data = await res.json();
+
+    let candles = data.values.reverse();
+
+    let closes = candles.map(c => parseFloat(c.close));
+    let highs  = candles.map(c => parseFloat(c.high));
+    let lows   = candles.map(c => parseFloat(c.low));
+    let volumes = candles.map(c => parseFloat(c.volume));
+
+    // EMA20
+    let ema20 = EMA(closes, 20);
+    let emaPrev = EMA(closes.slice(0,-1), 20);
+    let emaSlope = ema20 - emaPrev;
+
+    // ATR + Keltner
+    let atr = ATR(highs, lows, closes, 14);
+    let upperBand = ema20 + atr * 1.5;
+    let lowerBand = ema20 - atr * 1.5;
+
+    let lastClose = closes[closes.length-1];
+
+    // Volume Normalizer
+    let avgVol = volumes.slice(0,-1).reduce((a,b)=>a+b,0)/(volumes.length-1);
+    let curVol = volumes[volumes.length-1];
+    let volNorm = curVol / (avgVol * 1.0); // EURUSD factor
+
+    let volSpike = volNorm > 1.8;
+
+    // Trend Strength Meter
+    let TSM = Math.abs(emaSlope) * (atr / 0.0015);
+
+    let mode = "Reversal";
+    if (TSM >= 0.70) mode = "Breakout";
+    else if (TSM >= 0.30) mode = "Trend";
+
+    let signal = "No Trade";
+    let confirm = "";
+    let filter = "";
+
+    // ===== Reversal =====
+    if (mode === "Reversal") {
+        if (lastClose <= lowerBand && emaSlope > 0 && !volSpike) {
+            signal = "BUY (Reversal)";
+            confirm = "Lower Keltner ✔ | EMA20 Up ✔ | Volume Normal ✔";
+        }
+        else if (lastClose >= upperBand && emaSlope < 0 && !volSpike) {
+            signal = "SELL (Reversal)";
+            confirm = "Upper Keltner ✔ | EMA20 Down ✔ | Volume Normal ✔";
+        }
+        else filter = "Filtered: Weak reversal.";
+    }
+
+    // ===== Trend =====
+    if (mode === "Trend") {
+        if (emaSlope > 0 && lastClose > ema20) {
+            signal = "BUY (Trend)";
+            confirm = "EMA20 Up ✔ | Price Above EMA ✔";
+        }
+        else if (emaSlope < 0 && lastClose < ema20) {
+            signal = "SELL (Trend)";
+            confirm = "EMA20 Down ✔ | Price Below EMA ✔";
+        }
+        else filter = "Filtered: Weak trend.";
+    }
+
+    // ===== Breakout =====
+    if (mode === "Breakout") {
+        if (lastClose > upperBand && emaSlope > 0 && volSpike) {
+            signal = "BUY (Breakout)";
+            confirm = "Close > Upper Keltner ✔ | EMA20 Up ✔ | Volume Spike ✔";
+        }
+        else if (lastClose < lowerBand && emaSlope < 0 && volSpike) {
+            signal = "SELL (Breakout)";
+            confirm = "Close < Lower Keltner ✔ | EMA20 Down ✔ | Volume Spike ✔";
+        }
+        else filter = "Filtered: Weak breakout.";
+    }
+
+    // ===== UI =====
+    document.getElementById("trend").innerHTML = "Trend: " + (emaSlope>0?"Bullish":"Bearish");
+    document.getElementById("mode").innerHTML = "Mode: " + mode;
+
+    if (signal.includes("BUY"))
+        document.getElementById("signal").innerHTML = "<span class='green'>" + signal + "</span>";
+    else if (signal.includes("SELL"))
+        document.getElementById("signal").innerHTML = "<span class='red'>" + signal + "</span>";
+    else
+        document.getElementById("signal").innerHTML = signal;
+
+    document.getElementById("confirm").innerHTML = confirm;
+    document.getElementById("filter").innerHTML = filter;
+}
+
+setInterval(getSignal, 10000);
+getSignal();
+</script>
+
+</body>
+</html>
