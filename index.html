@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>⚡ Ultimate AI Institutional Multi-Pair Bot (FINAL VERSION)</title>
+<title>⚡ Ultimate AI Institutional Multi-Pair Bot (SAFE VERSION)</title>
 <meta charset="UTF-8">
 <style>
 body {
@@ -124,7 +124,6 @@ body {
     <label>Select Market Pair</label>
     <select id="pairSelector">
 
-      <!-- Major Pairs -->
       <optgroup label="Major Pairs (Live)">
         <option value="EUR/USD">EUR/USD</option>
         <option value="GBP/USD">GBP/USD</option>
@@ -135,7 +134,6 @@ body {
         <option value="NZD/USD">NZD/USD</option>
       </optgroup>
 
-      <!-- Minor Pairs -->
       <optgroup label="Minor Pairs (Live)">
         <option value="EUR/GBP">EUR/GBP</option>
         <option value="EUR/JPY">EUR/JPY</option>
@@ -146,7 +144,6 @@ body {
         <option value="CAD/JPY">CAD/JPY</option>
       </optgroup>
 
-      <!-- Exotic Pairs -->
       <optgroup label="Exotic Pairs (Live)">
         <option value="USD/TRY">USD/TRY</option>
         <option value="USD/ZAR">USD/ZAR</option>
@@ -158,20 +155,17 @@ body {
         <option value="AUD/ZAR">AUD/ZAR</option>
       </optgroup>
 
-      <!-- Crypto -->
       <optgroup label="Crypto (Live)">
         <option value="BTC/USD">BTC/USD</option>
         <option value="ETH/USD">ETH/USD</option>
         <option value="LTC/USD">LTC/USD</option>
       </optgroup>
 
-      <!-- Metals -->
       <optgroup label="Metals (Live)">
         <option value="XAU/USD">XAU/USD</option>
         <option value="XAG/USD">XAG/USD</option>
       </optgroup>
 
-      <!-- OTC -->
       <optgroup label="OTC Market">
         <option value="EUR/USD_otc">EUR/USD OTC</option>
         <option value="GBP/USD_otc">GBP/USD OTC</option>
@@ -202,6 +196,8 @@ body {
     <div id="signalBox" class="signal signal-none">Waiting...</div>
   </div>
 
+</div>
+
 <script>
 const apiKey = "0c069b8b41284d9ab6cedab13c2074fb";
 
@@ -211,13 +207,8 @@ setInterval(() => {
 }, 1000);
 
 function buildUrl(sym) {
-  // FIX: remove slash (EUR/USD → EURUSD)
   sym = sym.replace("/", "");
-
-  // FIX: correct interval (1m → 1min)
-  const interval = "1min";
-
-  return `https://api.twelvedata.com/time_series?symbol=${sym}&interval=${interval}&outputsize=60&apikey=${apiKey}`;
+  return `https://api.twelvedata.com/time_series?symbol=${sym}&interval=1min&outputsize=60&apikey=${apiKey}`;
 }
 
 function detectSession() {
@@ -339,7 +330,25 @@ function updateDisplay(session, trend, structure, liquidity, smc, momentum, timi
 }
 
 let symbol = document.getElementById("pairSelector").value;
+let lastCallTime = 0;
+let isFetching = false;
+let fetchInterval;
 
+// SAFE API CALLER (Limiter)
+async function safeFetch() {
+  const now = Date.now();
+
+  if (now - lastCallTime < 3000) return;
+  if (isFetching) return;
+
+  lastCallTime = now;
+  isFetching = true;
+
+  await fetchData();
+  isFetching = false;
+}
+
+// MAIN FETCH FUNCTION
 async function fetchData() {
   document.getElementById("pairName").innerText = "PAIR: " + symbol;
 
@@ -364,12 +373,21 @@ async function fetchData() {
   }
 }
 
-setInterval(fetchData, 10000);
-fetchData();
+// STOP OLD INTERVAL + START NEW SAFE INTERVAL
+function startSafeInterval() {
+  if (fetchInterval) clearInterval(fetchInterval);
+  fetchInterval = setInterval(safeFetch, 5000);
+}
 
+// FIRST CALL
+safeFetch();
+startSafeInterval();
+
+// PAIR CHANGE HANDLER
 document.getElementById("pairSelector").addEventListener("change", function () {
   symbol = this.value;
-  fetchData();
+  safeFetch();
+  startSafeInterval();
 });
 </script>
 
