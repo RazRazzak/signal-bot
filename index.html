@@ -211,8 +211,13 @@ setInterval(() => {
 }, 1000);
 
 function buildUrl(sym) {
-  if (sym.endsWith("_otc")) sym = sym.replace("_otc", "");
-  return `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=1m&outputsize=60&apikey=${apiKey}`;
+  // FIX: remove slash (EUR/USD → EURUSD)
+  sym = sym.replace("/", "");
+
+  // FIX: correct interval (1m → 1min)
+  const interval = "1min";
+
+  return `https://api.twelvedata.com/time_series?symbol=${sym}&interval=${interval}&outputsize=60&apikey=${apiKey}`;
 }
 
 function detectSession() {
