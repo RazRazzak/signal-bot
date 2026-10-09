@@ -1,231 +1,220 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>⚡ Ultimate AI Institutional Multi-Pair Bot (FINAL VERSION)</title>
-  <meta charset="UTF-8">
-  <style>
-    body {
-      background: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 15px;
-    }
-    .pair-box {
-      margin: 15px 0;
-      padding: 12px;
-      background: #1e1e1e;
-      border-radius: 12px;
-      color: #fff;
-    }
-    .pair-box label {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      display: block;
-    }
-    #pairSelector {
-      width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      background: #2c2c2c;
-      color: #fff;
-      font-size: 17px;
-      outline: none;
-    }
-    #pairSelector optgroup {
-      color: #00eaff;
-      font-weight: bold;
-    }
-    #pairSelector option {
-      background: #2c2c2c;
-      color: #fff;
-    }
-    .card {
-      background: #111;
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 10px;
-    }
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      margin: 4px 0;
-    }
-    .label {
-      color: #aaa;
-    }
-    .value {
-      font-weight: bold;
-    }
-    .signal {
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .signal-buy {
-      background: #003300;
-      color: #00ff66;
-      border: 1px solid #00ff66;
-    }
-    .signal-sell {
-      background: #330000;
-      color: #ff3333;
-      border: 1px solid #ff3333;
-    }
-    .signal-none {
-      background: #333;
-      color: #ccc;
-    }
-    #localTime {
-      font-size: 18px;
-      font-weight: bold;
-      margin-top: 5px;
-    }
-    .tag {
-      display:inline-block;
-      padding:2px 6px;
-      border-radius:6px;
-      font-size:12px;
-      margin-left:4px;
-    }
-    .tag-strong {background:#003300;color:#00ff66;}
-    .tag-weak {background:#330000;color:#ff3333;}
-    .tag-neutral {background:#333;color:#ccc;}
-  </style>
+<title>⚡ Ultimate AI Institutional Multi-Pair Bot (FINAL VERSION)</title>
+<meta charset="UTF-8">
+<style>
+body {
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 15px;
+}
+.pair-box {
+  margin: 15px 0;
+  padding: 12px;
+  background: #1e1e1e;
+  border-radius: 12px;
+  color: #fff;
+}
+.pair-box label {
+  font-size: 19px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+}
+#pairSelector {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #2c2c2c;
+  color: #fff;
+  font-size: 17px;
+  outline: none;
+}
+#pairSelector optgroup {
+  color: #00eaff;
+  font-weight: bold;
+}
+#pairSelector option {
+  background: #2c2c2c;
+  color: #fff;
+}
+.card {
+  background: #111;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 10px;
+}
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+}
+.label {
+  color: #aaa;
+}
+.value {
+  font-weight: bold;
+}
+.signal {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 19px;
+  font-weight: bold;
+}
+.signal-buy {
+  background: #003300;
+  color: #00ff66;
+  border: 1px solid #00ff66;
+}
+.signal-sell {
+  background: #330000;
+  color: #ff3333;
+  border: 1px solid #ff3333;
+}
+.signal-none {
+  background: #333;
+  color: #ccc;
+}
+#localTime {
+  font-size: 19px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+.tag {
+  display:inline-block;
+  padding:2px 6px;
+  border-radius:6px;
+  font-size:12px;
+  margin-left:4px;
+}
+.tag-strong {background:#003300;color:#00ff66;}
+.tag-weak {background:#330000;color:#ff3333;}
+.tag-neutral {background:#333;color:#ccc;}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <h2>⚡ Ultimate AI Institutional Multi-Pair Bot</h2>
+<div class="container">
+  <h2>⚡ Ultimate AI Institutional Multi-Pair Bot ⚡</h2>
 
-    <!-- Local Time -->
-    <div class="card">
-      <div class="title">Local Time</div>
-      <div class="value" id="localTime">Loading...</div>
-    </div>
+  <!-- Local Time -->
+  <div class="card">
+    <div class="title">Local Time</div>
+    <div class="value" id="localTime">Loading...</div>
+  </div>
 
-    <!-- Pair Selector -->
-    <div class="pair-box">
-      <label>Select Market Pair</label>
-      <select id="pairSelector">
+  <!-- Pair Selector -->
+  <div class="pair-box">
+    <label>Select Market Pair</label>
+    <select id="pairSelector">
 
-        <!-- Major Pairs -->
-        <optgroup label="Major Pairs (Live)">
-          <option value="EUR/USD">EUR/USD</option>
-          <option value="GBP/USD">GBP/USD</option>
-          <option value="USD/JPY">USD/JPY</option>
-          <option value="USD/CHF">USD/CHF</option>
-          <option value="USD/CAD">USD/CAD</option>
-          <option value="AUD/USD">AUD/USD</option>
-          <option value="NZD/USD">NZD/USD</option>
-        </optgroup>
+      <!-- Major Pairs -->
+      <optgroup label="Major Pairs (Live)">
+        <option value="EUR/USD">EUR/USD</option>
+        <option value="GBP/USD">GBP/USD</option>
+        <option value="USD/JPY">USD/JPY</option>
+        <option value="USD/CHF">USD/CHF</option>
+        <option value="USD/CAD">USD/CAD</option>
+        <option value="AUD/USD">AUD/USD</option>
+        <option value="NZD/USD">NZD/USD</option>
+      </optgroup>
 
-        <!-- Minor Pairs -->
-        <optgroup label="Minor Pairs (Live)">
-          <option value="EUR/GBP">EUR/GBP</option>
-          <option value="EUR/JPY">EUR/JPY</option>
-          <option value="GBP/JPY">GBP/JPY</option>
-          <option value="AUD/JPY">AUD/JPY</option>
-          <option value="CHF/JPY">CHF/JPY</option>
-          <option value="EUR/AUD">EUR/AUD</option>
-          <option value="EUR/CAD">EUR/CAD</option>
-          <option value="CAD/JPY">CAD/JPY</option>
-        </optgroup>
+      <!-- Minor Pairs -->
+      <optgroup label="Minor Pairs (Live)">
+        <option value="EUR/GBP">EUR/GBP</option>
+        <option value="EUR/JPY">EUR/JPY</option>
+        <option value="GBP/JPY">GBP/JPY</option>
+        <option value="CHF/JPY">CHF/JPY</option>
+        <option value="EUR/AUD">EUR/AUD</option>
+        <option value="EUR/CAD">EUR/CAD</option>
+        <option value="CAD/JPY">CAD/JPY</option>
+      </optgroup>
 
-        <!-- Exotic Pairs -->
-        <optgroup label="Exotic Pairs (Live)">
-          <option value="USD/TRY">USD/TRY</option>
-          <option value="USD/ZAR">USD/ZAR</option>
-          <option value="USD/MXN">USD/MXN</option>
-          <option value="USD/INR">USD/INR</option>
-          <option value="USD/BDT">USD/BDT</option>
-          <option value="USD/PKR">USD/PKR</option>
-          <option value="USD/BRL">USD/BRL</option>
-          <option value="AUD/ZAR">AUD/ZAR</option>
-        </optgroup>
+      <!-- Exotic Pairs -->
+      <optgroup label="Exotic Pairs (Live)">
+        <option value="USD/TRY">USD/TRY</option>
+        <option value="USD/ZAR">USD/ZAR</option>
+        <option value="USD/MXN">USD/MXN</option>
+        <option value="USD/INR">USD/INR</option>
+        <option value="USD/BDT">USD/BDT</option>
+        <option value="USD/PHP">USD/PHP</option>
+        <option value="USD/BRL">USD/BRL</option>
+        <option value="AUD/ZAR">AUD/ZAR</option>
+      </optgroup>
 
-        <!-- Crypto -->
-        <optgroup label="Crypto (Live)">
-          <option value="BTC/USD">BTC/USD</option>
-          <option value="ETH/USD">ETH/USD</option>
-          <option value="LTC/USD">LTC/USD</option>
-        </optgroup>
+      <!-- Crypto -->
+      <optgroup label="Crypto (Live)">
+        <option value="BTC/USD">BTC/USD</option>
+        <option value="ETH/USD">ETH/USD</option>
+        <option value="LTC/USD">LTC/USD</option>
+      </optgroup>
 
-        <!-- Metals -->
-        <optgroup label="Metals (Live)">
-          <option value="XAU/USD">XAU/USD</option>
-          <option value="XAG/USD">XAG/USD</option>
-        </optgroup>
+      <!-- Metals -->
+      <optgroup label="Metals (Live)">
+        <option value="XAU/USD">XAU/USD</option>
+        <option value="XAG/USD">XAG/USD</option>
+      </optgroup>
 
-        <!-- OTC Market -->
-        <optgroup label="OTC Market">
-          <option value="EUR/USD_otc">EUR/USD OTC</option>
-          <option value="GBP/USD_otc">GBP/USD OTC</option>
-          <option value="USD/JPY_otc">USD/JPY OTC</option>
-          <option value="AUD/USD_otc">AUD/USD OTC</option>
-          <option value="USD/CHF_otc">USD/CHF OTC</option>
-          <option value="NZD/USD_otc">NZD/USD OTC</option>
-          <option value="USD/CAD_otc">USD/CAD OTC</option>
-          <option value="XAU/USD_otc">Gold OTC</option>
-          <option value="BTC/USD_otc">BTC OTC</option>
-          <option value="USD/BDT_otc">USD/BDT OTC</option>
-          <option value="USD/PKR_otc">USD/PKR OTC</option>
-          <option value="USD/BRL_otc">USD/BRL OTC</option>
-          <option value="USD/INR_otc">USD/INR OTC</option>
-          <option value="USD/ZAR_otc">USD/ZAR OTC</option>
-          <option value="AUD/ZAR_otc">AUD/ZAR OTC</option>
-        </optgroup>
+      <!-- OTC -->
+      <optgroup label="OTC Market">
+        <option value="EUR/USD_otc">EUR/USD OTC</option>
+        <option value="GBP/USD_otc">GBP/USD OTC</option>
+        <option value="USD/JPY_otc">USD/JPY OTC</option>
+        <option value="USD/CHF_otc">USD/CHF OTC</option>
+        <option value="USD/CAD_otc">USD/CAD OTC</option>
+        <option value="USD/PKR_otc">USD/PKR OTC</option>
+        <option value="USD/INR_otc">USD/INR OTC</option>
+        <option value="USD/ZAR_otc">USD/ZAR OTC</option>
+        <option value="AUD/ZAR_otc">AUD/ZAR OTC</option>
+      </optgroup>
 
-      </select>
-    </div>
+    </select>
+  </div>
 
-    <!-- Signal Card -->
-    <div class="card">
-      <div class="title" id="pairName">PAIR: EUR/USD</div>
+  <!-- Signal Card -->
+  <div class="card">
+    <div class="title" id="pairName">PAIR: EUR/USD</div>
 
-      <div class="row"><div class="label">Session:</div><div class="value" id="session">--</div></div>
-      <div class="row"><div class="label">Trend Bias:</div><div class="value" id="trend">--</div></div>
-      <div class="row"><div class="label">Market Structure:</div><div class="value" id="structure">--</div></div>
-      <div class="row"><div class="label">Liquidity:</div><div class="value" id="liquidity">--</div></div>
-      <div class="row"><div class="label">OB / FVG:</div><div class="value" id="smc">--</div></div>
-      <div class="row"><div class="label">Momentum:</div><div class="value" id="momentum">--</div></div>
-      <div class="row"><div class="label">Timing:</div><div class="value" id="timing">--</div></div>
+    <div class="row"><div class="label">Session:</div><div class="value" id="session">--</div></div>
+    <div class="row"><div class="label">Trend Bias:</div><div class="value" id="trend">--</div></div>
+    <div class="row"><div class="label">Market Structure:</div><div class="value" id="structure">--</div></div>
+    <div class="row"><div class="label">Liquidity:</div><div class="value" id="liquidity">--</div></div>
+    <div class="row"><div class="label">OB / FVG:</div><div class="value" id="smc">--</div></div>
+    <div class="row"><div class="label">Momentum:</div><div class="value" id="momentum">--</div></div>
+    <div class="row"><div class="label">Timing:</div><div class="value" id="timing">--</div></div>
 
-      <div id="signalBox" class="signal signal-none">Waiting...</div>
-    </div>
+    <div id="signalBox" class="signal signal-none">Waiting...</div>
   </div>
 
 <script>
-const apiKey = "7bc91d2bdbb54f94811142506bc155f8";
+const apiKey = "7bc91d2dbbd54f94811142506bc155f8";
 
-// Local Time
 setInterval(() => {
   document.getElementById("localTime").innerText =
     new Date().toLocaleTimeString('en-US', { hour12: true });
 }, 1000);
 
-// Build API URL
 function buildUrl(sym) {
   if (sym.endsWith("_otc")) sym = sym.replace("_otc", "");
-  return `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=1min&outputsize=60&apikey=${apiKey}`;
+  return `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=1m&outputsize=60&apikey=${apiKey}`;
 }
 
-// Session Detection
 function detectSession() {
   let h = new Date().getHours();
   if (h >= 3 && h < 12) return "Asian";
@@ -233,7 +222,6 @@ function detectSession() {
   return "New York";
 }
 
-// Market Structure (HH/HL, LH/LL approx)
 function detectStructure(closes) {
   let last = closes[closes.length - 1];
   let prev = closes[closes.length - 2];
@@ -241,10 +229,9 @@ function detectStructure(closes) {
 
   if (last > prev && prev > older) return "Bullish (HH/HL)";
   if (last < prev && prev < older) return "Bearish (LH/LL)";
-  return "Range / CHoCH";
+  return "Range / ChoCH";
 }
 
-// EMA20
 function calcEMA20(closes) {
   let ema = closes[0];
   const k = 2 / (20 + 1);
@@ -254,7 +241,6 @@ function calcEMA20(closes) {
   return ema;
 }
 
-// Trend Engine (EMA + micro trend)
 function checkTrend(last, ema20, closes) {
   let microUp = last > closes[closes.length - 5];
   let microDown = last < closes[closes.length - 5];
@@ -264,7 +250,6 @@ function checkTrend(last, ema20, closes) {
   return "NONE";
 }
 
-// Liquidity Sweep (simple)
 function checkLiquidity(candles) {
   let h = parseFloat(candles[candles.length - 1].high);
   let ph = parseFloat(candles[candles.length - 2].high);
@@ -276,7 +261,6 @@ function checkLiquidity(candles) {
   return "None";
 }
 
-// SMC: OB touch + FVG presence (simplified)
 function checkSMC(candles, last, ema20) {
   let nearOB = Math.abs(last - ema20) < 0.05;
 
@@ -285,7 +269,7 @@ function checkSMC(candles, last, ema20) {
 
   let high1 = parseFloat(c1.high);
   let low3 = parseFloat(c3.low);
-  let fvg = (high1 < low3); // simple FVG idea
+  let fvg = (high1 < low3);
 
   if (nearOB && fvg) return "OB + FVG Confluence";
   if (nearOB) return "OB Touch";
@@ -293,19 +277,16 @@ function checkSMC(candles, last, ema20) {
   return "None";
 }
 
-// Momentum / Displacement
 function checkMomentum(last, prev) {
   let body = Math.abs(last - prev);
   return body > 0.03;
 }
 
-// Timing Engine
 function checkTiming() {
   let s = new Date().getSeconds();
   return (s >= 50 && s <= 58);
 }
 
-// Final Signal Engine
 function generateSignal(candles, closes) {
   let last = closes[closes.length - 1];
   let prev = closes[closes.length - 2];
@@ -329,7 +310,6 @@ function generateSignal(candles, closes) {
   updateDisplay(session, trend, structure, liquidity, smc, momentum, timing, allow);
 }
 
-// Smart Display
 function updateDisplay(session, trend, structure, liquidity, smc, momentum, timing, allow) {
   document.getElementById("session").innerText = session;
   document.getElementById("trend").innerHTML =
@@ -339,7 +319,7 @@ function updateDisplay(session, trend, structure, liquidity, smc, momentum, timi
   document.getElementById("smc").innerText = smc;
   document.getElementById("momentum").innerHTML =
     momentum ? "Strong <span class='tag tag-strong'>Displacement</span>" :
-               "Weak <span class='tag tag-weak'>No Displacement</span>";
+    "Weak <span class='tag tag-weak'>No Displacement</span>";
   document.getElementById("timing").innerHTML =
     timing ? "Perfect (50–58s)" : "Bad (Wait)";
 
@@ -353,7 +333,6 @@ function updateDisplay(session, trend, structure, liquidity, smc, momentum, timi
   }
 }
 
-// Fetch Data
 let symbol = document.getElementById("pairSelector").value;
 
 async function fetchData() {
@@ -380,7 +359,7 @@ async function fetchData() {
   }
 }
 
-setInterval(fetchData, 10000);
+setInterval(fetchData, 1000);
 fetchData();
 
 document.getElementById("pairSelector").addEventListener("change", function () {
