@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart AI Signal Bot</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0f19;
+      color: #e5e5e5;
+    }
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #22c55e;
+    }
+    .clock {
+      font-size: 14px;
+      color: #9ca3af;
+    }
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      grid-template-rows: 1fr;
+      gap: 10px;
+      padding: 10px 20px;
+    }
+    .panel {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #e5e5e5;
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 4px;
+    }
+    select, button {
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e5e5;
+      font-size: 13px;
+    }
+    button {
+      cursor: pointer;
+      background: #16a34a;
+      border-color: #16a34a;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #22c55e;
+    }
+    .timing-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .timing-buttons button {
+      background: #1f2937;
+      border-color: #374151;
+      font-weight: normal;
+    }
+    .timing-buttons button.active {
+      background: #22c55e;
+      border-color: #22c55e;
+      color: #020617;
+      font-weight: bold;
+    }
+    .chart-area {
+      height: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .signal-panel {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 8px;
+      background: #020617;
+      border: 1px solid #374151;
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+    .signal-panel.glow-buy {
+      box-shadow: 0 0 12px #22c55e;
+      border-color: #22c55e;
+    }
+    .signal-panel.glow-sell {
+      box-shadow: 0 0 12px #ef4444;
+      border-color: #ef4444;
+    }
+    .signal-panel.glow-neutral {
+      box-shadow: 0 0 12px #6b7280;
+      border-color: #6b7280;
+    }
+    .signal-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .signal-direction {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .signal-direction.buy {
+      color: #22c55e;
+    }
+    .signal-direction.sell {
+      color: #ef4444;
+    }
+    .signal-direction.neutral {
+      color: #9ca3af;
+    }
+    .signal-score {
+      font-size: 14px;
+      color: #e5e5e5;
+    }
+    .signal-meta {
+      font-size: 12px;
+      color: #9ca3af;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 8px;
+    }
+    .history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 12px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .history-list li {
+      padding: 4px 0;
+      border-bottom: 1px solid #1f2937;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      margin-left: 4px;
+    }
+    .badge-live {
+      background: #22c55e;
+      color: #020617;
+    }
+    .badge-otc {
+      background: #f97316;
+      color: #020617;
+    }
+    .badge-custom {
+      background: #3b82f6;
+      color: #020617;
+    }
+    .popup-alert {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #111827;
+      border: 1px solid #22c55e;
+      color: #e5e5e5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      box-shadow: 0 0 10px #22c55e;
+      display: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <div class="title">Smart AI Signal Bot</div>
+    <div class="clock" id="clock"></div>
+  </div>
+
+  <div class="main">
+    <!-- Left panel: mode, broker, pair -->
+    <div class="panel">
+      <h3>Mode & Market</h3>
+      <label>Mode Selector</label>
+      <select id="modeSelect">
+        <option value="manual">Manual Mode</option>
+        <option value="auto">Auto Mode</option>
+      </select>
+
+      <label>Broker</label>
+      <select id="brokerSelect">
+        <optgroup label="Binary Options">
+          <option value="quotex">Quotex</option>
+          <option value="binola">Binola</option>
+          <option value="iqoption">IQ Option</option>
+          <option value="pocketoption">Pocket Option</option>
+          <option value="expertoption">Expert Option</option>
+          <option value="olymptrade">Olymp Trade</option>
+          <option value="deriv">Deriv</option>
+          <option value="spectre">Spectre.ai</option>
+          <option value="binary">Binary.com</option>
+        </optgroup>
+        <optgroup label="Forex Brokers">
+          <option value="oanda">OANDA</option>
+          <option value="xm">XM</option>
+          <option value="exness">Exness</option>
+          <option value="icmarkets">IC Markets</option>
+          <option value="fxtm">FXTM</option>
+        </optgroup>
+        <optgroup label="Crypto Exchanges">
+          <option value="binance">Binance</option>
+          <option value="bybit">Bybit</option>
+          <option value="kucoin">KuCoin</option>
+          <option value="okx">OKX</option>
+          <option value="coinbase">Coinbase</option>
+        </optgroup>
+        <optgroup label="Bangladesh Brokers">
+          <option value="bd1">BD Broker 1</option>
+          <option value="bd2">BD Broker 2</option>
+          <option value="bd3">BD Broker 3</option>
+        </optgroup>
+        <option value="auto">Auto Detect</option>
+      </select>
+
+      <label>Pair</label>
+      <select id="pairSelect">
+        <optgroup label="Forex Majors (Live)">
+          <option value="forex:OANDA:EUR_USD">EUR/USD</option>
+          <option value="forex:OANDA:GBP_USD">GBP/USD</option>
+          <option value="forex:OANDA:USD_JPY">USD/JPY</option>
+          <option value="forex:OANDA:USD_CHF">USD/CHF</option>
+          <option value="forex:OANDA:USD_CAD">USD/CAD</option>
+          <option value="forex:OANDA:AUD_USD">AUD/USD</option>
+          <option value="forex:OANDA:NZD_USD">NZD/USD</option>
+        </optgroup>
+        <optgroup label="Forex Minors (Live)">
+          <option value="forex:OANDA:EUR_GBP">EUR/GBP</option>
+          <option value="forex:OANDA:EUR_JPY">EUR/JPY</option>
+          <option value="forex:OANDA:GBP_JPY">GBP/JPY</option>
+          <option value="forex:OANDA:AUD_JPY">AUD/JPY</option>
+          <option value="forex:OANDA:CHF_JPY">CHF/JPY</option>
+          <option value="forex:OANDA:EUR_AUD">EUR/AUD</option>
+          <option value="forex:OANDA:EUR_CAD">EUR/CAD</option>
+          <option value="forex:OANDA:CAD_JPY">CAD/JPY</option>
+        </optgroup>
+        <optgroup label="Forex Exotics (Live)">
+          <option value="forex:OANDA:USD_TRY">USD/TRY</option>
+          <option value="forex:OANDA:USD_ZAR">USD/ZAR</option>
+          <option value="forex:OANDA:USD_MXN">USD/MXN</option>
+          <option value="forex:OANDA:USD_INR">USD/INR</option>
+          <option value="forex:OANDA:USD_BDT">USD/BDT</option>
+          <option value="forex:OANDA:USD_PKR">USD/PKR</option>
+          <option value="forex:OANDA:USD_BRL">USD/BRL</option>
+          <option value="forex:OANDA:AUD_ZAR">AUD/ZAR</option>
+        </optgroup>
+        <optgroup label="Metals (Live)">
+          <option value="forex:OANDA:XAU_USD">Gold (XAU/USD)</option>
+          <option value="forex:OANDA:XAG_USD">Silver (XAG/USD)</option>
+          <option value="forex:OANDA:XPT_USD">Platinum (XPT/USD)</option>
+          <option value="forex:OANDA:XPD_USD">Palladium (XPD/USD)</option>
+        </optgroup>
+        <optgroup label="Crypto (Simulated)">
+          <option value="crypto:BINANCE:BTCUSDT">BTC/USDT</option>
+          <option value="crypto:BINANCE:ETHUSDT">ETH/USDT</option>
+          <option value="crypto:BINANCE:LTCUSDT">LTC/USDT</option>
+          <option value="crypto:BINANCE:XRPUSDT">XRP/USDT</option>
+          <option value="crypto:BINANCE:ADAUSDT">ADA/USDT</option>
+          <option value="crypto:BINANCE:SOLUSDT">SOL/USDT</option>
+          <option value="crypto:BINANCE:BNBUSDT">BNB/USDT</option>
+          <option value="crypto:BINANCE:DOGEUSDT">DOGE/USDT</option>
+        </optgroup>
+        <optgroup label="Stocks (Simulated)">
+          <option value="stock:AAPL">AAPL</option>
+          <option value="stock:MSFT">MSFT</option>
+          <option value="stock:AMZN">AMZN</option>
+          <option value="stock:TSLA">TSLA</option>
+          <option value="stock:META">META</option>
+          <option value="stock:NVDA">NVDA</option>
+          <option value="stock:GOOG">GOOG</option>
+          <option value="stock:NFLX">NFLX</option>
+          <option value="stock:AMD">AMD</option>
+          <option value="stock:INTC">INTC</option>
+        </optgroup>
+        <optgroup label="OTC (Custom)">
+          <option value="otc:EUR_USD_OTC">EUR/USD OTC</option>
+          <option value="otc:GBP_USD_OTC">GBP/USD OTC</option>
+          <option value="otc:USD_JPY_OTC">USD/JPY OTC</option>
+          <option value="otc:AUD_USD_OTC">AUD/USD OTC</option>
+          <option value="otc:USD_CHF_OTC">USD/CHF OTC</option>
+          <option value="otc:NZD_USD_OTC">NZD/USD OTC</option>
+          <option value="otc:USD_CAD_OTC">USD/CAD OTC</option>
+          <option value="otc:XAU_USD_OTC">Gold OTC</option>
+          <option value="otc:BTC_USD_OTC">BTC OTC</option>
+          <option value="otc:USD_BDT_OTC">USD/BDT OTC</option>
+          <option value="otc:USD_PKR_OTC">USD/PKR OTC</option>
+          <option value="otc:USD_INR_OTC">USD/INR OTC</option>
+          <option value="otc:USD_ZAR_OTC">USD/ZAR OTC</option>
+          <option value="otc:USD_MXN_OTC">USD/MXN OTC</option>
+          <option value="otc:USD_TRY_OTC">USD/TRY OTC</option>
+        </optgroup>
+      </select>
+
+      <div style="margin-top:8px;font-size:12px;color:#9ca3af;">
+        Market status:
+        <span id="marketStatus" class="badge badge-live">Live</span>
+      </div>
+    </div>
+
+    <!-- Center: chart -->
+    <div class="panel">
+      <h3>Chart</h3>
+      <div class="chart-area">
+        <!-- Simple placeholder; you can replace with TradingView embed -->
+        Chart Area (TradingView / Price View)
+      </div>
+    </div>
+
+    <!-- Right: timing, signal, history -->
+    <div class="panel">
+      <h3>Timing & Signal</h3>
+      <div class="timing-buttons" id="timingButtons">
+        <button data-seconds="5">5s</button>
+        <button data-seconds="10">10s</button>
+        <button data-seconds="30">30s</button>
+        <button data-seconds="60">1m</button>
+        <button data-seconds="180">3m</button>
+        <button data-seconds="300">5m</button>
+      </div>
+      <button id="createSignalBtn">Create Signal (Manual)</button>
+      <button id="autoToggleBtn" style="margin-top:4px;background:#1f2937;border-color:#374151;">
+        Auto Mode: OFF
+      </button>
+
+      <div class="signal-panel" id="signalPanel">
+        <div class="signal-main">
+          <div class="signal-direction neutral" id="signalDirection">NO SIGNAL</div>
+          <div class="signal-score" id="signalScore">Score: 0</div>
+        </div>
+        <div class="signal-meta">
+          <div>Risk: <span id="riskLevel">N/A</span></div>
+          <div>Trend: <span id="trendArrow">→ Sideways</span></div>
+          <div>Session: <span id="sessionInfo">Detecting...</span></div>
+          <div>Mode: <span id="modeInfo">Manual</span></div>
+          <div>Timing: <span id="timingInfo">N/A</span></div>
+          <div>Source: <span id="sourceInfo">N/A</span></div>
+        </div>
+      </div>
+
+      <h3>Signal History</h3>
+      <ul class="history-list" id="historyList"></ul>
+    </div>
+  </div>
+</div>
+
+<div class="popup-alert" id="popupAlert"></div>
+
+<script>
+  const FINNHUB_API_KEY = "db9n5p9r01qkqqs3cflgdb9n5p9r01qkqqs3cfm0";
+
+  const clockEl = document.getElementById("clock");
+  const modeSelect = document.getElementById("modeSelect");
+  const brokerSelect = document.getElementById("brokerSelect");
+  const pairSelect = document.getElementById("pairSelect");
+  const marketStatusEl = document.getElementById("marketStatus");
+  const timingButtonsEl = document.getElementById("timingButtons");
+  const createSignalBtn = document.getElementById("createSignalBtn");
+  const autoToggleBtn = document.getElementById("autoToggleBtn");
+  const signalPanel = document.getElementById("signalPanel");
+  const signalDirectionEl = document.getElementById("signalDirection");
+  const signalScoreEl = document.getElementById("signalScore");
+  const riskLevelEl = document.getElementById("riskLevel");
+  const trendArrowEl = document.getElementById("trendArrow");
+  const sessionInfoEl = document.getElementById("sessionInfo");
+  const modeInfoEl = document.getElementById("modeInfo");
+  const timingInfoEl = document.getElementById("timingInfo");
+  const sourceInfoEl = document.getElementById("sourceInfo");
+  const historyListEl = document.getElementById("historyList");
+  const popupAlertEl = document.getElementById("popupAlert");
+
+  let selectedTimingSeconds = null;
+  let autoIntervalId = null;
+  let prevPrice = null;
+  let priceWindow = [];
+
+  function updateClock() {
+    const now = new Date();
+    clockEl.textContent = now.toLocaleString();
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function setTiming(seconds) {
+    selectedTimingSeconds = seconds;
+    Array.from(timingButtonsEl.querySelectorAll("button")).forEach(btn => {
+      const s = parseInt(btn.getAttribute("data-seconds"), 10);
+      btn.classList.toggle("active", s === seconds);
+    });
+    timingInfoEl.textContent = seconds ? seconds + "s" : "N/A";
+  }
+
+  timingButtonsEl.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON") {
+      const seconds = parseInt(e.target.getAttribute("data-seconds"), 10);
+      setTiming(seconds);
+    }
+  });
+
+  function getSessionInfo() {
+    const now = new Date();
+    const utcHour = now.getUTCHours();
+    let session = "Off Session";
+    let booster = 0;
+    if (utcHour >= 7 && utcHour < 16) {
+      session = "London Session";
+    }
+    if (utcHour >= 13 && utcHour < 22) {
+      session = "New York Session";
+    }
+    if (utcHour >= 13 && utcHour < 16) {
+      session = "Overlap Session";
+      booster = 5;
+    }
+    return { session, booster };
+  }
+
+  function getAutoInterval(volatility, percentChange) {
+    const v = volatility || 0;
+    const p = Math.abs(percentChange || 0);
+    if (v > 0.5 || p > 0.5) return 5000;
+    if (v > 0.2 || p > 0.2) return 30000;
+    if (v > 0.1 || p > 0.1) return 60000;
+    return 180000;
+  }
+
+  function classifyCandle(prev, current) {
+    if (prev == null || current == null) return { type: "none", impact: 0 };
+    const diff = current - prev;
+    const absDiff = Math.abs(diff);
+    if (absDiff < 0.0005) return { type: "doji", impact: -2 };
+    if (diff > 0) {
+      if (absDiff > 0.005) return { type: "bull_strong", impact: 5 };
+      return { type: "bull", impact: 2 };
+    } else {
+      if (absDiff > 0.005) return { type: "bear_strong", impact: -5 };
+      return { type: "bear", impact: -2 };
+    }
+  }
+
+  function updatePriceWindow(price) {
+    if (price == null) return;
+    priceWindow.push(price);
+    if (priceWindow.length > 20) priceWindow.shift();
+  }
+
+  function computeTrendAndVolatility() {
+    if (priceWindow.length < 2) {
+      return {
+        trendLabel: "Weak",
+        trendArrow: "→ Sideways",
+        volatility: 0
+      };
+    }
+    const first = priceWindow[0];
+    const last = priceWindow[priceWindow.length - 1];
+    const slope = last - first;
+    let trendArrow = "→ Sideways";
+    let trendLabel = "Weak";
+    if (slope > 0.01) {
+      trendArrow = "⬆ Strong Uptrend";
+      trendLabel = "Strong";
+    } else if (slope > 0.003) {
+      trendArrow = "↗ Medium Uptrend";
+      trendLabel = "Medium";
+    } else if (slope < -0.01) {
+      trendArrow = "⬇ Strong Downtrend";
+      trendLabel = "Strong";
+    } else if (slope < -0.003) {
+      trendArrow = "↘ Medium Downtrend";
+      trendLabel = "Medium";
+    }
+
+    let sumAbs = 0;
+    for (let i = 1; i < priceWindow.length; i++) {
+      sumAbs += Math.abs(priceWindow[i] - priceWindow[i - 1]);
+    }
+    const volatility = sumAbs / (priceWindow.length - 1);
+
+    return { trendLabel, trendArrow, volatility };
+  }
+
+  function detectBreakoutAndRetest(current) {
+    if (priceWindow.length < 5 || current == null) {
+      return { isBreakout: false, isRetest: false };
+    }
+    const max = Math.max(...priceWindow);
+    const min = Math.min(...priceWindow);
+    const tolerance = (max - min) * 0.05 || 0.0005;
+    const isBreakout = current > max + tolerance || current < min - tolerance;
+    let isRetest = false;
+    if (!isBreakout) {
+      if (Math.abs(current - max) < tolerance || Math.abs(current - min) < tolerance) {
+        isRetest = true;
+      }
+    }
+    return { isBreakout, isRetest };
+  }
+
+  function computeRiskLevel(volatility, percentChange, isBreakout, isRetest) {
+    const v = volatility || 0;
+    const p = Math.abs(percentChange || 0);
+    let score = 0;
+    if (v > 0.5 || p > 0.5) score += 2;
+    if (v > 0.2 || p > 0.2) score += 1;
+    if (isBreakout) score += 2;
+    if (isRetest) score -= 1;
+    if (score <= 1) return "Low Risk";
+    if (score === 2) return "Medium Risk";
+    return "High Risk";
+  }
+
+  function showPopupAlert(text) {
+    popupAlertEl.textContent = text;
+    popupAlertEl.style.display = "block";
+    setTimeout(() => {
+      popupAlertEl.style.display = "none";
+    }, 2500);
+  }
+
+  function setGlow(direction) {
+    signalPanel.classList.remove("glow-buy", "glow-sell", "glow-neutral");
+    if (direction === "BUY") signalPanel.classList.add("glow-buy");
+    else if (direction === "SELL") signalPanel.classList.add("glow-sell");
+    else signalPanel.classList.add("glow-neutral");
+  }
+
+  function addHistoryEntry(entry) {
+    const li = document.createElement("li");
+    li.textContent =
+      `${entry.time} | ${entry.pair} | ${entry.mode} | ${entry.timing}s | ` +
+      `${entry.direction} | Score ${entry.score} | ${entry.risk}`;
+    historyListEl.insertBefore(li, historyListEl.firstChild);
+    while (historyListEl.children.length > 5) {
+      historyListEl.removeChild(historyListEl.lastChild);
+    }
+  }
+
+  async function fetchQuote(pairValue) {
+    const [type, provider, symbol] = pairValue.split(":");
+    let url = null;
+    let source = "Live";
+    if (type === "forex") {
+      url = `https://finnhub.io/api/v1/forex/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
+    } else {
+      source = "Simulated";
+    }
+
+    if (!url) {
+      const price = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.01 : 1 + Math.random();
+      return {
+        currentPrice: price,
+        change: (Math.random() - 0.5) * 0.01,
+        percentChange: (Math.random() - 0.5) * 0.5,
+        source
+      };
+    }
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP error");
+      const data = await res.json();
+      const currentPrice = data.c || data.p || 1 + Math.random();
+      const change = data.d != null ? data.d : (Math.random() - 0.5) * 0.01;
+      const percentChange = data.dp != null ? data.dp : (Math.random() - 0.5) * 0.5;
+      return { currentPrice, change, percentChange, source };
+    } catch (e) {
+      const price = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.01 : 1 + Math.random();
+      return {
+        currentPrice: price,
+        change: (Math.random() - 0.5) * 0.01,
+        percentChange: (Math.random() - 0.5) * 0.5,
+        source: "Simulated (Fallback)"
+      };
+    }
+  }
+
+  function updateMarketStatus(pairValue) {
+    if (pairValue.startsWith("forex:")) {
+      marketStatusEl.textContent = "Live";
+      marketStatusEl.className = "badge badge-live";
+    } else if (pairValue.startsWith("otc:")) {
+      marketStatusEl.textContent = "OTC";
+      marketStatusEl.className = "badge badge-otc";
+    } else {
+      marketStatusEl.textContent = "Custom";
+      marketStatusEl.className = "badge badge-custom";
+    }
+  }
+
+  async function generateSignal(triggerMode) {
+    const pairValue = pairSelect.value;
+    if (!pairValue) return;
+
+    updateMarketStatus(pairValue);
+
+    const quote = await fetchQuote(pairValue);
+    const currentPrice = quote.currentPrice;
+    const change = quote.change;
+    const percentChange = quote.percentChange;
+
+    const candle = classifyCandle(prevPrice, currentPrice);
+    updatePriceWindow(currentPrice);
+    const { trendLabel, trendArrow, volatility } = computeTrendAndVolatility();
+    const { isBreakout, isRetest } = detectBreakoutAndRetest(currentPrice);
+    const riskLevel = computeRiskLevel(volatility, percentChange, isBreakout, isRetest);
+    const { session, booster } = getSessionInfo();
+
+    let baseScore = 50;
+    if (change > 0) baseScore += 10;
+    if (change < 0) baseScore -= 10;
+    baseScore += candle.impact;
+    if (trendLabel === "Strong") baseScore += 8;
+    else if (trendLabel === "Medium") baseScore += 4;
+    if (isBreakout) baseScore += 6;
+    if (isRetest) baseScore -= 3;
+    baseScore += booster;
+    baseScore -= volatility * 50;
+
+    let score = Math.max(0, Math.min(100, Math.round(baseScore)));
+
+    let direction = "NEUTRAL";
+    if (score >= 55 && change > 0) direction = "BUY";
+    else if (score >= 55 && change < 0) direction = "SELL";
+    else direction = "NEUTRAL";
+
+    signalDirectionEl.textContent = direction;
+    signalDirectionEl.className = "signal-direction " +
+      (direction === "BUY" ? "buy" : direction === "SELL" ? "sell" : "neutral");
+    signalScoreEl.textContent = "Score: " + score;
+    riskLevelEl.textContent = riskLevel;
+    trendArrowEl.textContent = trendArrow;
+    sessionInfoEl.textContent = session;
+    modeInfoEl.textContent = triggerMode === "auto" ? "Auto" : "Manual";
+    timingInfoEl.textContent = selectedTimingSeconds ? selectedTimingSeconds + "s" : "Auto";
+    sourceInfoEl.textContent = quote.source;
+
+    setGlow(direction);
+    showPopupAlert(`${direction} | Score ${score} | ${riskLevel}`);
+
+    const now = new Date();
+    addHistoryEntry({
+      time: now.toLocaleTimeString(),
+      pair: pairSelect.options[pairSelect.selectedIndex].text,
+      mode: triggerMode === "auto" ? "Auto" : "Manual",
+      timing: selectedTimingSeconds || 0,
+      direction,
+      score,
+      risk: riskLevel
+    });
+
+    prevPrice = currentPrice;
+  }
+
+  createSignalBtn.addEventListener("click", () => {
+    generateSignal("manual");
+  });
+
+  function startAutoMode() {
+    if (autoIntervalId) clearInterval(autoIntervalId);
+    autoToggleBtn.textContent = "Auto Mode: ON";
+    autoToggleBtn.style.background = "#22c55e";
+    autoToggleBtn.style.borderColor = "#22c55e";
+    modeSelect.value = "auto";
+    modeInfoEl.textContent = "Auto";
+
+    const dummyVolatility = 0.2;
+    const dummyPercentChange = 0.2;
+    let intervalMs = selectedTimingSeconds
+      ? selectedTimingSeconds * 1000
+      : getAutoInterval(dummyVolatility, dummyPercentChange);
+
+    autoIntervalId = setInterval(() => {
+      generateSignal("auto");
+    }, intervalMs);
+  }
+
+  function stopAutoMode() {
+    if (autoIntervalId) clearInterval(autoIntervalId);
+    autoIntervalId = null;
+    autoToggleBtn.textContent = "Auto Mode: OFF";
+    autoToggleBtn.style.background = "#1f2937";
+    autoToggleBtn.style.borderColor = "#374151";
+    modeSelect.value = "manual";
+    modeInfoEl.textContent = "Manual";
+  }
+
+  autoToggleBtn.addEventListener("click", () => {
+    if (autoIntervalId) {
+      stopAutoMode();
+    } else {
+      startAutoMode();
+    }
+  });
+
+  modeSelect.addEventListener("change", () => {
+    if (modeSelect.value === "auto" && !autoIntervalId) {
+      startAutoMode();
+    }
+    if (modeSelect.value === "manual" && autoIntervalId) {
+      stopAutoMode();
+    }
+  });
+
+  updateMarketStatus(pairSelect.value);
+</script>
+</body>
+</html>
