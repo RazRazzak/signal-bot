@@ -420,7 +420,81 @@
     <div class="panel">
       <h3>Chart</h3>
       <div class="chart-area">
-        Chart Area (TradingView / Price View)
+        <div id="tvchart" style="width:100%; height:100%;"></div>
+</div>
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+<script>
+  // Finnhub API key আগেই index.html এ আছে:
+  // const API_KEY = "তোমার আগের key";
+  const FINNHUB_API_KEY = API_KEY;
+
+  // 🔥 Chart setup
+  const chart = LightweightCharts.createChart(document.getElementById('tvchart'), {
+    width: document.getElementById('tvchart').clientWidth,
+    height: document.getElementById('tvchart').clientHeight,
+    layout: { backgroundColor: '#0b0f19', textColor: '#e5e5e5' },
+    grid: { vertLines: { color: '#1f2937' }, horLines: { color: '#1f2937' } },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: '#1f2937' },
+    timeScale: { borderColor: '#1f2937' }
+  });
+
+  const candleSeries = chart.addCandlestickSeries({
+    upColor: '#22c55e',
+    downColor: '#ef4444',
+    borderDownColor: '#ef4444',
+    borderUpColor: '#22c55e',
+    wickDownColor: '#ef4444',
+    wickUpColor: '#22c55e'
+  });
+
+  // 🔥 Finnhub থেকে লাইভ ক্যান্ডেল ডেটা লোড
+  async function loadFinnhubData(symbol) {
+    try {
+      const url = `https://finnhub.io/api/v1/forex/candle?symbol=${symbol}&resolution=1&token=${FINNHUB_API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (!data || data.s !== "ok") {
+        console.log("Finnhub returned no data");
+        return;
+      }
+
+      const candles = data.t.map((time, i) => ({
+        time: time,
+        open: data.o[i],
+        high: data.h[i],
+        low: data.l[i],
+        close: data.c[i]
+      }));
+
+      candleSeries.setData(candles);
+    } catch (error) {
+      console.log("Finnhub Error:", error);
+    }
+  }
+
+  // 🔥 Pair dropdown পরিবর্তন হলে চার্ট আপডেট
+  const pairSelect = document.getElementById("pairSelect");
+  if (pairSelect) {
+    pairSelect.addEventListener("change", function () {
+      const selectedPair = this.value;
+      loadFinnhubData(selectedPair);
+    });
+  }
+
+  // 🔥 প্রতি 10 সেকেন্ডে রিফ্রেশ
+  setInterval(() => {
+    const selectedPair = pairSelect ? pairSelect.value : "OANDA:GBP_JPY";
+    loadFinnhubData(selectedPair);
+  }, 10000);
+
+  // 🔥 প্রথমবার লোড (ডিফল্ট GBP/JPY)
+  loadFinnhubData("OANDA:GBP_JPY");
+</script>
+
       </div>
     </div>
 
