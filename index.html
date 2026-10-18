@@ -250,82 +250,165 @@
       </select>
 
       <label>Pair</label>
-      <select id="pairSelect">
-        <optgroup label="Forex Majors (Live)">
-          <option value="forex:OANDA:EUR_USD">EUR/USD</option>
-          <option value="forex:OANDA:GBP_USD">GBP/USD</option>
-          <option value="forex:OANDA:USD_JPY">USD/JPY</option>
-          <option value="forex:OANDA:USD_CHF">USD/CHF</option>
-          <option value="forex:OANDA:USD_CAD">USD/CAD</option>
-          <option value="forex:OANDA:AUD_USD">AUD/USD</option>
-          <option value="forex:OANDA:NZD_USD">NZD/USD</option>
-        </optgroup>
-        <optgroup label="Forex Minors (Live)">
-          <option value="forex:OANDA:EUR_GBP">EUR/GBP</option>
-          <option value="forex:OANDA:EUR_JPY">EUR/JPY</option>
-          <option value="forex:OANDA:GBP_JPY">GBP/JPY</option>
-          <option value="forex:OANDA:AUD_JPY">AUD/JPY</option>
-          <option value="forex:OANDA:CHF_JPY">CHF/JPY</option>
-          <option value="forex:OANDA:EUR_AUD">EUR/AUD</option>
-          <option value="forex:OANDA:EUR_CAD">EUR/CAD</option>
-          <option value="forex:OANDA:CAD_JPY">CAD/JPY</option>
-        </optgroup>
-        <optgroup label="Forex Exotics (Live)">
-          <option value="forex:OANDA:USD_TRY">USD/TRY</option>
-          <option value="forex:OANDA:USD_ZAR">USD/ZAR</option>
-          <option value="forex:OANDA:USD_MXN">USD/MXN</option>
-          <option value="forex:OANDA:USD_INR">USD/INR</option>
-          <option value="forex:OANDA:USD_BDT">USD/BDT</option>
-          <option value="forex:OANDA:USD_PKR">USD/PKR</option>
-          <option value="forex:OANDA:USD_BRL">USD/BRL</option>
-          <option value="forex:OANDA:AUD_ZAR">AUD/ZAR</option>
-        </optgroup>
-        <optgroup label="Metals (Live)">
-          <option value="forex:OANDA:XAU_USD">Gold (XAU/USD)</option>
-          <option value="forex:OANDA:XAG_USD">Silver (XAG/USD)</option>
-          <option value="forex:OANDA:XPT_USD">Platinum (XPT/USD)</option>
-          <option value="forex:OANDA:XPD_USD">Palladium (XPD/USD)</option>
-        </optgroup>
-        <optgroup label="Crypto (Simulated)">
-          <option value="crypto:BINANCE:BTCUSDT">BTC/USDT</option>
-          <option value="crypto:BINANCE:ETHUSDT">ETH/USDT</option>
-          <option value="crypto:BINANCE:LTCUSDT">LTC/USDT</option>
-          <option value="crypto:BINANCE:XRPUSDT">XRP/USDT</option>
-          <option value="crypto:BINANCE:ADAUSDT">ADA/USDT</option>
-          <option value="crypto:BINANCE:SOLUSDT">SOL/USDT</option>
-          <option value="crypto:BINANCE:BNBUSDT">BNB/USDT</option>
-          <option value="crypto:BINANCE:DOGEUSDT">DOGE/USDT</option>
-        </optgroup>
-        <optgroup label="Stocks (Simulated)">
-          <option value="stock:AAPL">AAPL</option>
-          <option value="stock:MSFT">MSFT</option>
-          <option value="stock:AMZN">AMZN</option>
-          <option value="stock:TSLA">TSLA</option>
-          <option value="stock:META">META</option>
-          <option value="stock:NVDA">NVDA</option>
-          <option value="stock:GOOG">GOOG</option>
-          <option value="stock:NFLX">NFLX</option>
-          <option value="stock:AMD">AMD</option>
-          <option value="stock:INTC">INTC</option>
-        </optgroup>
-        <optgroup label="OTC (Custom)">
-          <option value="otc:EUR_USD_OTC">EUR/USD OTC</option>
-          <option value="otc:GBP_USD_OTC">GBP/USD OTC</option>
-          <option value="otc:USD_JPY_OTC">USD/JPY OTC</option>
-          <option value="otc:AUD_USD_OTC">AUD/USD OTC</option>
-          <option value="otc:USD_CHF_OTC">USD/CHF OTC</option>
-          <option value="otc:NZD_USD_OTC">NZD/USD OTC</option>
-          <option value="otc:USD_CAD_OTC">USD/CAD OTC</option>
-          <option value="otc:XAU_USD_OTC">Gold OTC</option>
-          <option value="otc:BTC_USD_OTC">BTC OTC</option>
-          <option value="otc:USD_BDT_OTC">USD/BDT OTC</option>
-          <option value="otc:USD_PKR_OTC">USD/PKR OTC</option>
-          <option value="otc:USD_INR_OTC">USD/INR OTC</option>
-          <option value="otc:USD_ZAR_OTC">USD/ZAR OTC</option>
-          <option value="otc:USD_MXN_OTC">USD/MXN OTC</option>
-          <option value="otc:USD_TRY_OTC">USD/TRY OTC</option>
-        </optgroup>
-      </select>
+       <select id="pairSelect">
+
+  <!-- ⭐ FOREX MAJORS -->
+  <optgroup label="Forex Majors (Live)">
+    <option value="forex:OANDA:EUR_USD">EUR/USD</option>
+    <option value="forex:OANDA:GBP_USD">GBP/USD</option>
+    <option value="forex:OANDA:USD_JPY">USD/JPY</option>
+    <option value="forex:OANDA:USD_CHF">USD/CHF</option>
+    <option value="forex:OANDA:USD_CAD">USD/CAD</option>
+    <option value="forex:OANDA:AUD_USD">AUD/USD</option>
+    <option value="forex:OANDA:NZD_USD">NZD/USD</option>
+  </optgroup>
+
+  <!-- ⭐ FOREX MINORS -->
+  <optgroup label="Forex Minors (Live)">
+    <option value="forex:OANDA:EUR_GBP">EUR/GBP</option>
+    <option value="forex:OANDA:EUR_JPY">EUR/JPY</option>
+    <option value="forex:OANDA:GBP_JPY">GBP/JPY</option>
+    <option value="forex:OANDA:AUD_JPY">AUD/JPY</option>
+    <option value="forex:OANDA:CHF_JPY">CHF/JPY</option>
+    <option value="forex:OANDA:EUR_AUD">EUR/AUD</option>
+    <option value="forex:OANDA:EUR_CAD">EUR/CAD</option>
+    <option value="forex:OANDA:CAD_JPY">CAD/JPY</option>
+    <option value="forex:OANDA:GBP_CAD">GBP/CAD</option>
+    <option value="forex:OANDA:GBP_AUD">GBP/AUD</option>
+    <option value="forex:OANDA:GBP_CHF">GBP/CHF</option>
+    <option value="forex:OANDA:GBP_NZD">GBP/NZD</option>
+    <option value="forex:OANDA:AUD_CHF">AUD/CHF</option>
+    <option value="forex:OANDA:AUD_CAD">AUD/CAD</option>
+    <option value="forex:OANDA:AUD_NZD">AUD/NZD</option>
+    <option value="forex:OANDA:NZD_CHF">NZD/CHF</option>
+    <option value="forex:OANDA:NZD_CAD">NZD/CAD</option>
+    <option value="forex:OANDA:NZD_JPY">NZD/JPY</option>
+    <option value="forex:OANDA:EUR_NZD">EUR/NZD</option>
+    <option value="forex:OANDA:EUR_CHF">EUR/CHF</option>
+    <option value="forex:OANDA:USD_SEK">USD/SEK</option>
+    <option value="forex:OANDA:USD_DKK">USD/DKK</option>
+  </optgroup>
+
+  <!-- ⭐ FOREX EXOTICS -->
+  <optgroup label="Forex Exotics (Live)">
+    <option value="forex:OANDA:USD_TRY">USD/TRY</option>
+    <option value="forex:OANDA:USD_ZAR">USD/ZAR</option>
+    <option value="forex:OANDA:USD_MXN">USD/MXN</option>
+    <option value="forex:OANDA:USD_INR">USD/INR</option>
+    <option value="forex:OANDA:USD_BDT">USD/BDT</option>
+    <option value="forex:OANDA:USD_PKR">USD/PKR</option>
+    <option value="forex:OANDA:USD_BRL">USD/BRL</option>
+    <option value="forex:OANDA:AUD_ZAR">AUD/ZAR</option>
+    <option value="forex:OANDA:EUR_TRY">EUR/TRY</option>
+    <option value="forex:OANDA:EUR_ZAR">EUR/ZAR</option>
+    <option value="forex:OANDA:GBP_ZAR">GBP/ZAR</option>
+    <option value="forex:OANDA:GBP_MXN">GBP/MXN</option>
+    <option value="forex:OANDA:GBP_INR">GBP/INR</option>
+    <option value="forex:OANDA:EUR_MXN">EUR/MXN</option>
+    <option value="forex:OANDA:EUR_INR">EUR/INR</option>
+    <option value="forex:OANDA:CHF_ZAR">CHF/ZAR</option>
+    <option value="forex:OANDA:CAD_ZAR">CAD/ZAR</option>
+    <option value="forex:OANDA:NZD_ZAR">NZD/ZAR</option>
+    <option value="forex:OANDA:JPY_ZAR">JPY/ZAR</option>
+    <option value="forex:OANDA:USD_CNH">USD/CNH</option>
+    <option value="forex:OANDA:USD_HKD">USD/HKD</option>
+    <option value="forex:OANDA:USD_SGD">USD/SGD</option>
+    <option value="forex:OANDA:USD_THB">USD/THB</option>
+    <option value="forex:OANDA:USD_KRW">USD/KRW</option>
+    <option value="forex:OANDA:USD_PLN">USD/PLN</option>
+    <option value="forex:OANDA:USD_CZK">USD/CZK</option>
+    <option value="forex:OANDA:USD_HUF">USD/HUF</option>
+  </optgroup>
+
+  <!-- ⭐ METALS -->
+  <optgroup label="Metals (Live)">
+    <option value="forex:OANDA:XAU_USD">Gold (XAU/USD)</option>
+    <option value="forex:OANDA:XAG_USD">Silver (XAG/USD)</option>
+    <option value="forex:OANDA:XPT_USD">Platinum (XPT/USD)</option>
+    <option value="forex:OANDA:XPD_USD">Palladium (XPD/USD)</option>
+  </optgroup>
+
+  <!-- ⭐ CRYPTO -->
+  <optgroup label="Crypto (Simulated)">
+    <option value="crypto:BINANCE:BTCUSDT">BTC/USDT</option>
+    <option value="crypto:BINANCE:ETHUSDT">ETH/USDT</option>
+    <option value="crypto:BINANCE:LTCUSDT">LTC/USDT</option>
+    <option value="crypto:BINANCE:XRPUSDT">XRP/USDT</option>
+    <option value="crypto:BINANCE:ADAUSDT">ADA/USDT</option>
+    <option value="crypto:BINANCE:SOLUSDT">SOL/USDT</option>
+    <option value="crypto:BINANCE:BNBUSDT">BNB/USDT</option>
+    <option value="crypto:BINANCE:DOGEUSDT">DOGE/USDT</option>
+    <option value="crypto:BINANCE:DOTUSDT">DOT/USDT</option>
+    <option value="crypto:BINANCE:MATICUSDT">MATIC/USDT</option>
+    <option value="crypto:BINANCE:AVAXUSDT">AVAX/USDT</option>
+    <option value="crypto:BINANCE:ATOMUSDT">ATOM/USDT</option>
+    <option value="crypto:BINANCE:NEARUSDT">NEAR/USDT</option>
+    <option value="crypto:BINANCE:FTMUSDT">FTM/USDT</option>
+    <option value="crypto:BINANCE:TRXUSDT">TRX/USDT</option>
+    <option value="crypto:BINANCE:ETCUSDT">ETC/USDT</option>
+    <option value="crypto:BINANCE:HBARUSDT">HBAR/USDT</option>
+    <option value="crypto:BINANCE:ICPUSDT">ICP/USDT</option>
+    <option value="crypto:BINANCE:FILUSDT">FIL/USDT</option>
+    <option value="crypto:BINANCE:EOSUSDT">EOS/USDT</option>
+  </optgroup>
+
+  <!-- ⭐ STOCKS -->
+  <optgroup label="Stocks (Simulated)">
+    <option value="stock:AAPL">AAPL</option>
+    <option value="stock:MSFT">MSFT</option>
+    <option value="stock:AMZN">AMZN</option>
+    <option value="stock:TSLA">TSLA</option>
+    <option value="stock:META">META</option>
+    <option value="stock:NVDA">NVDA</option>
+    <option value="stock:GOOG">GOOG</option>
+    <option value="stock:NFLX">NFLX</option>
+    <option value="stock:AMD">AMD</option>
+    <option value="stock:INTC">INTC</option>
+    <option value="stock:BABA">BABA</option>
+    <option value="stock:ORCL">ORCL</option>
+    <option value="stock:IBM">IBM</option>
+    <option value="stock:PYPL">PYPL</option>
+    <option value="stock:DIS">DIS</option>
+    <option value="stock:KO">KO</option>
+    <option value="stock:PEP">PEP</option>
+    <option value="stock:V">V</option>
+    <option value="stock:MA">MA</option>
+    <option value="stock:CSCO">CSCO</option>
+  </optgroup>
+
+  <!-- ⭐ OTC -->
+  <optgroup label="OTC Market">
+    <option value="otc:EUR_USD_OTC">EUR/USD OTC</option>
+    <option value="otc:GBP_USD_OTC">GBP/USD OTC</option>
+    <option value="otc:USD_JPY_OTC">USD/JPY OTC</option>
+    <option value="otc:AUD_USD_OTC">AUD/USD OTC</option>
+    <option value="otc:USD_CHF_OTC">USD/CHF OTC</option>
+    <option value="otc:NZD_USD_OTC">NZD/USD OTC</option>
+    <option value="otc:USD_CAD_OTC">USD/CAD OTC</option>
+    <option value="otc:XAU_USD_OTC">Gold OTC</option>
+    <option value="otc:BTC_USD_OTC">BTC OTC</option>
+    <option value="otc:USD_BDT_OTC">USD/BDT OTC</option>
+    <option value="otc:USD_PKR_OTC">USD/PKR OTC</option>
+    <option value="otc:USD_INR_OTC">USD/INR OTC</option>
+    <option value="otc:USD_ZAR_OTC">USD/ZAR OTC</option>
+    <option value="otc:USD_MXN_OTC">USD/MXN OTC</option>
+    <option value="otc:USD_TRY_OTC">USD/TRY OTC</option>
+    <option value="otc:EUR_JPY_OTC">EUR/JPY OTC</option>
+    <option value="otc:GBP_JPY_OTC">GBP/JPY OTC</option>
+    <option value="otc:AUD_JPY_OTC">AUD/JY OTC</option>
+    <option value="otc:CAD_JPY_OTC">CAD/JPY OTC</option>
+    <option value="otc:CHF_JPY_OTC">CHF/JPY OTC</option>
+    <option value="otc:EUR_GBP_OTC">EUR/GBP OTC</option>
+    <option value="otc:GBP_CHF_OTC">GBP/CHF OTC</option>
+    <option value="otc:GBP_CAD_OTC">GBP/CAD OTC</option>
+    <option value="otc:AUD_CHF_OTC">AUD/CHF OTC</option>
+    <option value="otc:NZD_CHF_OTC">NZD/CHF OTC</option>
+    <option value="otc:NZD_CAD_OTC">NZD/CAD OTC</option>
+    <option value="otc:EUR_CHF_OTC">EUR/CHF OTC</option>
+  </optgroup>
+
+</select>
+
 
       <div style="margin-top:8px;font-size:12px;color:#9ca3af;">
         Market status:
