@@ -483,8 +483,6 @@
   const historyListEl = document.getElementById("historyList");
   const popupAlertEl = document.getElementById("popupAlert");
 
-  let selectedTimingSeconds = null;
-  let autoIntervalId = null;
   let prevPrice = null;
   let priceWindow = [];
 
@@ -495,20 +493,12 @@
   setInterval(updateClock, 1000);
   updateClock();
 
-  function setTiming(seconds) {
-    selectedTimingSeconds = seconds;
-    Array.from(timingButtonsEl.querySelectorAll("button")).forEach(btn => {
-      const s = parseInt(btn.getAttribute("data-seconds"), 10);
-      btn.classList.toggle("active", s === seconds);
+  document.querySelectorAll("#timingButtons button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const sec = Number(btn.dataset.seconds);
+        startAutoMode(sec);
     });
-    timingInfoEl.textContent = seconds ? seconds + "s" : "N/A";
-  }
-
-  timingButtonsEl.addEventListener("click", (e) => {
-    if (e.target.tagName === "BUTTON") {
-      const seconds = parseInt(e.target.getAttribute("data-seconds"), 10);
-      setTiming(seconds);
-    }
+ 
   });
 
   function getSessionInfo() {
@@ -1377,39 +1367,26 @@
   }
 
   // ===== AUTO MODE + EVENTS =====
-  createSignalBtn.addEventListener("click", () => {
-    generateSignal("manual");
-  });
+    
+  let autoTimer = null;
 
-  function startAutoMode() {
-    if (autoIntervalId) clearInterval(autoIntervalId);
-    autoToggleBtn.textContent = "Auto Mode: ON";
-    autoToggleBtn.style.background = "#22c55e";
-    autoToggleBtn.style.borderColor = "#22c55e";
-    modeSelect.value = "auto";
-    modeInfoEl.textContent = "Auto";
+function startAutoMode(seconds) {
+    stopAutoMode();
 
-    const dummyVolatility = 0.2;
-    const dummyPercentChange = 0.2;
-    let intervalMs = selectedTimingSeconds
-      ? selectedTimingSeconds * 1000
-      : getAutoIntervalOptimized(dummyVolatility, dummyPercentChange);
+    autoTimer = setInterval(async () => {
+        const quote = await fetchQuote(selectedPair);
+        updatePriceUI(quote);
+        generateSignal(quote);
+    }, seconds * 1000);
+}
 
-    autoIntervalId = setInterval(() => {
-      generateSignal("auto");
-    }, intervalMs);
-  }
-
-  function stopAutoMode() {
-    if (autoIntervalId) clearInterval(autoIntervalId);
-    autoIntervalId = null;
-    autoToggleBtn.textContent = "Auto Mode: OFF";
-    autoToggleBtn.style.background = "#1f2937";
-    autoToggleBtn.style.borderColor = "#374151";
-    modeSelect.value = "manual";
-    modeInfoEl.textContent = "Manual";
-  }
-
+function stopAutoMode() {
+    if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+    }
+}
+ 
   autoToggleBtn.addEventListener("click", () => {
     if (autoIntervalId) {
       stopAutoMode();
