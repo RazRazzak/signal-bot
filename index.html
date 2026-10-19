@@ -416,83 +416,7 @@
       </div>
     </div>
 
-    <!-- Center: chart -->
-    <div class="panel">
-      <h3>Chart</h3>
-      <div class="chart-area">
-        <div id="tvchart" style="width:100%; height:350px;"></div>
-</div>
-
-<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-
-<script>
-  // Finnhub API key আগেই index.html এ আছে:
-  // const API_KEY = "তোমার আগের key";
-  
-  // 🔥 Chart setup
-  const chart = LightweightCharts.createChart(document.getElementById('tvchart'), {
-    width: document.getElementById('tvchart').clientWidth,
-    height: document.getElementById('tvchart').clientHeight,
-    layout: { backgroundColor: '#0b0f19', textColor: '#e5e5e5' },
-    grid: { vertLines: { color: '#1f2937' }, horLines: { color: '#1f2937' } },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-    rightPriceScale: { borderColor: '#1f2937' },
-    timeScale: { borderColor: '#1f2937' }
-  });
-
-  const candleSeries = chart.addCandlestickSeries({
-    upColor: '#22c55e',
-    downColor: '#ef4444',
-    borderDownColor: '#ef4444',
-    borderUpColor: '#22c55e',
-    wickDownColor: '#ef4444',
-    wickUpColor: '#22c55e'
-  });
-
-  // 🔥 Finnhub থেকে লাইভ ক্যান্ডেল ডেটা লোড
-  async function loadFinnhubData(symbol) {
-    try {
-      const url = `https://finnhub.io/api/v1/forex/candle?symbol=${symbol}&resolution=1&token=${FINNHUB_API_KEY}`;
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (!data || data.s !== "ok") {
-        console.log("Finnhub returned no data");
-        return;
-      }
-
-      const candles = data.t.map((time, i) => ({
-        time: time,
-        open: data.o[i],
-        high: data.h[i],
-        low: data.l[i],
-        close: data.c[i]
-      }));
-
-      candleSeries.setData(candles);
-    } catch (error) {
-      console.log("Finnhub Error:", error);
-    }
-  }
-
-  // 🔥 Pair dropdown পরিবর্তন হলে চার্ট আপডেট
-  const pairSelect = document.getElementById("pairSelect");
-  if (pairSelect) {
-    pairSelect.addEventListener("change", function () {
-      const selectedPair = this.value;
-      loadFinnhubData(selectedPair);
-    });
-  }
-
-  // 🔥 প্রতি 10 সেকেন্ডে রিফ্রেশ
-  setInterval(() => {
-    const selectedPair = pairSelect ? pairSelect.value : "OANDA:GBP_JPY";
-    loadFinnhubData(selectedPair);
-  }, 10000);
-
-  // 🔥 প্রথমবার লোড (ডিফল্ট GBP/JPY)
-  loadFinnhubData("OANDA:GBP_JPY");
-</script>
+    </div>
 
       </div>
     </div>
@@ -1305,42 +1229,63 @@
     const [type, provider, symbol] = pairValue.split(":");
     let url = null;
     let source = "Live";
+
+    // Live forex data
     if (type === "forex") {
-      url = `https://finnhub.io/api/v1/forex/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
+        url = `https://finnhub.io/api/v1/forex/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
     } else {
-      source = "Simulated";
+        source = "Simulated";
     }
 
+    // If no URL → simulated mode
     if (!url) {
-      const price = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.01 : 1 + Math.random();
-      return {
-        currentPrice: price,
-        change: (Math.random() - 0.5) * 0.01,
-        percentChange: (Math.random() - 0.5) * 0.5,
-        source
-      };
+        const price = prevPrice != null 
+            ? prevPrice + (Math.random() - 0.5) * 0.01 
+            : 1 + Math.random();
+
+        prevPrice = price;
+
+        return {
+            currentPrice: price,
+            change: (Math.random() - 0.5) * 0.01,
+            percentChange: (Math.random() - 0.5) * 0.3,
+            source
+        };
     }
 
     try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("HTTP error");
-      const data = await res.json();
-      const currentPrice = data.c || data.p || 1 + Math.random();
-      const change = data.d != null ? data.d : (Math.random() - 0.5) * 0.01;
-      const percentChange = data.dp != null ? data.dp : (Math.random() - 0.5) * 0.5;
-      return { currentPrice, change, percentChange, source };
-    } catch (e) {
-      const price = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.01 : 1 + Math.random();
-      return {
-        currentPrice: price,
-        change: (Math.random() - 0.5) * 0.01,
-        percentChange: (Math.random() - 0.5) * 0.5,
-        source: "Simulated (Fallback)"
-      };
-    }
-  }
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("HTTP error");
 
-  // ===== MAIN SIGNAL ENGINE =====
+        const data = await res.json();
+
+        // Normalize Finnhub response
+        const currentPrice = data.c || data.p || data.l || (prevPrice || 1 + Math.random());
+        const change = data.d != null ? data.d : (Math.random() - 0.5) * 0.01;
+        const percentChange = data.dp != null ? data.dp : (Math.random() - 0.5) * 0.3;
+
+        // Update prevPrice for next candle
+        prevPrice = currentPrice;
+
+        return { currentPrice, change, percentChange, source };
+    } catch (e) {
+        // Fallback simulated data
+        const price = prevPrice != null 
+            ? prevPrice + (Math.random() - 0.5) * 0.01 
+            : 1 + Math.random();
+
+        prevPrice = price;
+
+        return {
+            currentPrice: price,
+            change: (Math.random() - 0.5) * 0.01,
+            percentChange: (Math.random() - 0.5) * 0.3,
+            source: "Simulated (Fallback)"
+        };
+    }
+}
+
+    // ===== MAIN SIGNAL ENGINE =====
   async function generateSignal(triggerMode) {
     const pairValue = pairSelect.value;
     if (!pairValue) return;
