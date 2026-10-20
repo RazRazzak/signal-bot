@@ -66,6 +66,16 @@ timingButtons.forEach((btn) => {
     timingInfoEl.textContent = `Timing: ${selectedTimingSeconds}s`;
   });
 });
+
+const timingButtons = document.querySelectorAll(".timing-btn");
+
+timingButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    selectedTimingSeconds = Number(btn.dataset.sec);
+    timingInfoEl.textContent = `Timing: ${selectedTimingSeconds}s`;
+  });
+});
+
 // ============================
 // FULL PAIR LIST (FINAL MERGED)
 // ============================
