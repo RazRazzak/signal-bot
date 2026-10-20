@@ -210,6 +210,17 @@ const FULL_PAIRS = [
 // DROPDOWN + SEARCH + PREVIEW
 // ============================
 
+function populatePairDropdown(list) {
+  pairMasterSelect.innerHTML = "";
+
+  list.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.symbol;
+    opt.textContent = p.label;
+    pairMasterSelect.appendChild(opt);
+  });
+}
+
 populatePairDropdown(FULL_PAIRS);
 
 pairSearchInput.addEventListener("input", () => {
