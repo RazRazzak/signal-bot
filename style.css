@@ -1,0 +1,135 @@
+/* GLOBAL RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #1f2937 0%, #000 70%);
+  color: #e5e7eb;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+/* GLASS PANEL */
+.glass-panel {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  width: 360px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  cursor: move;
+}
+
+/* SEARCH */
+.search-box {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* DROPDOWN */
+.pair-dropdown {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+
+/* PREVIEW */
+.pair-preview {
+  padding: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* TIMING BUTTONS */
+.timing-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.timing-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  background: #374151;
+  color: white;
+  border: none;
+}
+
+/* BROKER */
+.broker-select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+/* AUTO BUTTON */
+.auto-btn {
+  width: 100%;
+  padding: 10px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* SIGNAL BUTTON */
+.signal-btn {
+  width: 100%;
+  padding: 10px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* SIGNAL PANEL */
+.signal-panel {
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.glow-buy { box-shadow: 0 0 15px #22c55e; }
+.glow-sell { box-shadow: 0 0 15px #ef4444; }
+.glow-neutral { box-shadow: 0 0 15px #9ca3af; }
+
+/* HISTORY */
+.history-list {
+  max-height: 150px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+/* POPUP */
+.popup-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #111827;
+  padding: 10px 15px;
+  border-radius: 6px;
+  display: none;
+  color: white;
+}
