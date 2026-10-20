@@ -8,6 +8,17 @@ let autoMode = false;
 let history = [];
 
 // DOM
+
+const clockEl = document.getElementById("clock");
+
+function updateClock() {
+  const now = new Date();
+  clockEl.textContent = now.toLocaleTimeString();
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
 const glassPanel = document.getElementById("glassPanel");
 const glassHeader = document.getElementById("glassHeader");
 
