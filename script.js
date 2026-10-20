@@ -50,12 +50,6 @@ const timingButtons = document.querySelectorAll(".timing-btn");
 // ============================
 
 // TIMING SELECT
-timingButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    selectedTimingSeconds = Number(btn.dataset.sec);
-    timingInfoEl.textContent = `Timing: ${selectedTimingSeconds}s`;
-  });
-});
 
 let selectedTimingSeconds = null;
 
