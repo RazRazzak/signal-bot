@@ -57,7 +57,7 @@ timingButtons.forEach((btn) => {
   });
 });
 
-let selectedTimingSeconds = 0;
+let selectedTimingSeconds = null;
 
 timingButtons.forEach(btn => {
   btn.addEventListener("click", () => {
