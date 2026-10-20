@@ -49,16 +49,6 @@ const timingButtons = document.querySelectorAll(".timing-btn");
 // DROPDOWN POPULATE
 // ============================
 
-function populatePairDropdown(list) {
-  pairMasterSelect.innerHTML = `<option value="">Select pair...</option>`;
-  list.forEach((p) => {
-    const opt = document.createElement("option");
-    opt.value = p.symbol;
-    opt.textContent = p.label;
-    pairMasterSelect.appendChild(opt);
-  });
-}
-
 // TIMING SELECT
 timingButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -66,6 +56,8 @@ timingButtons.forEach((btn) => {
     timingInfoEl.textContent = `Timing: ${selectedTimingSeconds}s`;
   });
 });
+
+let selectedTimingSeconds = 0;
 
 timingButtons.forEach(btn => {
   btn.addEventListener("click", () => {
