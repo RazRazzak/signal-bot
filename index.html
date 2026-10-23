@@ -1276,22 +1276,6 @@
   return "Unknown Pair";
 }
 
-
-    function addFavoritePair(pairValue, pairText) {
-      const existing = Array.from(pairFavoritesSelect.options).find(
-        opt => opt.value === pairValue
-      );
-      if (!existing) {
-        const opt = document.createElement("option");
-        opt.value = pairValue;
-        opt.textContent = pairText;
-        pairFavoritesSelect.insertBefore(opt, pairFavoritesSelect.firstChild);
-      }
-      while (pairFavoritesSelect.options.length > 10) {
-        pairFavoritesSelect.removeChild(pairFavoritesSelect.lastChild);
-      }
-    }
-
     async function generateSignal(triggerMode) {
       const pairValue = getSelectedPairValue();
       currentPairValue = pairValue;
@@ -1434,14 +1418,7 @@
       });
     });
 
-    pairFavoritesSelect.addEventListener("change", () => {
-      priceWindow = [];
-      prevPrice = null;
-      currentPairValue = pairFavoritesSelect.value;
-      updateMarketStatus(currentPairValue);
-    });
-
-    pairSearchInput.addEventListener("input", () => {
+        pairSearchInput.addEventListener("input", () => {
       const query = pairSearchInput.value.toLowerCase();
       pairSelectGroups.forEach(sel => {
         Array.from(sel.options).forEach(opt => {
