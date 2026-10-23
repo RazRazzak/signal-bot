@@ -1252,25 +1252,30 @@
       }
     }
 
-    function getSelectedPairValue() {
-      if (pairFavoritesSelect.value) return pairFavoritesSelect.value;
-      for (const sel of pairSelectGroups) {
-        if (sel.value) return sel.value;
-      }
-      return currentPairValue;
+   function getSelectedPairValue() {
+
+  for (const sel of pairSelectGroups) {
+    if (sel && sel.value) {
+      return sel.value;
     }
+  }
+
+  return currentPairValue;
+}
 
     function getSelectedPairText() {
-      if (pairFavoritesSelect.value) {
-        return pairFavoritesSelect.options[pairFavoritesSelect.selectedIndex].text;
-      }
-      for (const sel of pairSelectGroups) {
-        if (sel.value) {
-          return sel.options[sel.selectedIndex].text;
-        }
-      }
-      return "Unknown Pair";
+
+  for (const sel of pairSelectGroups) {
+    if (sel && sel.value) {
+      return sel.options[
+        sel.selectedIndex
+      ].text;
     }
+  }
+
+  return "Unknown Pair";
+}
+
 
     function addFavoritePair(pairValue, pairText) {
       const existing = Array.from(pairFavoritesSelect.options).find(
