@@ -1419,6 +1419,13 @@
         prevPrice = null;
         currentPairValue = sel.value;
         updateMarketStatus(currentPairValue);
+
+        const display = document.getElementById("selectedPairDisplay");
+
+    if (display) {
+      display.textContent =
+        sel.options[sel.selectedIndex].text;
+    }
       });
     });
 
