@@ -1425,11 +1425,7 @@
           opt.style.display = text.includes(query) ? "" : "none";
         });
       });
-      Array.from(pairFavoritesSelect.options).forEach(opt => {
-        const text = opt.textContent.toLowerCase();
-        opt.style.display = text.includes(query) ? "" : "none";
-      });
-    });
+     });
 
     brokerSelect.addEventListener("change", () => {});
 
