@@ -1431,15 +1431,7 @@
         prevPrice = null;
         currentPairValue = sel.value;
         updateMarketStatus(currentPairValue);
-
-        const selectedPairDisplay =
-    document.getElementById("selectedPairDisplay");
-
-  if (selectedPairDisplay) {
-    selectedPairDisplay.textContent =
-      pairFavoritesSelect.options[
-        pairFavoritesSelect.selectedIndex
-      ].text
+    
       });
     });
 
@@ -1448,16 +1440,7 @@
       prevPrice = null;
       currentPairValue = pairFavoritesSelect.value;
       updateMarketStatus(currentPairValue);
-
-       const selectedPairDisplay =
-    document.getElementById("selectedPairDisplay");
-
-  if (selectedPairDisplay) {
-    selectedPairDisplay.textContent =
-      pairFavoritesSelect.options[
-        pairFavoritesSelect.selectedIndex
-      ].text;
-  }
+       
     });
 
     pairSearchInput.addEventListener("input", () => {
