@@ -1418,16 +1418,46 @@ else {
       });
     });
 
-        pairSearchInput.addEventListener("input", () => {
-      const query = pairSearchInput.value.toLowerCase();
-      pairSelectGroups.forEach(sel => {
-        Array.from(sel.options).forEach(opt => {
-          const text = opt.textContent.toLowerCase();
-          opt.style.display = text.includes(query) ? "" : "none";
-        });
-      });
-     });
+       pairSearchInput.addEventListener("input", () => {
 
+  const query =
+    pairSearchInput.value.toLowerCase();
+
+  pairSelectGroups.forEach(sel => {
+
+    let firstMatch = -1;
+
+    Array.from(sel.options).forEach((opt, index) => {
+
+      const text =
+        opt.textContent.toLowerCase();
+
+      if (
+        firstMatch === -1 &&
+        text.includes(query)
+      ) {
+        firstMatch = index;
+      }
+
+    });
+
+    if (firstMatch >= 0) {
+      sel.selectedIndex = firstMatch;
+
+      const display =
+        document.getElementById(
+          "selectedPairDisplay"
+        );
+
+      if (display) {
+        display.textContent =
+          sel.options[firstMatch].text;
+      }
+    }
+
+  });
+
+});
     brokerSelect.addEventListener("change", () => {});
 
     function initPanelPosition() {
