@@ -1200,12 +1200,14 @@
       let source = "Live";
 
       if (type === "forex") {
-        url = `https://finnhub.io/api/v1/forex/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
-      } else if (type === "crypto") {
-        url = `https://finnhub.io/api/v1/crypto/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
-      } else {
-        source = "Simulated";
-      }
+  url = `https://finnhub.io/api/v1/forex/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
+}
+else if (type === "crypto") {
+  url = `https://finnhub.io/api/v1/crypto/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
+}
+else {
+  source = "Simulated";
+}
 
       if (!url) {
         const price = prevPrice != null
