@@ -86,6 +86,11 @@
 
     select,
     input[type="text"] {
+      
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      
       width: 100%;
       padding: 6px 8px;
       border-radius: 999px;
@@ -134,14 +139,20 @@
     }
 
     .pair-select {
-      width: 100%;
-      border: none;
-      background: transparent;
-      color: #e5e7eb;
-      font-size: 11px;
-      outline: none;
-      margin-bottom: 2px;
-    }
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 11px;
+  outline: none;
+  margin-bottom: 2px;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: none;
+}
 
     .pair-select option {
       padding: 2px 0;
