@@ -22,8 +22,9 @@
 
     .glass-panel {
       position: fixed;
-      resize: both;
-      overflow: auto;
+      max-height: 90vh;
+      overflow-y: auto;
+      resize: vertical;
       min-width: 280px;
       min-height: 450px;
       max-width: 95vw;
@@ -1503,8 +1504,21 @@ else {
         if (!isDragging) return;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
-        const newLeft = startLeft + dx;
-        const newTop = startTop + dy;
+        const newLeft = Math.max(
+  0,
+  Math.min(
+    window.innerWidth - glassPanel.offsetWidth,
+    startLeft + dx
+  )
+);
+
+const newTop = Math.max(
+  0,
+  Math.min(
+    window.innerHeight - glassPanel.offsetHeight,
+    startTop + dy
+  )
+);
         glassPanel.style.left = newLeft + "px";
         glassPanel.style.top = newTop + "px";
         glassPanel.style.right = "auto";
