@@ -122,7 +122,7 @@
     }
 
     .pair-select-wrapper {
-      max-height: 90px;
+      max-height: 140px;
       overflow-y: auto;
       border-radius: 10px;
       background: rgba(15, 23, 42, 0.95);
@@ -145,29 +145,13 @@
   color: #e5e7eb;
   font-size: 11px;
   outline: none;
-  margin-bottom: 0;
+  margin-bottom: 2px;
 
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 
   background-image: none;
-}
-    #pairList{
-  max-height:200px;
-  overflow-y:auto;
-}
-
-.pair-item{
-  padding:6px 8px;
-  cursor:pointer;
-  border-bottom:1px solid #374151;
-  color:#e5e7eb;
-  font-size:11px;
-}
-
-.pair-item:hover{
-  background:#1f2937;
 }
 
     .pair-select option {
@@ -367,11 +351,79 @@
           </div>
 
           <div class="pair-select-wrapper">
-        </div>
-              
-             <div id="pairList"></div>
+            
+              <select id="pairMajorSelect" class="pair-select">
+              <option value="forex:OANDA:EUR_USD">EUR/USD (Live)</option>
+              <option value="forex:OANDA:GBP_USD">GBP/USD (Live)</option>
+              <option value="forex:OANDA:USD_JPY">USD/JPY (Live)</option>
+              <option value="forex:OANDA:USD_CHF">USD/CHF (Live)</option>
+              <option value="forex:OANDA:AUD_USD">AUD/USD (Live)</option>
+              <option value="forex:OANDA:USD_CAD">USD/CAD (Live)</option>
+              <option value="forex:OANDA:NZD_USD">NZD/USD (Live)</option>
+            </select>
+
+              <select id="pairMinorSelect" class="pair-select">
+              <option value="forex:OANDA:EUR_GBP">EUR/GBP (Live)</option>
+              <option value="forex:OANDA:EUR_JPY">EUR/JPY (Live)</option>
+              <option value="forex:OANDA:GBP_JPY">GBP/JPY (Live)</option>
+              <option value="forex:OANDA:AUD_JPY">AUD/JPY (Live)</option>
+              <option value="forex:OANDA:NZD_JPY">NZD/JPY (Live)</option>
+              <option value="forex:OANDA:CAD_JPY">CAD/JPY (Live)</option>
+            </select>
+
+              <select id="pairMetalsSelect" class="pair-select">
+              <option value="forex:OANDA:XAU_USD">XAU/USD (Gold)</option>
+              <option value="forex:OANDA:XAG_USD">XAG/USD (Silver)</option>
+              <option value="forex:OANDA:XPT_USD">XPT/USD (Platinum)</option>
+              <option value="forex:OANDA:XPD_USD">XPD/USD (Palladium)</option>
+            </select>
+
+              <select id="pairCryptoSelect" class="pair-select">
+              <option value="crypto:BINANCE:BTCUSDT">BTC/USDT</option>
+              <option value="crypto:BINANCE:ETHUSDT">ETH/USDT</option>
+              <option value="crypto:BINANCE:BNBUSDT">BNB/USDT</option>
+              <option value="crypto:BINANCE:XRPUSDT">XRP/USDT</option>
+              <option value="crypto:BINANCE:ADAUSDT">ADA/USDT</option>
+              <option value="crypto:BINANCE:DOGEUSDT">DOGE/USDT</option>
+            </select>
+
+              <select id="pairIndicesSelect" class="pair-select">
+              <option value="forex:OANDA:SPX500_USD">US500 (S&P 500)</option>
+              <option value="forex:OANDA:NAS100_USD">US100 (Nasdaq)</option>
+              <option value="forex:OANDA:DJI_USD">US30 (Dow Jones)</option>
+              <option value="forex:OANDA:DE30_EUR">DE30 (DAX)</option>
+              <option value="forex:OANDA:UK100_GBP">UK100 (FTSE)</option>
+            </select>
+
+              <select id="pairStocksSelect" class="pair-select">
+              <option value="forex:OANDA:US_AAPL">AAPL (Apple)</option>
+              <option value="forex:OANDA:US_MSFT">MSFT (Microsoft)</option>
+              <option value="forex:OANDA:US_GOOG">GOOG (Google)</option>
+              <option value="forex:OANDA:US_AMZN">AMZN (Amazon)</option>
+              <option value="forex:OANDA:US_TSLA">TSLA (Tesla)</option>
+              <option value="forex:OANDA:US_META">META (Meta)</option>
+            </select>
+
+              <select id="pairOtcQuotexSelect" class="pair-select">
+              <option value="otc:QUOTEX:EURUSD">EUR/USD (OTC Quotex)</option>
+              <option value="otc:QUOTEX:GBPUSD">GBP/USD (OTC Quotex)</option>
+              <option value="otc:QUOTEX:USDJPY">USD/JPY (OTC Quotex)</option>
+              <option value="otc:QUOTEX:USDCHF">USD/CHF (OTC Quotex)</option>
+              <option value="otc:QUOTEX:AUDUSD">AUD/USD (OTC Quotex)</option>
+              <option value="otc:QUOTEX:USDCAD">USD/CAD (OTC Quotex)</option>
+            </select>
+
+              <select id="pairOtcBinolaSelect" class="pair-select">
+              <option value="otc:BINOLA:EURUSD">EUR/USD (OTC Binola)</option>
+              <option value="otc:BINOLA:GBPUSD">GBP/USD (OTC Binola)</option>
+              <option value="otc:BINOLA:USDJPY">USD/JPY (OTC Binola)</option>
+              <option value="otc:BINOLA:USDCHF">USD/CHF (OTC Binola)</option>
+              <option value="otc:BINOLA:AUDUSD">AUD/USD (OTC Binola)</option>
+              <option value="otc:BINOLA:USDCAD">USD/CAD (OTC Binola)</option>
+            </select>
             
           </div>
+        </div>
         <div id="selectedPairDisplay"
              style="
              margin-top:6px;
@@ -466,66 +518,7 @@
     const popupAlertEl = document.getElementById("popupAlert");
 
     const pairSearchInput = document.getElementById("pairSearchInput");
-    const PAIRS = [
-
-  { symbol: "EURUSD", label: "EUR/USD (Major)" },
-  { symbol: "GBPUSD", label: "GBP/USD (Major)" },
-  { symbol: "USDJPY", label: "USD/JPY (Major)" },
-  { symbol: "USDCHF", label: "USD/CHF (Major)" },
-  { symbol: "AUDUSD", label: "AUD/USD (Major)" },
-
-  { symbol: "EURGBP", label: "EUR/GBP (Minor)" },
-  { symbol: "EURJPY", label: "EUR/JPY (Minor)" },
-
-  { symbol: "XAUUSD", label: "XAU/USD (Gold)" },
-
-  { symbol: "BTCUSDT", label: "BTC/USDT" },
-
-  { symbol: "USDBDT_OTC", label: "USD/BDT (OTC)" }
-
-];
-   
-    function renderPairList(filteredPairs = PAIRS) {
-
-  const pairList =
-    document.getElementById("pairList");
-
-  if (!pairList) return;
-
-  pairList.innerHTML = "";
-
-  filteredPairs.forEach(pair => {
-
-    const item =
-      document.createElement("div");
-
-    item.className = "pair-item";
-
-    item.textContent =
-      pair.label;
-
-    item.addEventListener("click", () => {
-
-      currentPairValue =
-        pair.symbol;
-
-      const display =
-        document.getElementById(
-          "selectedPairDisplay"
-        );
-
-      if (display) {
-        display.textContent =
-          pair.label;
-      }
-
-    });
-
-    pairList.appendChild(item);
-
-  });
-
-}
+    
     const pairSelectGroups = [
       document.getElementById("pairMajorSelect"),
       document.getElementById("pairMinorSelect"),
@@ -1432,7 +1425,63 @@ else {
     createSignalBtn.addEventListener("click", () => {
       generateSignal("manual");
     });
-  
+
+    pairSelectGroups.forEach(sel => {
+      sel.addEventListener("change", () => {
+        priceWindow = [];
+        prevPrice = null;
+        currentPairValue = sel.value;
+        updateMarketStatus(currentPairValue);
+
+        const display = document.getElementById("selectedPairDisplay");
+
+    if (display) {
+      display.textContent =
+        sel.options[sel.selectedIndex].text;
+    }
+      });
+    });
+
+       pairSearchInput.addEventListener("input", () => {
+
+  const query =
+    pairSearchInput.value.toLowerCase();
+
+  pairSelectGroups.forEach(sel => {
+
+    let firstMatch = -1;
+
+    Array.from(sel.options).forEach((opt, index) => {
+
+      const text =
+        opt.textContent.toLowerCase();
+
+      if (
+        firstMatch === -1 &&
+        text.includes(query)
+      ) {
+        firstMatch = index;
+      }
+
+    });
+
+    if (firstMatch >= 0) {
+      sel.selectedIndex = firstMatch;
+
+      const display =
+        document.getElementById(
+          "selectedPairDisplay"
+        );
+
+      if (display) {
+        display.textContent =
+          sel.options[firstMatch].text;
+      }
+    }
+
+  });
+
+});
     brokerSelect.addEventListener("change", () => {});
 
     function initPanelPosition() {
@@ -1544,22 +1593,7 @@ const newTop = Math.max(
       glassHeader.addEventListener("mousedown", onMouseDown);
       glassHeader.addEventListener("touchstart", onTouchStart, { passive: true });
     }
-pairSearchInput.addEventListener("input", () => {
 
-  const query =
-    pairSearchInput.value.toLowerCase();
-
-  const filtered =
-    PAIRS.filter(pair =>
-      pair.label
-        .toLowerCase()
-        .includes(query)
-    );
-
-  renderPairList(filtered);
-
-});
-    renderPairList();
     initPanelPosition();
     enablePanelDrag();
     updateMarketStatus(getSelectedPairValue());
