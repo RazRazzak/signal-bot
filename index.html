@@ -989,9 +989,12 @@
 
     // Fixed Search Filter Logic
     pairSearchInput.addEventListener("input", () => {
-      const query = pairSearchInput.value.toLowerCase();
-      const filteredPairs = allPairs.filter(p => p.label.toLowerCase().includes(query));
-      renderPairList(filteredPairs);
+  const query = pairSearchInput.value.toLowerCase().trim();
+  const filteredPairs = allPairs.filter(p => 
+    p.label.toLowerCase().includes(query) || p.symbol.toLowerCase().includes(query)
+  );
+  renderPairList(filteredPairs);
+});
     });
 
     brokerSelect.addEventListener("change", () => {});
