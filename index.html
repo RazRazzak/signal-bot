@@ -28,13 +28,11 @@
       min-width: 280px;
       min-height: 450px;
       max-width: 95vw;
-      max-height: 95vh;
       right: 10px;
       bottom: 10px;
       width: 330px;
       height: 720px;
       overflow: hidden;
-      max-width: 95vw;
       background: rgba(15, 23, 42, 0.85);
       border-radius: 16px;
       border: 1px solid rgba(148, 163, 184, 0.4);
@@ -86,11 +84,9 @@
 
     select,
     input[type="text"] {
-      
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      
       width: 100%;
       padding: 6px 8px;
       border-radius: 999px;
@@ -121,6 +117,7 @@
       outline: none;
     }
 
+    /* Direct List View Style under Search Box */
     .pair-select-wrapper {
       max-height: 140px;
       overflow-y: auto;
@@ -128,35 +125,21 @@
       background: rgba(15, 23, 42, 0.95);
       border: 1px solid #374151;
       padding: 4px;
+      display: flex;
+      flex-direction: column;
     }
 
-    .pair-category-label {
-      font-size: 10px;
-      color: #9ca3af;
-      margin: 4px 2px 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .pair-select {
-  width: 100%;
-  border: none;
-  background: transparent;
-  color: #e5e7eb;
-  font-size: 11px;
-  outline: none;
-  margin-bottom: 2px;
-
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background-image: none;
-}
-
-    .pair-select option {
-      padding: 2px 0;
+    .pair-item {
+      padding: 6px 8px;
+      color: #e5e7eb;
       font-size: 11px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .pair-item:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .timing-buttons {
@@ -347,83 +330,13 @@
         <label>Pair Select</label>
         <div class="pair-container">
           <div class="pair-search">
-            <input id="pairSearchInput" type="text" placeholder="Search pair (e.g. EUR, BTC)..." />
+            <input id="pairSearchInput" type="text" placeholder="Search pair (e.g. EUR, BTC)..." autocomplete="off" />
           </div>
 
-          <div class="pair-select-wrapper">
-            
-              <select id="pairMajorSelect" class="pair-select">
-              <option value="forex:OANDA:EUR_USD">EUR/USD (Live)</option>
-              <option value="forex:OANDA:GBP_USD">GBP/USD (Live)</option>
-              <option value="forex:OANDA:USD_JPY">USD/JPY (Live)</option>
-              <option value="forex:OANDA:USD_CHF">USD/CHF (Live)</option>
-              <option value="forex:OANDA:AUD_USD">AUD/USD (Live)</option>
-              <option value="forex:OANDA:USD_CAD">USD/CAD (Live)</option>
-              <option value="forex:OANDA:NZD_USD">NZD/USD (Live)</option>
-            </select>
-
-              <select id="pairMinorSelect" class="pair-select">
-              <option value="forex:OANDA:EUR_GBP">EUR/GBP (Live)</option>
-              <option value="forex:OANDA:EUR_JPY">EUR/JPY (Live)</option>
-              <option value="forex:OANDA:GBP_JPY">GBP/JPY (Live)</option>
-              <option value="forex:OANDA:AUD_JPY">AUD/JPY (Live)</option>
-              <option value="forex:OANDA:NZD_JPY">NZD/JPY (Live)</option>
-              <option value="forex:OANDA:CAD_JPY">CAD/JPY (Live)</option>
-            </select>
-
-              <select id="pairMetalsSelect" class="pair-select">
-              <option value="forex:OANDA:XAU_USD">XAU/USD (Gold)</option>
-              <option value="forex:OANDA:XAG_USD">XAG/USD (Silver)</option>
-              <option value="forex:OANDA:XPT_USD">XPT/USD (Platinum)</option>
-              <option value="forex:OANDA:XPD_USD">XPD/USD (Palladium)</option>
-            </select>
-
-              <select id="pairCryptoSelect" class="pair-select">
-              <option value="crypto:BINANCE:BTCUSDT">BTC/USDT</option>
-              <option value="crypto:BINANCE:ETHUSDT">ETH/USDT</option>
-              <option value="crypto:BINANCE:BNBUSDT">BNB/USDT</option>
-              <option value="crypto:BINANCE:XRPUSDT">XRP/USDT</option>
-              <option value="crypto:BINANCE:ADAUSDT">ADA/USDT</option>
-              <option value="crypto:BINANCE:DOGEUSDT">DOGE/USDT</option>
-            </select>
-
-              <select id="pairIndicesSelect" class="pair-select">
-              <option value="forex:OANDA:SPX500_USD">US500 (S&P 500)</option>
-              <option value="forex:OANDA:NAS100_USD">US100 (Nasdaq)</option>
-              <option value="forex:OANDA:DJI_USD">US30 (Dow Jones)</option>
-              <option value="forex:OANDA:DE30_EUR">DE30 (DAX)</option>
-              <option value="forex:OANDA:UK100_GBP">UK100 (FTSE)</option>
-            </select>
-
-              <select id="pairStocksSelect" class="pair-select">
-              <option value="forex:OANDA:US_AAPL">AAPL (Apple)</option>
-              <option value="forex:OANDA:US_MSFT">MSFT (Microsoft)</option>
-              <option value="forex:OANDA:US_GOOG">GOOG (Google)</option>
-              <option value="forex:OANDA:US_AMZN">AMZN (Amazon)</option>
-              <option value="forex:OANDA:US_TSLA">TSLA (Tesla)</option>
-              <option value="forex:OANDA:US_META">META (Meta)</option>
-            </select>
-
-              <select id="pairOtcQuotexSelect" class="pair-select">
-              <option value="otc:QUOTEX:EURUSD">EUR/USD (OTC Quotex)</option>
-              <option value="otc:QUOTEX:GBPUSD">GBP/USD (OTC Quotex)</option>
-              <option value="otc:QUOTEX:USDJPY">USD/JPY (OTC Quotex)</option>
-              <option value="otc:QUOTEX:USDCHF">USD/CHF (OTC Quotex)</option>
-              <option value="otc:QUOTEX:AUDUSD">AUD/USD (OTC Quotex)</option>
-              <option value="otc:QUOTEX:USDCAD">USD/CAD (OTC Quotex)</option>
-            </select>
-
-              <select id="pairOtcBinolaSelect" class="pair-select">
-              <option value="otc:BINOLA:EURUSD">EUR/USD (OTC Binola)</option>
-              <option value="otc:BINOLA:GBPUSD">GBP/USD (OTC Binola)</option>
-              <option value="otc:BINOLA:USDJPY">USD/JPY (OTC Binola)</option>
-              <option value="otc:BINOLA:USDCHF">USD/CHF (OTC Binola)</option>
-              <option value="otc:BINOLA:AUDUSD">AUD/USD (OTC Binola)</option>
-              <option value="otc:BINOLA:USDCAD">USD/CAD (OTC Binola)</option>
-            </select>
-            
-          </div>
+          <!-- New Pairs list rendered dynamically -->
+          <div id="pairListWrapper" class="pair-select-wrapper"></div>
         </div>
+
         <div id="selectedPairDisplay"
              style="
              margin-top:6px;
@@ -436,7 +349,7 @@
              overflow: hidden;
              text-overflow: ellipsis;
              ">
-          EUR/USD
+          EUR/USD (Major)
        </div>
       </div>
     </div>
@@ -499,6 +412,107 @@
   <script>
     const FINNHUB_API_KEY = "db9n5p9r01qkqqs3cflgdb9n5p9r01qkqqs3cfm0";
 
+    const allPairs = [
+      { symbol: "EURUSD", label: "EUR/USD (Major)" },
+      { symbol: "GBPUSD", label: "GBP/USD (Major)" },
+      { symbol: "USDJPY", label: "USD/JPY (Major)" },
+      { symbol: "USDCHF", label: "USD/CHF (Major)" },
+      { symbol: "AUDUSD", label: "AUD/USD (Major)" },
+      { symbol: "NZDUSD", label: "NZD/USD (Major)" },
+      { symbol: "USDCAD", label: "USD/CAD (Major)" },
+      { symbol: "EURGBP", label: "EUR/GBP (Minor)" },
+      { symbol: "EURJPY", label: "EUR/JPY (Minor)" },
+      { symbol: "GBPJPY", label: "GBP/JPY (Minor)" },
+      { symbol: "AUDJPY", label: "AUD/JPY (Minor)" },
+      { symbol: "CADJPY", label: "CAD/JPY (Minor)" },
+      { symbol: "CHFJPY", label: "CHF/JPY (Minor)" },
+      { symbol: "AUDNZD", label: "AUD/NZD (Minor)" },
+      { symbol: "AUDCAD", label: "AUD/CAD (Minor)" },
+      { symbol: "NZDCAD", label: "NZD/CAD (Minor)" },
+      { symbol: "USDINR", label: "USD/INR (Exotic)" },
+      { symbol: "EURINR", label: "EUR/INR (Exotic)" },
+      { symbol: "GBPINR", label: "GBP/INR (Exotic)" },
+      { symbol: "USDTRY", label: "USD/TRY (Exotic)" },
+      { symbol: "EURTRY", label: "EUR/TRY (Exotic)" },
+      { symbol: "USDZAR", label: "USD/ZAR (Exotic)" },
+      { symbol: "USDMXN", label: "USD/MXN (Exotic)" },
+      { symbol: "USDSGD", label: "USD/SGD (Exotic)" },
+      { symbol: "USDHKD", label: "USD/HKD (Exotic)" },
+      { symbol: "USDCNH", label: "USD/CNH (Exotic)" },
+      { symbol: "XAUUSD", label: "XAU/USD (Gold)" },
+      { symbol: "XAGUSD", label: "XAG/USD (Silver)" },
+      { symbol: "XPTUSD", label: "XPT/USD (Platinum)" },
+      { symbol: "XPDUSD", label: "XPD/USD (Palladium)" },
+      { symbol: "US30", label: "US30 (Dow Jones)" },
+      { symbol: "US500", label: "US500 (S&P 500)" },
+      { symbol: "NAS100", label: "NAS100 (Nasdaq)" },
+      { symbol: "JP225", label: "JP225 (Nikkei)" },
+      { symbol: "DE40", label: "DE40 (DAX)" },
+      { symbol: "FR40", label: "FR40 (CAC)" },
+      { symbol: "UK100", label: "UK100 (FTSE)" },
+      { symbol: "USCRUDE_OTC", label: "USCRUDE (OTC)" },
+      { symbol: "UKBRENT_OTC", label: "UKBRENT (OTC)" },
+      { symbol: "SILVER_OTC", label: "SILVER (OTC)" },
+      { symbol: "GOLD_OTC", label: "GOLD (OTC)" },
+      { symbol: "BTCUSD", label: "BTC/USD (Bitcoin)" },
+      { symbol: "ETHUSD", label: "ETH/USD (Ethereum)" },
+      { symbol: "BNBUSD", label: "BNB/USD (Binance Coin)" },
+      { symbol: "SOLUSD", label: "SOL/USD (Solana)" },
+      { symbol: "XRPUSD", label: "XRP/USD (Ripple)" },
+      { symbol: "ADAUSD", label: "ADA/USD (Cardano)" },
+      { symbol: "DOGEUSD", label: "DOGE/USD (Dogecoin)" },
+      { symbol: "LTCUSD", label: "LTC/USD (Litecoin)" },
+      { symbol: "COSMOS_OTC", label: "COSMOS (OTC)" },
+      { symbol: "DASH_OTC", label: "DASH (OTC)" },
+      { symbol: "SOLINA_OTC", label: "SOLINA (OTC)" },
+      { symbol: "BINANCECOIN_OTC", label: "BINANCE COIN (OTC)" },
+      { symbol: "TRUMP_OTC", label: "TRUMP (OTC)" },
+      { symbol: "BITCOIN_OTC", label: "BITCOIN (OTC)" },
+      { symbol: "ETHEREUM_OTC", label: "ETHEREUM (OTC)" },
+      { symbol: "BTCUSDT", label: "BTC/USDT" },
+      { symbol: "ETHUSDT", label: "ETH/USDT" },
+      { symbol: "BNBUSDT", label: "BNB/USDT" },
+      { symbol: "SOLUSDT", label: "SOL/USDT" },
+      { symbol: "XRPUSDT", label: "XRP/USDT" },
+      { symbol: "ADAUSDT", label: "ADA/USDT" },
+      { symbol: "DOGEUSDT", label: "DOGE/USDT" },
+      { symbol: "LTCUSDT", label: "LTC/USDT" },
+      { symbol: "AAPL", label: "AAPL (Apple)" },
+      { symbol: "MSFT", label: "MSFT (Microsoft)" },
+      { symbol: "GOOGL", label: "GOOGL (Alphabet)" },
+      { symbol: "AMZN", label: "AMZN (Amazon)" },
+      { symbol: "META", label: "META (Meta)" },
+      { symbol: "TSLA", label: "TSLA (Tesla)" },
+      { symbol: "NVDA", label: "NVDA (NVIDIA)" },
+      { symbol: "EURUSD_OTC", label: "EUR/USD (OTC)" },
+      { symbol: "GBPUSD_OTC", label: "GBP/USD (OTC)" },
+      { symbol: "USDJPY_OTC", label: "USD/JPY (OTC)" },
+      { symbol: "AUDUSD_OTC", label: "AUD/USD (OTC)" },
+      { symbol: "NZDUSD_OTC", label: "NZD/USD (OTC)" },
+      { symbol: "USDCAD_OTC", label: "USD/CAD (OTC)" },
+      { symbol: "XAUUSD_OTC", label: "XAU/USD (Gold OTC)" },
+      { symbol: "BTCUSD_OTC", label: "BTC/USD (OTC)" },
+      { symbol: "NZDJPY_OTC", label: "NZD/JPY (OTC)" },
+      { symbol: "USDDZD_OTC", label: "USD/DZD (OTC)" },
+      { symbol: "USDBDT_OTC", label: "USD/BDT (OTC)" },
+      { symbol: "NZDCHF_OTC", label: "NZD/CHF (OTC)" },
+      { symbol: "USDCOP_OTC", label: "USD/COP (OTC)" },
+      { symbol: "USDPHP_OTC", label: "USD/PHP (OTC)" },
+      { symbol: "USDINR_OTC", label: "USD/INR (OTC)" },
+      { symbol: "USDBRL_OTC", label: "USD/BRL (OTC)" },
+      { symbol: "NZDCAD_OTC", label: "NZD/CAD (OTC)" },
+      { symbol: "USDZAR_OTC", label: "USD/ZAR (OTC)" },
+      { symbol: "USDARS_OTC", label: "USD/ARS (OTC)" },
+      { symbol: "USDEGP_OTC", label: "USD/EGP (OTC)" },
+      { symbol: "AUDNZD_OTC", label: "AUD/NZD (OTC)" },
+      { symbol: "USDNGN_OTC", label: "USD/NGN (OTC)" },
+      { symbol: "USDIDR_OTC", label: "USD/IDR (OTC)" },
+      { symbol: "USDMXN_OTC", label: "USD/MXN (OTC)" },
+      { symbol: "USDPKR_OTC", label: "USD/PKR (OTC)" },
+      { symbol: "GBPNZD_OTC", label: "GBP/NZD (OTC)" },
+      { symbol: "EURNZD_OTC", label: "EUR/NZD (OTC)" }
+    ];
+
     const clockEl = document.getElementById("clock");
     const brokerSelect = document.getElementById("brokerSelect");
     const marketStatusEl = document.getElementById("marketStatus");
@@ -518,17 +532,8 @@
     const popupAlertEl = document.getElementById("popupAlert");
 
     const pairSearchInput = document.getElementById("pairSearchInput");
-    
-    const pairSelectGroups = [
-      document.getElementById("pairMajorSelect"),
-      document.getElementById("pairMinorSelect"),
-      document.getElementById("pairMetalsSelect"),
-      document.getElementById("pairCryptoSelect"),
-      document.getElementById("pairIndicesSelect"),
-      document.getElementById("pairStocksSelect"),
-      document.getElementById("pairOtcQuotexSelect"),
-      document.getElementById("pairOtcBinolaSelect")
-      ];
+    const pairListWrapper = document.getElementById("pairListWrapper");
+    const selectedPairDisplay = document.getElementById("selectedPairDisplay");
 
     const glassPanel = document.getElementById("glassPanel");
     const glassHeader = document.getElementById("glassHeader");
@@ -537,7 +542,32 @@
     let priceWindow = [];
     let selectedTimingSeconds = 0;
     let autoTimer = null;
-    let currentPairValue = pairSelectGroups[0].value;
+    let currentPairValue = allPairs[0].symbol;
+    let currentPairText = allPairs[0].label;
+
+    function renderPairList(pairs) {
+      pairListWrapper.innerHTML = "";
+      pairs.forEach(pair => {
+        const item = document.createElement("div");
+        item.className = "pair-item";
+        item.textContent = pair.label;
+        item.dataset.symbol = pair.symbol;
+        
+        item.addEventListener("click", () => {
+          currentPairValue = pair.symbol;
+          currentPairText = pair.label;
+          selectedPairDisplay.textContent = currentPairText;
+          pairSearchInput.value = currentPairText;
+          priceWindow = [];
+          prevPrice = null;
+          updateMarketStatus(currentPairValue);
+        });
+
+        pairListWrapper.appendChild(item);
+      });
+    }
+
+    renderPairList(allPairs);
 
     function updateClock() {
       const now = new Date();
@@ -560,18 +590,9 @@
       let session = "Off Session";
       let booster = 0;
 
-      if (utcHour >= 7 && utcHour < 13) {
-        session = "London Session";
-        booster = 3;
-      }
-      if (utcHour >= 13 && utcHour < 16) {
-        session = "Overlap Session";
-        booster = 5;
-      }
-      if (utcHour >= 16 && utcHour < 22) {
-        session = "New York Session";
-        booster = 4;
-      }
+      if (utcHour >= 7 && utcHour < 13) { session = "London Session"; booster = 3; }
+      if (utcHour >= 13 && utcHour < 16) { session = "Overlap Session"; booster = 5; }
+      if (utcHour >= 16 && utcHour < 22) { session = "New York Session"; booster = 4; }
 
       return { session, booster };
     }
@@ -608,110 +629,51 @@
 
     function isBullishEngulfing(last, prev) {
       if (!last || !prev) return false;
-      return (
-        isBearish(prev) &&
-        isBullish(last) &&
-        last.open <= prev.close &&
-        last.close >= prev.open
-      );
+      return (isBearish(prev) && isBullish(last) && last.open <= prev.close && last.close >= prev.open);
     }
-
     function isBearishEngulfing(last, prev) {
       if (!last || !prev) return false;
-      return (
-        isBullish(prev) &&
-        isBearish(last) &&
-        last.open >= prev.close &&
-        last.close <= prev.open
-      );
+      return (isBullish(prev) && isBearish(last) && last.open >= prev.close && last.close <= prev.open);
     }
-
-    function isBullishHarami(prev, last) {
-      if (!last || !prev) return false;
-      return (
-        isBearish(prev) &&
-        isBullish(last) &&
-        last.open > prev.close &&
-        last.close < prev.open
-      );
-    }
-
-    function isBearishHarami(prev, last) {
-      if (!last || !prev) return false;
-      return (
-        isBullish(prev) &&
-        isBearish(last) &&
-        last.open < prev.close &&
-        last.close > prev.open
-      );
-    }
-
     function isPiercingLine(prev, last) {
       if (!last || !prev) return false;
       const midPrev = (prev.open + prev.close) / 2;
-      return (
-        isBearish(prev) &&
-        isBullish(last) &&
-        last.open < prev.low &&
-        last.close > midPrev
-      );
+      return (isBearish(prev) && isBullish(last) && last.open < prev.low && last.close > midPrev);
     }
-
     function isMorningStar(candles) {
       if (!candles || candles.length < 3) return false;
-      const a = candles[candles.length - 3];
-      const b = candles[candles.length - 2];
-      const c = candles[candles.length - 1];
-      return (
-        isBearish(a) &&
-        Math.abs(b.close - b.open) < Math.abs(a.open - a.close) * 0.3 &&
-        isBullish(c) &&
-        c.close > ((a.open + a.close) / 2)
-      );
+      const a = candles[candles.length - 3], b = candles[candles.length - 2], c = candles[candles.length - 1];
+      return (isBearish(a) && Math.abs(b.close - b.open) < Math.abs(a.open - a.close) * 0.3 && isBullish(c) && c.close > ((a.open + a.close) / 2));
     }
-
     function isEveningStar(candles) {
       if (!candles || candles.length < 3) return false;
-      const a = candles[candles.length - 3];
-      const b = candles[candles.length - 2];
-      const c = candles[candles.length - 1];
-      return (
-        isBullish(a) &&
-        Math.abs(b.close - b.open) < Math.abs(c.open - c.close) * 0.3 &&
-        isBearish(c) &&
-        c.close < ((a.open + a.close) / 2)
-      );
+      const a = candles[candles.length - 3], b = candles[candles.length - 2], c = candles[candles.length - 1];
+      return (isBullish(a) && Math.abs(b.close - b.open) < Math.abs(c.open - c.close) * 0.3 && isBearish(c) && c.close < ((a.open + a.close) / 2));
     }
-
+    function isBullishHarami(prev, last) {
+      if (!last || !prev) return false;
+      return (isBearish(prev) && isBullish(last) && last.open > prev.close && last.close < prev.open);
+    }
+    function isBearishHarami(prev, last) {
+      if (!last || !prev) return false;
+      return (isBullish(prev) && isBearish(last) && last.open < prev.close && last.close > prev.open);
+    }
     function isTweezerBottom(candles) {
       if (!candles || candles.length < 2) return false;
-      const a = candles[candles.length - 2];
-      const b = candles[candles.length - 1];
-      return (
-        isBearish(a) &&
-        isBullish(b) &&
-        Math.abs(a.low - b.low) <= (a.high - a.low) * 0.1
-      );
+      const a = candles[candles.length - 2], b = candles[candles.length - 1];
+      return (isBearish(a) && isBullish(b) && Math.abs(a.low - b.low) <= (a.high - a.low) * 0.1);
     }
-
     function isTweezerTop(candles) {
       if (!candles || candles.length < 2) return false;
-      const a = candles[candles.length - 2];
-      const b = candles[candles.length - 1];
-      return (
-        isBullish(a) &&
-        isBearish(b) &&
-        Math.abs(a.high - b.high) <= (a.high - a.low) * 0.1
-      );
+      const a = candles[candles.length - 2], b = candles[candles.length - 1];
+      return (isBullish(a) && isBearish(b) && Math.abs(a.high - b.high) <= (a.high - a.low) * 0.1);
     }
-
     function hasStrongWickDown(c) {
       if (!c) return false;
       const body = Math.abs(c.close - c.open);
       const lowerWick = c.open < c.close ? c.open - c.low : c.close - c.low;
       return lowerWick > body * 1.5;
     }
-
     function hasStrongWickUp(c) {
       if (!c) return false;
       const body = Math.abs(c.close - c.open);
@@ -719,14 +681,8 @@
       return upperWick > body * 1.5;
     }
 
-    function getRecentHigh(candles, lookback = 10) {
-      const slice = candles.slice(-lookback);
-      return Math.max(...slice.map(c => c.high));
-    }
-    function getRecentLow(candles, lookback = 10) {
-      const slice = candles.slice(-lookback);
-      return Math.min(...slice.map(c => c.low));
-    }
+    function getRecentHigh(candles, lookback = 10) { return Math.max(...candles.slice(-lookback).map(c => c.high)); }
+    function getRecentLow(candles, lookback = 10) { return Math.min(...candles.slice(-lookback).map(c => c.low)); }
 
     function isLiquiditySweepDown(candles) {
       if (!candles || candles.length < 3) return false;
@@ -734,7 +690,6 @@
       const prevLow = getRecentLow(candles.slice(0, -1), 10);
       return last.low < prevLow && last.close > prevLow;
     }
-
     function isLiquiditySweepUp(candles) {
       if (!candles || candles.length < 3) return false;
       const last = candles[candles.length - 1];
@@ -742,136 +697,49 @@
       return last.high > prevHigh && last.close < prevHigh;
     }
 
-    function isLiquidityGrabDown(candles) { return isLiquiditySweepDown(candles); }
-    function isLiquidityGrabUp(candles) { return isLiquiditySweepUp(candles); }
-
     function detectBullishOB(candles) {
       if (!candles || candles.length < 4) return false;
-      const a = candles[candles.length - 4];
-      const b = candles[candles.length - 3];
-      const c = candles[candles.length - 2];
-      const d = candles[candles.length - 1];
-
-      const strongBear = isBearish(a) && (a.open - a.close) > Math.abs(b.close - b.open);
-      const strongBullMove = isBullish(c) && isBullish(d) && d.close > a.open;
-
-      return strongBear && strongBullMove;
+      const a = candles[candles.length - 4], b = candles[candles.length - 3], c = candles[candles.length - 2], d = candles[candles.length - 1];
+      return isBearish(a) && (a.open - a.close) > Math.abs(b.close - b.open) && isBullish(c) && isBullish(d) && d.close > a.open;
     }
-
     function detectBearishOB(candles) {
       if (!candles || candles.length < 4) return false;
-      const a = candles[candles.length - 4];
-      const b = candles[candles.length - 3];
-      const c = candles[candles.length - 2];
-      const d = candles[candles.length - 1];
-
-      const strongBull = isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close);
-      const strongBearMove = isBearish(c) && isBearish(d) && d.close < a.open;
-
-      return strongBull && strongBearMove;
+      const a = candles[candles.length - 4], b = candles[candles.length - 3], c = candles[candles.length - 2], d = candles[candles.length - 1];
+      return isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close) && isBearish(c) && isBearish(d) && d.close < a.open;
     }
-
     function detectFVGFillBuy(candles) {
       if (!candles || candles.length < 3) return false;
-      const a = candles[candles.length - 3];
-      const b = candles[candles.length - 2];
-      const c = candles[candles.length - 1];
-
-      const gapUp = b.low > a.high;
-      const fill = c.low <= a.high && c.close > b.low;
-
-      return gapUp && fill;
+      const a = candles[candles.length - 3], b = candles[candles.length - 2], c = candles[candles.length - 1];
+      return b.low > a.high && c.low <= a.high && c.close > b.low;
     }
-
     function detectFVGFillSell(candles) {
       if (!candles || candles.length < 3) return false;
-      const a = candles[candles.length - 3];
-      const b = candles[candles.length - 2];
-      const c = candles[candles.length - 1];
-
-      const gapDown = b.high < a.low;
-      const fill = c.high >= a.low && c.close < b.high;
-
-      return gapDown && fill;
+      const a = candles[candles.length - 3], b = candles[candles.length - 2], c = candles[candles.length - 1];
+      return b.high < a.low && c.high >= a.low && c.close < b.high;
     }
 
     function isSwingHigh(candles, i) {
       if (i < 1 || i > candles.length - 2) return false;
-      const prev = candles[i - 1], cur = candles[i], next = candles[i + 1];
-      return cur.high > prev.high && cur.high > next.high;
+      return candles[i].high > candles[i - 1].high && candles[i].high > candles[i + 1].high;
     }
     function isSwingLow(candles, i) {
       if (i < 1 || i > candles.length - 2) return false;
-      const prev = candles[i - 1], cur = candles[i], next = candles[i + 1];
-      return cur.low < prev.low && cur.low < next.low;
+      return candles[i].low < candles[i - 1].low && candles[i].low < candles[i + 1].low;
     }
 
     function isBOSUp(candles) {
       if (!candles || candles.length < 5) return false;
       const highs = [];
-      for (let i = 1; i < candles.length - 1; i++) {
-        if (isSwingHigh(candles, i)) highs.push(candles[i].high);
-      }
+      for (let i = 1; i < candles.length - 1; i++) { if (isSwingHigh(candles, i)) highs.push(candles[i].high); }
       if (highs.length < 2) return false;
-      const lastHigh = highs[highs.length - 1];
-      const prevHigh = highs[highs.length - 2];
-      return lastHigh > prevHigh;
+      return highs[highs.length - 1] > highs[highs.length - 2];
     }
-
     function isBOSDown(candles) {
       if (!candles || candles.length < 5) return false;
       const lows = [];
-      for (let i = 1; i < candles.length - 1; i++) {
-        if (isSwingLow(candles, i)) lows.push(candles[i].low);
-      }
+      for (let i = 1; i < candles.length - 1; i++) { if (isSwingLow(candles, i)) lows.push(candles[i].low); }
       if (lows.length < 2) return false;
-      const lastLow = lows[lows.length - 1];
-      const prevLow = lows[lows.length - 2];
-      return lastLow < prevLow;
-    }
-
-    function isCHoCHUp(candles) { return isBOSUp(candles); }
-    function isCHoCHDown(candles) { return isBOSDown(candles); }
-
-    function isMMCModelBuy(candles) {
-      return isBOSUp(candles) && isLiquiditySweepDown(candles);
-    }
-
-    function isMMCModelSell(candles) {
-      return isBOSDown(candles) && isLiquiditySweepUp(candles);
-    }
-
-    function detectLongDistanceSNR(candles) {
-      if (!candles || candles.length < 20) return { demand: null, supply: null };
-      const highs = candles.map(c => c.high);
-      const lows = candles.map(c => c.low);
-      const maxHigh = Math.max(...highs);
-      const minLow = Math.min(...lows);
-      return { demand: minLow, supply: maxHigh };
-    }
-
-    function detectHiddenSNR(candles) {
-      if (!candles || candles.length < 10) return { demand: null, supply: null };
-      const midIndex = Math.floor(candles.length / 2);
-      const slice = candles.slice(Math.max(0, midIndex - 5), midIndex + 5);
-      const highs = slice.map(c => c.high);
-      const lows = slice.map(c => c.low);
-      return { demand: Math.min(...lows), supply: Math.max(...highs) };
-    }
-
-    function strongestZone(longSNR, hiddenSNR) {
-      if (!longSNR || !hiddenSNR) return "NONE";
-      const lastPrice = priceWindow[priceWindow.length - 1]?.close;
-      const demand = hiddenSNR.demand || longSNR.demand;
-      const supply = hiddenSNR.supply || longSNR.supply;
-      if (lastPrice == null) return "NONE";
-      if (demand && Math.abs(lastPrice - demand) < Math.abs(lastPrice - supply)) {
-        return "STRONG_BUY_ZONE";
-      }
-      if (supply && Math.abs(lastPrice - supply) < Math.abs(lastPrice - demand)) {
-        return "STRONG_SELL_ZONE";
-      }
-      return "NONE";
+      return lows[lows.length - 1] < lows[lows.length - 2];
     }
 
     function trendEngine(candles) {
@@ -892,76 +760,57 @@
     }
 
     function indicatorEngine(candles) {
-      return {
-        ema20: EMA(candles, 20).direction,
-        keltner: Keltner(candles).direction,
-        frama: FRAMA(candles).direction,
-        fractal: Fractal(candles).structure
-      };
+      return { ema20: EMA(candles, 20).direction, keltner: Keltner(candles).direction, frama: FRAMA(candles).direction, fractal: Fractal(candles).structure };
     }
 
     function advancedPriceAction(candles) {
       if (!candles || candles.length < 2) return "NONE";
-      const last = candles[candles.length - 1];
-      const prev = candles[candles.length - 2];
-
+      const last = candles[candles.length - 1], prev = candles[candles.length - 2];
       if (isBullishEngulfing(last, prev)) return "BUY";
       if (isBearishEngulfing(last, prev)) return "SELL";
-
       if (isPiercingLine(prev, last)) return "BUY";
       if (isEveningStar(candles)) return "SELL";
       if (isMorningStar(candles)) return "BUY";
-
       if (isBullishHarami(prev, last)) return "BUY";
       if (isBearishHarami(prev, last)) return "SELL";
-
       if (isTweezerBottom(candles)) return "BUY";
       if (isTweezerTop(candles)) return "SELL";
-
       if (hasStrongWickDown(last)) return "BUY";
       if (hasStrongWickUp(last)) return "SELL";
-
       return "NONE";
     }
 
     function liquidityEngine(candles) {
       if (isLiquiditySweepDown(candles)) return "BUY";
       if (isLiquiditySweepUp(candles)) return "SELL";
-      if (isLiquidityGrabDown(candles)) return "BUY";
-      if (isLiquidityGrabUp(candles)) return "SELL";
       return "NONE";
     }
 
     function obFvgEngine(candles) {
-      if (detectBullishOB(candles)) return "BUY";
-      if (detectBearishOB(candles)) return "SELL";
-      if (detectFVGFillBuy(candles)) return "BUY";
-      if (detectFVGFillSell(candles)) return "SELL";
+      if (detectBullishOB(candles) || detectFVGFillBuy(candles)) return "BUY";
+      if (detectBearishOB(candles) || detectFVGFillSell(candles)) return "SELL";
       return "NONE";
     }
 
     function smcEngine(candles) {
       if (isBOSUp(candles)) return "BUY";
       if (isBOSDown(candles)) return "SELL";
-      if (isCHoCHUp(candles)) return "BUY";
-      if (isCHoCHDown(candles)) return "SELL";
-      if (isMMCModelBuy(candles)) return "BUY";
-      if (isMMCModelSell(candles)) return "SELL";
       return "NONE";
     }
 
     function snrMasterStudy(candles) {
-      const longSNR = detectLongDistanceSNR(candles);
-      const hiddenSNR = detectHiddenSNR(candles);
-      return strongestZone(longSNR, hiddenSNR);
+      if (!candles || candles.length < 10) return "NONE";
+      const last = candles[candles.length - 1];
+      const lows = candles.map(c => c.low);
+      const highs = candles.map(c => c.high);
+      if (Math.abs(last.close - Math.min(...lows)) < 0.001) return "STRONG_BUY_ZONE";
+      if (Math.abs(last.close - Math.max(...highs)) < 0.001) return "STRONG_SELL_ZONE";
+      return "NONE";
     }
 
     function timingEngine(marketType, second) {
       if (marketType === "OTC") return (second >= 45 && second <= 50);
-      if (marketType === "LIVE") return (second >= 55 && second <= 60);
-      if (marketType === "CRYPTO") return (second >= 50 && second <= 55);
-      if (marketType === "GOLD") return (second >= 50 && second <= 55);
-      return false;
+      return (second >= 55 && second <= 60);
     }
 
     const PRICE_WINDOW_MAX = 150;
@@ -982,164 +831,20 @@
 
     function computeTrendAndVolatilityOptimized() {
       const len = priceWindow.length;
-      if (len < 2) {
-        return { trendLabel: "Weak", trendArrow: "→ Sideways", volatility: 0 };
-      }
-      const first = priceWindow[0].close;
-      const last = priceWindow[len - 1].close;
-      const slope = last - first;
-
-      let trendArrow = "→ Sideways";
-      let trendLabel = "Weak";
+      if (len < 2) return { trendLabel: "Weak", trendArrow: "→ Sideways", volatility: 0 };
+      const first = priceWindow[0].close, last = priceWindow[len - 1].close, slope = last - first;
+      let trendArrow = "→ Sideways", trendLabel = "Weak";
       if (slope > 0.005) { trendArrow = "⬆ Strong Uptrend"; trendLabel = "Strong"; }
-      else if (slope > 0.002) { trendArrow = "↗ Medium Uptrend"; trendLabel = "Medium"; }
       else if (slope < -0.005) { trendArrow = "⬇ Strong Downtrend"; trendLabel = "Strong"; }
-      else if (slope < -0.002) { trendArrow = "↘ Medium Downtrend"; trendLabel = "Medium"; }
 
       let sumAbs = 0;
-      for (let i = 1; i < len; i++) {
-        sumAbs += Math.abs(priceWindow[i].close - priceWindow[i - 1].close);
-      }
-      const volatility = sumAbs / (len - 1);
-
-      return { trendLabel, trendArrow, volatility };
+      for (let i = 1; i < len; i++) { sumAbs += Math.abs(priceWindow[i].close - priceWindow[i - 1].close); }
+      return { trendLabel, trendArrow, volatility: sumAbs / (len - 1) };
     }
 
-    function accuracyBooster(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk, baseDirection, baseScore) {
-      let confirmations = 0;
-
-      if (trend === "BUY" || trend === "SELL") confirmations++;
-      if (indicator.ema20 === "up" || indicator.ema20 === "down") confirmations++;
-      if (pa === "BUY" || pa === "SELL") confirmations++;
-      if (liquidity === "BUY" || liquidity === "SELL") confirmations++;
-      if (obfvg === "BUY" || obfvg === "SELL") confirmations++;
-      if (smc === "BUY" || smc === "SELL") confirmations++;
-      if (snr === "STRONG_BUY_ZONE" || snr === "STRONG_SELL_ZONE") confirmations++;
-      if (timingOk) confirmations++;
-
-      let dir = baseDirection;
-      let score = baseScore;
-
-      if (confirmations <= 2) {
-        dir = "NEUTRAL";
-        score = Math.min(score, 30);
-      }
-
-      if (confirmations === 3 || confirmations === 4) {
-        score = Math.min(score, 70);
-      }
-
-      if (confirmations >= 5) {
-        score = Math.max(score, 60);
-      }
-
-      if ((dir === "BUY" || dir === "SELL") && score < 40) {
-        dir = "NEUTRAL";
-      }
-
-      score = Math.max(0, Math.min(100, score));
-      return { direction: dir, score };
-    }
-
-    function isOTC(pairValue) {
-      return pairValue.startsWith("otc:");
-    }
-
-    function otcPatternBoost(candles) {
-      if (!candles || candles.length < 3) return "NONE";
-      const last = candles[candles.length - 1];
-      const prev = candles[candles.length - 2];
-      const prev2 = candles[candles.length - 3];
-
-      if (isBearish(prev2) && isBullish(prev) && isBearish(last)) {
-        return "SELL";
-      }
-      if (isBullish(prev2) && isBearish(prev) && isBullish(last)) {
-        return "BUY";
-      }
-
-      if (hasStrongWickUp(prev) && hasStrongWickUp(last)) return "SELL";
-      if (hasStrongWickDown(prev) && hasStrongWickDown(last)) return "BUY";
-
-      return "NONE";
-    }
-
-    function otcLiquidityBoost(candles) {
-      if (!candles || candles.length < 2) return "NONE";
-      const last = candles[candles.length - 1];
-      if (isLiquiditySweepDown(candles) && hasStrongWickDown(last)) {
-        return "BUY";
-      }
-      if (isLiquiditySweepUp(candles) && hasStrongWickUp(last)) {
-        return "SELL";
-      }
-      return "NONE";
-    }
-
-    function otcSNRBoost(candles) {
-      if (!candles || candles.length < 10) return "NONE";
-      const last = candles[candles.length - 1];
-      const lows = candles.slice(-10).map(c => c.low);
-      const highs = candles.slice(-10).map(c => c.high);
-      const minLow = Math.min(...lows);
-      const maxHigh = Math.max(...highs);
-      const tol = (maxHigh - minLow) * 0.1 || 0.0005;
-
-      if (Math.abs(last.close - minLow) < tol) return "STRONG_BUY_ZONE";
-      if (Math.abs(last.close - maxHigh) < tol) return "STRONG_SELL_ZONE";
-      return "NONE";
-    }
-
-    function otcBoosterDecision(pairValue, candles, baseDirection, baseScore) {
-      if (!isOTC(pairValue)) return { direction: baseDirection, score: baseScore };
-
-      const patternBoost = otcPatternBoost(candles);
-      const liqBoost = otcLiquidityBoost(candles);
-      const snrBoost = otcSNRBoost(candles);
-
-      let dir = baseDirection;
-      let score = baseScore;
-
-      if (patternBoost === "BUY" || liqBoost === "BUY" || snrBoost === "STRONG_BUY_ZONE") {
-        if (dir === "BUY") score += 10;
-        else if (dir === "NEUTRAL") { dir = "BUY"; score += 8; }
-      }
-
-      if (patternBoost === "SELL" || liqBoost === "SELL" || snrBoost === "STRONG_SELL_ZONE") {
-        if (dir === "SELL") score += 10;
-        else if (dir === "NEUTRAL") { dir = "SELL"; score += 8; }
-      }
-
-      score = Math.max(0, Math.min(100, score));
-      return { direction: dir, score };
-    }
-
-    function detectBreakoutAndRetest(current) {
-      if (priceWindow.length < 5 || current == null) {
-        return { isBreakout: false, isRetest: false };
-      }
-      const closes = priceWindow.map(c => c.close);
-      const max = Math.max(...closes);
-      const min = Math.min(...closes);
-      const tolerance = (max - min) * 0.05 || 0.0005;
-      const isBreakout = current > max + tolerance || current < min - tolerance;
-      let isRetest = false;
-      if (!isBreakout) {
-        if (Math.abs(current - max) < tolerance || Math.abs(current - min) < tolerance) {
-          isRetest = true;
-        }
-      }
-      return { isBreakout, isRetest };
-    }
-
-    function computeRiskLevel(volatility, percentChange, isBreakout, isRetest) {
-      const v = volatility || 0;
-      const p = Math.abs(percentChange || 0);
+    function computeRiskLevel(volatility, percentChange) {
       let score = 0;
-      if (v > 0.5 || p > 0.5) score += 2;
-      if (v > 0.2 || p > 0.2) score += 1;
-      if (isBreakout) score += 2;
-      if (isRetest) score -= 1;
+      if (volatility > 0.5 || Math.abs(percentChange || 0) > 0.5) score += 2;
       if (score <= 1) return "Low Risk";
       if (score === 2) return "Medium Risk";
       return "High Risk";
@@ -1148,9 +853,7 @@
     function showPopupAlert(text) {
       popupAlertEl.textContent = text;
       popupAlertEl.style.display = "block";
-      setTimeout(() => {
-        popupAlertEl.style.display = "none";
-      }, 2500);
+      setTimeout(() => { popupAlertEl.style.display = "none"; }, 2500);
     }
 
     function setGlow(direction) {
@@ -1162,169 +865,71 @@
 
     function addHistoryEntry(entry) {
       const li = document.createElement("li");
-      li.textContent =
-        `${entry.time} | ${entry.broker} | ${entry.pair} | ${entry.mode} | ${entry.timing}s | ` +
-        `${entry.direction} | Score ${entry.score} | ${entry.risk}`;
+      li.textContent = `${entry.time} | ${entry.broker} | ${entry.pair} | ${entry.mode} | ${entry.timing}s | ${entry.direction} | Score ${entry.score} | ${entry.risk}`;
       historyListEl.insertBefore(li, historyListEl.firstChild);
-      while (historyListEl.children.length > 20) {
-        historyListEl.removeChild(historyListEl.lastChild);
-      }
+      while (historyListEl.children.length > 20) { historyListEl.removeChild(historyListEl.lastChild); }
     }
 
     function strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk) {
-      const buySignals = [
-        trend === "BUY",
-        indicator.ema20 === "up",
-        pa === "BUY",
-        liquidity === "BUY",
-        obfvg === "BUY",
-        smc === "BUY",
-        snr === "STRONG_BUY_ZONE",
-        timingOk === true
-      ];
-
-      const sellSignals = [
-        trend === "SELL",
-        indicator.ema20 === "down",
-        pa === "SELL",
-        liquidity === "SELL",
-        obfvg === "SELL",
-        smc === "SELL",
-        snr === "STRONG_SELL_ZONE",
-        timingOk === true
-      ];
-
-      const buyMatch = buySignals.filter(x => x === true).length;
-      const sellMatch = sellSignals.filter(x => x === true).length;
-
-      if (buyMatch >= 4) return "BUY";
-      if (sellMatch >= 4) return "SELL";
+      const buyCount = [trend === "BUY", indicator.ema20 === "up", pa === "BUY", liquidity === "BUY", obfvg === "BUY", smc === "BUY", snr === "STRONG_BUY_ZONE", timingOk].filter(Boolean).length;
+      const sellCount = [trend === "SELL", indicator.ema20 === "down", pa === "SELL", liquidity === "SELL", obfvg === "SELL", smc === "SELL", snr === "STRONG_SELL_ZONE", timingOk].filter(Boolean).length;
+      if (buyCount >= 4) return "BUY";
+      if (sellCount >= 4) return "SELL";
       return "NEUTRAL";
     }
 
     function updateMarketStatus(pairValue) {
-      if (pairValue.startsWith("forex:")) {
-        marketStatusEl.textContent = "Live";
-        marketStatusEl.className = "badge badge-live";
-      } else if (pairValue.startsWith("otc:")) {
-        marketStatusEl.textContent = "OTC";
-        marketStatusEl.className = "badge badge-otc";
-      } else if (pairValue.startsWith("crypto:")) {
-        marketStatusEl.textContent = "Crypto";
-        marketStatusEl.className = "badge badge-custom";
+      if (pairValue.includes("OTC")) {
+        marketStatusEl.textContent = "OTC"; marketStatusEl.className = "badge badge-otc";
       } else {
-        marketStatusEl.textContent = "Custom";
-        marketStatusEl.className = "badge badge-custom";
+        marketStatusEl.textContent = "Live"; marketStatusEl.className = "badge badge-live";
       }
     }
 
     async function fetchQuote(pairValue) {
-      const [type, provider, symbol] = pairValue.split(":");
       let url = null;
       let source = "Live";
+      const cleanSymbol = pairValue.replace("_OTC", "");
 
-      if (type === "forex") {
-  url = `https://finnhub.io/api/v1/forex/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
-}
-else if (type === "crypto") {
-  url = `https://finnhub.io/api/v1/crypto/quote?symbol=${provider}:${symbol}&token=${FINNHUB_API_KEY}`;
-}
-else {
-  source = "Simulated";
-}
+      if (pairValue.includes("USD") || pairValue.includes("EUR") || pairValue.includes("GBP")) {
+        url = `https://finnhub.io/api/v1/forex/quote?symbol=OANDA:${cleanSymbol.slice(0,3)}_${cleanSymbol.slice(3,6)}&token=${FINNHUB_API_KEY}`;
+      } else if (pairValue.includes("USDT") || pairValue.includes("BTC")) {
+        url = `https://finnhub.io/api/v1/crypto/quote?symbol=BINANCE:${cleanSymbol}&token=${FINNHUB_API_KEY}`;
+      } else {
+        source = "Simulated";
+      }
 
       if (!url) {
-        const price = prevPrice != null
-          ? prevPrice + (Math.random() - 0.5) * 0.01
-          : 1 + Math.random();
-
+        const price = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.01 : 1 + Math.random();
         prevPrice = price;
-
-        return {
-          currentPrice: price,
-          change: (Math.random() - 0.5) * 0.01,
-          percentChange: (Math.random() - 0.5) * 0.3,
-          source
-        };
+        return { currentPrice: price, change: 0, percentChange: 0, source };
       }
 
       try {
         const res = await fetch(url);
         if (!res.ok) throw new Error("HTTP error");
-
         const data = await res.json();
-
-        const currentPrice = data.c || data.p || data.l || (prevPrice || 1 + Math.random());
-        const change = data.d != null ? data.d : (Math.random() - 0.5) * 0.01;
-        const percentChange = data.dp != null ? data.dp : (Math.random() - 0.5) * 0.3;
-
+        const currentPrice = data.c || data.p || (prevPrice || 1 + Math.random());
         prevPrice = currentPrice;
-
-        return { currentPrice, change, percentChange, source };
+        return { currentPrice, change: data.d || 0, percentChange: data.dp || 0, source };
       } catch (e) {
-        const price = prevPrice != null
-          ? prevPrice + (Math.random() - 0.5) * 0.01
-          : 1 + Math.random();
-
+        const price = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.01 : 1 + Math.random();
         prevPrice = price;
-
-        return {
-          currentPrice: price,
-          change: (Math.random() - 0.5) * 0.01,
-          percentChange: (Math.random() - 0.5) * 0.3,
-          source: "Simulated (Fallback)"
-        };
+        return { currentPrice: price, change: 0, percentChange: 0, source: "Simulated (Fallback)" };
       }
     }
 
-   function getSelectedPairValue() {
-
-  for (const sel of pairSelectGroups) {
-    if (sel && sel.value) {
-      return sel.value;
-    }
-  }
-
-  return currentPairValue;
-}
-
-    function getSelectedPairText() {
-
-  for (const sel of pairSelectGroups) {
-    if (sel && sel.value) {
-      return sel.options[
-        sel.selectedIndex
-      ].text;
-    }
-  }
-
-  return "Unknown Pair";
-}
-
     async function generateSignal(triggerMode) {
-      const pairValue = getSelectedPairValue();
-      currentPairValue = pairValue;
+      const pairValue = currentPairValue;
       if (!pairValue) return;
 
       updateMarketStatus(pairValue);
-
       const quote = await fetchQuote(pairValue);
-      const currentPrice = quote.currentPrice;
-      const change = quote.change;
-      const percentChange = quote.percentChange;
-
-      updatePriceWindowOptimized(currentPrice);
+      updatePriceWindowOptimized(quote.currentPrice);
 
       const { trendLabel, trendArrow, volatility } = computeTrendAndVolatilityOptimized();
-      const { isBreakout, isRetest } = detectBreakoutAndRetest(currentPrice);
-      const riskLevel = computeRiskLevel(volatility, percentChange, isBreakout, isRetest);
+      const riskLevel = computeRiskLevel(volatility, quote.percentChange);
       const { session } = getSessionInfo();
-
-      const marketType =
-        pairValue.startsWith("forex") ? "LIVE" :
-        pairValue.startsWith("crypto") ? "CRYPTO" :
-        pairValue.startsWith("otc") ? "OTC" :
-        pairValue.includes("XAU") ? "GOLD" : "LIVE";
 
       const trend = trendEngine(priceWindow);
       const indicator = indicatorEngine(priceWindow);
@@ -1333,44 +938,13 @@ else {
       const obfvg = obFvgEngine(priceWindow);
       const smc = smcEngine(priceWindow);
       const snr = snrMasterStudy(priceWindow);
+      const timingOk = timingEngine(pairValue.includes("OTC") ? "OTC" : "LIVE", new Date().getSeconds());
 
-      const now = new Date();
-      const second = now.getSeconds();
-      const timingOk = timingEngine(marketType, second);
+      let finalDirection = strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk);
+      let finalScore = finalDirection !== "NEUTRAL" ? 75 : 35;
 
-      let direction = strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk);
-
-      let baseScore =
-        (trend === "BUY" || trend === "SELL" ? 20 : 0) +
-        (indicator.ema20 === "up" || indicator.ema20 === "down" ? 15 : 0) +
-        (pa === "BUY" || pa === "SELL" ? 15 : 0) +
-        (liquidity === "BUY" || liquidity === "SELL" ? 10 : 0) +
-        (obfvg === "BUY" || obfvg === "SELL" ? 10 : 0) +
-        (smc === "BUY" || smc === "SELL" ? 10 : 0) +
-        (snr === "STRONG_BUY_ZONE" || snr === "STRONG_SELL_ZONE" ? 10 : 0) -
-        volatility * 50;
-
-      baseScore = Math.max(0, Math.min(100, Math.round(baseScore)));
-
-      const accBoost = accuracyBooster(
-        trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk,
-        direction, baseScore
-      );
-
-      let boostedDirection = accBoost.direction;
-      let boostedScore = accBoost.score;
-
-      const otcBoost = otcBoosterDecision(pairValue, priceWindow, boostedDirection, boostedScore);
-      const finalDirection = otcBoost.direction;
-      const finalScore = otcBoost.score;
-
-      const pairText = getSelectedPairText();
-      
       signalDirectionEl.textContent = finalDirection;
-      signalDirectionEl.className =
-        "signal-direction " +
-        (finalDirection === "BUY" ? "buy" :
-         finalDirection === "SELL" ? "sell" : "neutral");
+      signalDirectionEl.className = "signal-direction " + (finalDirection === "BUY" ? "buy" : finalDirection === "SELL" ? "sell" : "neutral");
 
       signalScoreEl.textContent = "Score: " + finalScore;
       riskLevelEl.textContent = riskLevel;
@@ -1386,7 +960,7 @@ else {
       addHistoryEntry({
         time: new Date().toLocaleTimeString(),
         broker: brokerSelect.value,
-        pair: pairText,
+        pair: currentPairText,
         mode: triggerMode === "auto" ? "Auto" : "Manual",
         timing: selectedTimingSeconds || 0,
         direction: finalDirection,
@@ -1394,94 +968,39 @@ else {
         risk: riskLevel
       });
 
-      prevPrice = currentPrice;
+      prevPrice = quote.currentPrice;
     }
 
     function startAutoMode(seconds) {
-      stopAutoMode();
-      const intervalSec = seconds || selectedTimingSeconds || 10;
-      autoTimer = setInterval(() => {
-        generateSignal("auto");
-      }, intervalSec * 1000);
+      if (autoTimer) clearInterval(autoTimer);
+      autoTimer = setInterval(() => { generateSignal("auto"); }, (seconds || selectedTimingSeconds || 10) * 1000);
       autoToggleBtn.textContent = "Auto: ON";
     }
 
     function stopAutoMode() {
-      if (autoTimer) {
-        clearInterval(autoTimer);
-        autoTimer = null;
-      }
+      if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
       autoToggleBtn.textContent = "Auto: OFF";
     }
 
     autoToggleBtn.addEventListener("click", () => {
-      if (autoTimer) {
-        stopAutoMode();
-      } else {
-        startAutoMode();
-      }
+      if (autoTimer) stopAutoMode(); else startAutoMode();
     });
 
-    createSignalBtn.addEventListener("click", () => {
-      generateSignal("manual");
-    });
+    createSignalBtn.addEventListener("click", () => { generateSignal("manual"); });
 
-    pairSelectGroups.forEach(sel => {
-      sel.addEventListener("change", () => {
-        priceWindow = [];
-        prevPrice = null;
-        currentPairValue = sel.value;
-        updateMarketStatus(currentPairValue);
-
-        const display = document.getElementById("selectedPairDisplay");
-
-    if (display) {
-      display.textContent =
-        sel.options[sel.selectedIndex].text;
-    }
+    pairSearchInput.addEventListener("input", () => {
+      const query = pairSearchInput.value.toLowerCase();
+      const pairItems = pairListWrapper.querySelectorAll(".pair-item");
+      pairItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(query)) {
+          item.style.display = "block";
+        } else {
+          item.style.display = "none";
+        }
       });
     });
 
-       pairSearchInput.addEventListener("input", () => {
-
-  const query =
-    pairSearchInput.value.toLowerCase();
-
-  pairSelectGroups.forEach(sel => {
-
-    let firstMatch = -1;
-
-    Array.from(sel.options).forEach((opt, index) => {
-
-      const text =
-        opt.textContent.toLowerCase();
-
-      if (
-        firstMatch === -1 &&
-        text.includes(query)
-      ) {
-        firstMatch = index;
-      }
-
-    });
-
-    if (firstMatch >= 0) {
-      sel.selectedIndex = firstMatch;
-
-      const display =
-        document.getElementById(
-          "selectedPairDisplay"
-        );
-
-      if (display) {
-        display.textContent =
-          sel.options[firstMatch].text;
-      }
-    }
-
-  });
-
-});
     brokerSelect.addEventListener("change", () => {});
 
     function initPanelPosition() {
@@ -1499,104 +1018,18 @@ else {
 
     function enablePanelDrag() {
       let isDragging = false;
-      let startX = 0;
-      let startY = 0;
-      let startLeft = 0;
-      let startTop = 0;
+      let startX = 0, startY = 0, startLeft = 0, startTop = 0;
 
-      function onMouseDown(e) {
+      glassHeader.addEventListener("mousedown", (e) => {
         isDragging = true;
         const rect = glassPanel.getBoundingClientRect();
-        startX = e.clientX;
-        startY = e.clientY;
-        startLeft = rect.left;
-        startTop = rect.top;
+        startX = e.clientX; startY = e.clientY;
+        startLeft = rect.left; startTop = rect.top;
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
-      }
+      });
 
       function onMouseMove(e) {
         if (!isDragging) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        const newLeft = Math.max(
-  0,
-  Math.min(
-    window.innerWidth - glassPanel.offsetWidth,
-    startLeft + dx
-  )
-);
-
-const newTop = Math.max(
-  0,
-  Math.min(
-    window.innerHeight - glassPanel.offsetHeight,
-    startTop + dy
-  )
-);
-        glassPanel.style.left = newLeft + "px";
-        glassPanel.style.top = newTop + "px";
-        glassPanel.style.right = "auto";
-        glassPanel.style.bottom = "auto";
-      }
-
-      function onMouseUp() {
-        if (!isDragging) return;
-        isDragging = false;
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        const rect = glassPanel.getBoundingClientRect();
-        localStorage.setItem("glassPanelPosition", JSON.stringify({
-          left: rect.left,
-          top: rect.top
-        }));
-      }
-
-      function onTouchStart(e) {
-        if (e.touches.length !== 1) return;
-        isDragging = true;
-        const touch = e.touches[0];
-        const rect = glassPanel.getBoundingClientRect();
-        startX = touch.clientX;
-        startY = touch.clientY;
-        startLeft = rect.left;
-        startTop = rect.top;
-        document.addEventListener("touchmove", onTouchMove);
-        document.addEventListener("touchend", onTouchEnd);
-      }
-
-      function onTouchMove(e) {
-        if (!isDragging || e.touches.length !== 1) return;
-        const touch = e.touches[0];
-        const dx = touch.clientX - startX;
-        const dy = touch.clientY - startY;
-        const newLeft = startLeft + dx;
-        const newTop = startTop + dy;
-        glassPanel.style.left = newLeft + "px";
-        glassPanel.style.top = newTop + "px";
-        glassPanel.style.right = "auto";
-        glassPanel.style.bottom = "auto";
-      }
-
-      function onTouchEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        document.removeEventListener("touchmove", onTouchMove);
-        document.removeEventListener("touchend", onTouchEnd);
-        const rect = glassPanel.getBoundingClientRect();
-        localStorage.setItem("glassPanelPosition", JSON.stringify({
-          left: rect.left,
-          top: rect.top
-        }));
-      }
-
-      glassHeader.addEventListener("mousedown", onMouseDown);
-      glassHeader.addEventListener("touchstart", onTouchStart, { passive: true });
-    }
-
-    initPanelPosition();
-    enablePanelDrag();
-    updateMarketStatus(getSelectedPairValue());
-  </script>
-</body>
-</html>
+        glassPanel.style.left = Math.max(0, Math.min(window.innerWidth - glassPanel.offsetWidth, startLeft + (e.clientX - startX))) + "px";
+        glassPanel.style.top = Math.max(0, Math.min(window.innerHeight - glassPanel.offsetHeight, start
