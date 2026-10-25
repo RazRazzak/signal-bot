@@ -518,7 +518,24 @@
     const popupAlertEl = document.getElementById("popupAlert");
 
     const pairSearchInput = document.getElementById("pairSearchInput");
-    
+    const PAIRS = [
+
+  { symbol: "EURUSD", label: "EUR/USD (Major)" },
+  { symbol: "GBPUSD", label: "GBP/USD (Major)" },
+  { symbol: "USDJPY", label: "USD/JPY (Major)" },
+  { symbol: "USDCHF", label: "USD/CHF (Major)" },
+  { symbol: "AUDUSD", label: "AUD/USD (Major)" },
+
+  { symbol: "EURGBP", label: "EUR/GBP (Minor)" },
+  { symbol: "EURJPY", label: "EUR/JPY (Minor)" },
+
+  { symbol: "XAUUSD", label: "XAU/USD (Gold)" },
+
+  { symbol: "BTCUSDT", label: "BTC/USDT" },
+
+  { symbol: "USDBDT_OTC", label: "USD/BDT (OTC)" }
+
+];
     const pairSelectGroups = [
       document.getElementById("pairMajorSelect"),
       document.getElementById("pairMinorSelect"),
