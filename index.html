@@ -1502,63 +1502,7 @@ else {
     createSignalBtn.addEventListener("click", () => {
       generateSignal("manual");
     });
-
-    pairSelectGroups.forEach(sel => {
-      sel.addEventListener("change", () => {
-        priceWindow = [];
-        prevPrice = null;
-        currentPairValue = sel.value;
-        updateMarketStatus(currentPairValue);
-
-        const display = document.getElementById("selectedPairDisplay");
-
-    if (display) {
-      display.textContent =
-        sel.options[sel.selectedIndex].text;
-    }
-      });
-    });
-
-       pairSearchInput.addEventListener("input", () => {
-
-  const query =
-    pairSearchInput.value.toLowerCase();
-
-  pairSelectGroups.forEach(sel => {
-
-    let firstMatch = -1;
-
-    Array.from(sel.options).forEach((opt, index) => {
-
-      const text =
-        opt.textContent.toLowerCase();
-
-      if (
-        firstMatch === -1 &&
-        text.includes(query)
-      ) {
-        firstMatch = index;
-      }
-
-    });
-
-    if (firstMatch >= 0) {
-      sel.selectedIndex = firstMatch;
-
-      const display =
-        document.getElementById(
-          "selectedPairDisplay"
-        );
-
-      if (display) {
-        display.textContent =
-          sel.options[firstMatch].text;
-      }
-    }
-
-  });
-
-});
+  
     brokerSelect.addEventListener("change", () => {});
 
     function initPanelPosition() {
@@ -1670,7 +1614,21 @@ const newTop = Math.max(
       glassHeader.addEventListener("mousedown", onMouseDown);
       glassHeader.addEventListener("touchstart", onTouchStart, { passive: true });
     }
+pairSearchInput.addEventListener("input", () => {
 
+  const query =
+    pairSearchInput.value.toLowerCase();
+
+  const filtered =
+    PAIRS.filter(pair =>
+      pair.label
+        .toLowerCase()
+        .includes(query)
+    );
+
+  renderPairList(filtered);
+
+});
     renderPairList();
     initPanelPosition();
     enablePanelDrag();
