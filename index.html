@@ -153,6 +153,22 @@
 
   background-image: none;
 }
+    #pairList{
+  max-height:200px;
+  overflow-y:auto;
+}
+
+.pair-item{
+  padding:6px 8px;
+  cursor:pointer;
+  border-bottom:1px solid #374151;
+  color:#e5e7eb;
+  font-size:11px;
+}
+
+.pair-item:hover{
+  background:#1f2937;
+}
 
     .pair-select option {
       padding: 2px 0;
@@ -538,6 +554,48 @@
   { symbol: "USDBDT_OTC", label: "USD/BDT (OTC)" }
 
 ];
+   
+    function renderPairList(filteredPairs = PAIRS) {
+
+  const pairList =
+    document.getElementById("pairList");
+
+  if (!pairList) return;
+
+  pairList.innerHTML = "";
+
+  filteredPairs.forEach(pair => {
+
+    const item =
+      document.createElement("div");
+
+    item.className = "pair-item";
+
+    item.textContent =
+      pair.label;
+
+    item.addEventListener("click", () => {
+
+      currentPairValue =
+        pair.symbol;
+
+      const display =
+        document.getElementById(
+          "selectedPairDisplay"
+        );
+
+      if (display) {
+        display.textContent =
+          pair.label;
+      }
+
+    });
+
+    pairList.appendChild(item);
+
+  });
+
+}
     const pairSelectGroups = [
       document.getElementById("pairMajorSelect"),
       document.getElementById("pairMinorSelect"),
@@ -1613,6 +1671,7 @@ const newTop = Math.max(
       glassHeader.addEventListener("touchstart", onTouchStart, { passive: true });
     }
 
+    renderPairList();
     initPanelPosition();
     enablePanelDrag();
     updateMarketStatus(getSelectedPairValue());
