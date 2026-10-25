@@ -988,12 +988,16 @@
     createSignalBtn.addEventListener("click", () => { generateSignal("manual"); });
 
     // Fixed Search Filter Logic
-    pairSearchInput.addEventListener("input", () => {
+   pairSearchInput.addEventListener("input", () => {
   const query = pairSearchInput.value.toLowerCase().trim();
-  const filteredPairs = allPairs.filter(p => 
-    p.label.toLowerCase().includes(query) || p.symbol.toLowerCase().includes(query)
-  );
-  renderPairList(filteredPairs);
+  if (query === "") {
+    renderPairList(allPairs);
+  } else {
+    const filteredPairs = allPairs.filter(p => 
+      p.label.toLowerCase().includes(query) || p.symbol.toLowerCase().includes(query)
+    );
+    renderPairList(filteredPairs);
+  }
 });
     });
 
