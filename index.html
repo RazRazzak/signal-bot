@@ -117,16 +117,15 @@
       outline: none;
     }
 
-    /* Direct List View Style under Search Box */
+    /* Fixed list wrapper display style */
     .pair-select-wrapper {
-      max-height: 140px;
+      max-height: 120px;
       overflow-y: auto;
       border-radius: 10px;
       background: rgba(15, 23, 42, 0.95);
       border: 1px solid #374151;
       padding: 4px;
-      display: flex;
-      flex-direction: column;
+      display: block; /* Ensure it is always visible */
     }
 
     .pair-item {
@@ -134,8 +133,8 @@
       color: #e5e7eb;
       font-size: 11px;
       cursor: pointer;
-      border-radius: 6px;
-      transition: background 0.2s;
+      border-radius: 4px;
+      display: block;
     }
 
     .pair-item:hover {
@@ -333,7 +332,7 @@
             <input id="pairSearchInput" type="text" placeholder="Search pair (e.g. EUR, BTC)..." autocomplete="off" />
           </div>
 
-          <!-- New Pairs list rendered dynamically -->
+          <!-- Pair list wrapper -->
           <div id="pairListWrapper" class="pair-select-wrapper"></div>
         </div>
 
@@ -988,17 +987,11 @@
 
     createSignalBtn.addEventListener("click", () => { generateSignal("manual"); });
 
+    // Fixed Search Filter Logic
     pairSearchInput.addEventListener("input", () => {
       const query = pairSearchInput.value.toLowerCase();
-      const pairItems = pairListWrapper.querySelectorAll(".pair-item");
-      pairItems.forEach(item => {
-        const text = item.textContent.toLowerCase();
-        if (text.includes(query)) {
-          item.style.display = "block";
-        } else {
-          item.style.display = "none";
-        }
-      });
+      const filteredPairs = allPairs.filter(p => p.label.toLowerCase().includes(query));
+      renderPairList(filteredPairs);
     });
 
     brokerSelect.addEventListener("change", () => {});
@@ -1032,4 +1025,22 @@
       function onMouseMove(e) {
         if (!isDragging) return;
         glassPanel.style.left = Math.max(0, Math.min(window.innerWidth - glassPanel.offsetWidth, startLeft + (e.clientX - startX))) + "px";
-        glassPanel.style.top = Math.max(0, Math.min(window.innerHeight - glassPanel.offsetHeight, start
+        glassPanel.style.top = Math.max(0, Math.min(window.innerHeight - glassPanel.offsetHeight, startTop + (e.clientY - startY))) + "px";
+        glassPanel.style.right = "auto"; glassPanel.style.bottom = "auto";
+      }
+
+      function onMouseUp() {
+        isDragging = false;
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        const rect = glassPanel.getBoundingClientRect();
+        localStorage.setItem("glassPanelPosition", JSON.stringify({ left: rect.left, top: rect.top }));
+      }
+    }
+
+    initPanelPosition();
+    enablePanelDrag();
+    updateMarketStatus(currentPairValue);
+  </script>
+</body>
+</html>
