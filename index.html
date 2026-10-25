@@ -117,7 +117,7 @@
       outline: none;
     }
 
-    /* Fixed list wrapper display style */
+    /* Fixed list wrapper style */
     .pair-select-wrapper {
       max-height: 120px;
       overflow-y: auto;
@@ -125,7 +125,7 @@
       background: rgba(15, 23, 42, 0.95);
       border: 1px solid #374151;
       padding: 4px;
-      display: block; /* Ensure it is always visible */
+      display: block;
     }
 
     .pair-item {
@@ -305,6 +305,7 @@
   <div id="popupAlert"></div>
 
   <div id="glassPanel" class="glass-panel">
+    <!-- Restored Header with Clock and Market Status -->
     <div id="glassHeader" class="glass-header">
       <div id="clock"></div>
       <span id="marketStatus" class="badge badge-live">Live</span>
@@ -544,6 +545,16 @@
     let currentPairValue = allPairs[0].symbol;
     let currentPairText = allPairs[0].label;
 
+    // Clock Updater Function
+    function updateClock() {
+      const now = new Date();
+      if (clockEl) {
+        clockEl.textContent = now.toLocaleString();
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
     function renderPairList(pairs) {
       pairListWrapper.innerHTML = "";
       pairs.forEach(pair => {
@@ -556,7 +567,8 @@
           currentPairValue = pair.symbol;
           currentPairText = pair.label;
           selectedPairDisplay.textContent = currentPairText;
-          pairSearchInput.value = currentPairText;
+          pairSearchInput.value = "";
+          renderPairList(allPairs);
           priceWindow = [];
           prevPrice = null;
           updateMarketStatus(currentPairValue);
@@ -567,13 +579,6 @@
     }
 
     renderPairList(allPairs);
-
-    function updateClock() {
-      const now = new Date();
-      clockEl.textContent = now.toLocaleString();
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
 
     document.querySelectorAll("#timingButtons button").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -987,18 +992,17 @@
 
     createSignalBtn.addEventListener("click", () => { generateSignal("manual"); });
 
-    // Fixed Search Filter Logic
-   pairSearchInput.addEventListener("input", () => {
-  const query = pairSearchInput.value.toLowerCase().trim();
-  if (query === "") {
-    renderPairList(allPairs);
-  } else {
-    const filteredPairs = allPairs.filter(p => 
-      p.label.toLowerCase().includes(query) || p.symbol.toLowerCase().includes(query)
-    );
-    renderPairList(filteredPairs);
-  }
-});
+    // Corrected Search Filter Logic to filter from `allPairs`
+    pairSearchInput.addEventListener("input", () => {
+      const query = pairSearchInput.value.toLowerCase().trim();
+      if (query === "") {
+        renderPairList(allPairs);
+      } else {
+        const filtered = allPairs.filter(p => 
+          p.label.toLowerCase().includes(query) || p.symbol.toLowerCase().includes(query)
+        );
+        renderPairList(filtered);
+      }
     });
 
     brokerSelect.addEventListener("change", () => {});
