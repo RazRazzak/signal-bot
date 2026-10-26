@@ -276,6 +276,7 @@
 
     .glow-buy { box-shadow: 0 0 18px rgba(34, 197, 94, 0.6); border-color: rgba(34, 197, 94, 0.7); }
     .glow-sell { box-shadow: 0 0 18px rgba(248, 113, 113, 0.6); border-color: rgba(248, 113, 113, 0.7); }
+    .glow-neutral { box-shadow: 0 0 12px rgba(148, 163, 184, 0.4); border-color: rgba(148, 163, 184, 0.6); }
   </style>
 </head>
 <body>
@@ -293,9 +294,13 @@
         <label for="brokerSelect">Broker</label>
         <select id="brokerSelect">
           <option value="QUOTEX">Quotex</option>
+          <option value="BINOLA">Binola</option>
           <option value="IQOPTION">IQ Option</option>
           <option value="POCKET">Pocket Option</option>
+          <option value="EXPERT">Expert Option</option>
+          <option value="DERIV">Deriv</option>
           <option value="BINANCE">Binance</option>
+          <option value="CUSTOM">Custom / Other</option>
         </select>
       </div>
 
@@ -303,7 +308,7 @@
         <label>Pair Select</label>
         <div class="pair-container">
           <div class="pair-search">
-            <input id="pairSearchInput" type="text" placeholder="Search pair..." autocomplete="off" />
+            <input id="pairSearchInput" type="text" placeholder="Search pair (e.g. EUR, BTC)..." autocomplete="off" />
           </div>
           <div id="pairListWrapper" class="pair-select-wrapper"></div>
         </div>
@@ -322,6 +327,7 @@
         <button data-seconds="30">30s</button>
         <button data-seconds="60" class="active">1m</button>
         <button data-seconds="180">3m</button>
+        <button data-seconds="300">5m</button>
       </div>
       <div class="btn-row">
         <button id="createSignalBtn" class="btn">Manual Signal</button>
@@ -350,16 +356,129 @@
   </div>
 
   <script>
+    // --- COMPLETE COMBINED PAIR LIST ---
     const allPairs = [
+      // ===== FOREX MAJOR =====
       { symbol: "EURUSD", label: "EUR/USD (Major)" },
       { symbol: "GBPUSD", label: "GBP/USD (Major)" },
       { symbol: "USDJPY", label: "USD/JPY (Major)" },
+      { symbol: "USDCHF", label: "USD/CHF (Major)" },
       { symbol: "AUDUSD", label: "AUD/USD (Major)" },
+      { symbol: "NZDUSD", label: "NZD/USD (Major)" },
+      { symbol: "USDCAD", label: "USD/CAD (Major)" },
+
+      // ===== FOREX MINOR =====
+      { symbol: "EURGBP", label: "EUR/GBP (Minor)" },
+      { symbol: "EURJPY", label: "EUR/JPY (Minor)" },
+      { symbol: "GBPJPY", label: "GBP/JPY (Minor)" },
+      { symbol: "AUDJPY", label: "AUD/JPY (Minor)" },
+      { symbol: "CADJPY", label: "CAD/JPY (Minor)" },
+      { symbol: "CHFJPY", label: "CHF/JPY (Minor)" },
+      { symbol: "AUDNZD", label: "AUD/NZD (Minor)" },
+      { symbol: "AUDCAD", label: "AUD/CAD (Minor)" },
+      { symbol: "NZDCAD", label: "NZD/CAD (Minor)" },
+
+      // ===== FOREX EXOTIC =====
+      { symbol: "USDINR", label: "USD/INR (Exotic)" },
+      { symbol: "EURINR", label: "EUR/INR (Exotic)" },
+      { symbol: "GBPINR", label: "GBP/INR (Exotic)" },
+      { symbol: "USDTRY", label: "USD/TRY (Exotic)" },
+      { symbol: "EURTRY", label: "EUR/TRY (Exotic)" },
+      { symbol: "USDZAR", label: "USD/ZAR (Exotic)" },
+      { symbol: "USDMXN", label: "USD/MXN (Exotic)" },
+      { symbol: "USDSGD", label: "USD/SGD (Exotic)" },
+      { symbol: "USDHKD", label: "USD/HKD (Exotic)" },
+      { symbol: "USDCNH", label: "USD/CNH (Exotic)" },
+
+      // ===== METALS =====
       { symbol: "XAUUSD", label: "XAU/USD (Gold)" },
+      { symbol: "XAGUSD", label: "XAG/USD (Silver)" },
+      { symbol: "XPTUSD", label: "XPT/USD (Platinum)" },
+      { symbol: "XPDUSD", label: "XPD/USD (Palladium)" },
+
+      // ===== INDICES =====
+      { symbol: "US30", label: "US30 (Dow Jones)" },
+      { symbol: "US500", label: "US500 (S&P 500)" },
+      { symbol: "NAS100", label: "NAS100 (Nasdaq)" },
+      { symbol: "JP225", label: "JP225 (Nikkei)" },
+      { symbol: "DE40", label: "DE40 (DAX)" },
+      { symbol: "FR40", label: "FR40 (CAC)" },
+      { symbol: "UK100", label: "UK100 (FTSE)" },
+
+      // ===== COMMODITIES OTC =====
+      { symbol: "USCRUDE_OTC", label: "USCRUDE (OTC)" },
+      { symbol: "UKBRENT_OTC", label: "UKBRENT (OTC)" },
+      { symbol: "SILVER_OTC", label: "SILVER (OTC)" },
+      { symbol: "GOLD_OTC", label: "GOLD (OTC)" },
+
+      // ===== CRYPTO MAJOR =====
       { symbol: "BTCUSD", label: "BTC/USD (Bitcoin)" },
+      { symbol: "ETHUSD", label: "ETH/USD (Ethereum)" },
+      { symbol: "BNBUSD", label: "BNB/USD (Binance Coin)" },
+      { symbol: "SOLUSD", label: "SOL/USD (Solana)" },
+      { symbol: "XRPUSD", label: "XRP/USD (Ripple)" },
+      { symbol: "ADAUSD", label: "ADA/USD (Cardano)" },
+      { symbol: "DOGEUSD", label: "DOGE/USD (Dogecoin)" },
+      { symbol: "LTCUSD", label: "LTC/USD (Litecoin)" },
+
+      // ===== CRYPTO OTC =====
+      { symbol: "COSMOS_OTC", label: "COSMOS (OTC)" },
+      { symbol: "DASH_OTC", label: "DASH (OTC)" },
+      { symbol: "SOLINA_OTC", label: "SOLINA (OTC)" },
+      { symbol: "BINANCECOIN_OTC", label: "BINANCE COIN (OTC)" },
+      { symbol: "TRUMP_OTC", label: "TRUMP (OTC)" },
+      { symbol: "BITCOIN_OTC", label: "BITCOIN (OTC)" },
+      { symbol: "ETHEREUM_OTC", label: "ETHEREUM (OTC)" },
+
+      // ===== CRYPTO /USDT =====
+      { symbol: "BTCUSDT", label: "BTC/USDT" },
+      { symbol: "ETHUSDT", label: "ETH/USDT" },
+      { symbol: "BNBUSDT", label: "BNB/USDT" },
+      { symbol: "SOLUSDT", label: "SOL/USDT" },
+      { symbol: "XRPUSDT", label: "XRP/USDT" },
+      { symbol: "ADAUSDT", label: "ADA/USDT" },
+      { symbol: "DOGEUSDT", label: "DOGE/USDT" },
+      { symbol: "LTCUSDT", label: "LTC/USDT" },
+
+      // ===== STOCKS =====
+      { symbol: "AAPL", label: "AAPL (Apple)" },
+      { symbol: "MSFT", label: "MSFT (Microsoft)" },
+      { symbol: "GOOGL", label: "GOOGL (Alphabet)" },
+      { symbol: "AMZN", label: "AMZN (Amazon)" },
+      { symbol: "META", label: "META (Meta)" },
+      { symbol: "TSLA", label: "TSLA (Tesla)" },
+      { symbol: "NVDA", label: "NVDA (NVIDIA)" },
+
+      // ===== QUOTEX OTC =====
       { symbol: "EURUSD_OTC", label: "EUR/USD (OTC)" },
       { symbol: "GBPUSD_OTC", label: "GBP/USD (OTC)" },
-      { symbol: "USDJPY_OTC", label: "USD/JPY (OTC)" }
+      { symbol: "USDJPY_OTC", label: "USD/JPY (OTC)" },
+      { symbol: "AUDUSD_OTC", label: "AUD/USD (OTC)" },
+      { symbol: "NZDUSD_OTC", label: "NZD/USD (OTC)" },
+      { symbol: "USDCAD_OTC", label: "USD/CAD (OTC)" },
+      { symbol: "XAUUSD_OTC", label: "XAU/USD (Gold OTC)" },
+      { symbol: "BTCUSD_OTC", label: "BTC/USD (OTC)" },
+
+      // ===== NEW QUOTEX OTC =====
+      { symbol: "NZDJPY_OTC", label: "NZD/JPY (OTC)" },
+      { symbol: "USDDZD_OTC", label: "USD/DZD (OTC)" },
+      { symbol: "USDBDT_OTC", label: "USD/BDT (OTC)" },
+      { symbol: "NZDCHF_OTC", label: "NZD/CHF (OTC)" },
+      { symbol: "USDCOP_OTC", label: "USD/COP (OTC)" },
+      { symbol: "USDPHP_OTC", label: "USD/PHP (OTC)" },
+      { symbol: "USDINR_OTC", label: "USD/INR (OTC)" },
+      { symbol: "USDBRL_OTC", label: "USD/BRL (OTC)" },
+      { symbol: "NZDCAD_OTC", label: "NZD/CAD (OTC)" },
+      { symbol: "USDZAR_OTC", label: "USD/ZAR (OTC)" },
+      { symbol: "USDARS_OTC", label: "USD/ARS (OTC)" },
+      { symbol: "USDEGP_OTC", label: "USD/EGP (OTC)" },
+      { symbol: "AUDNZD_OTC", label: "AUD/NZD (OTC)" },
+      { symbol: "USDNGN_OTC", label: "USD/NGN (OTC)" },
+      { symbol: "USDIDR_OTC", label: "USD/IDR (OTC)" },
+      { symbol: "USDMXN_OTC", label: "USD/MXN (OTC)" },
+      { symbol: "USDPKR_OTC", label: "USD/PKR (OTC)" },
+      { symbol: "GBPNZD_OTC", label: "GBP/NZD (OTC)" },
+      { symbol: "EURNZD_OTC", label: "EUR/NZD (OTC)" }
     ];
 
     const clockEl = document.getElementById("clock");
@@ -440,6 +559,7 @@
       }
     }
 
+    // --- ALL ENGINES RESTORED ---
     function EMA(candles, period) {
       if (!candles || candles.length < period) return { direction: "flat" };
       const last = candles[candles.length - 1];
@@ -457,6 +577,28 @@
       if (last.close > prev.close) return { structure: "HH-HL" };
       if (last.close < prev.close) return { structure: "LH-LL" };
       return { structure: "SIDEWAYS" };
+    }
+
+    function KeltnerChannel(candles, period = 20, multiplier = 1.5) {
+      if (!candles || candles.length < period) return { position: "middle" };
+      let sum = 0;
+      for (let i = candles.length - period; i < candles.length; i++) {
+        sum += candles[i].close;
+      }
+      const middle = sum / period;
+      
+      let atrSum = 0;
+      for (let i = candles.length - period; i < candles.length; i++) {
+        atrSum += (candles[i].high - candles[i].low);
+      }
+      const atr = atrSum / period;
+      const upper = middle + (atr * multiplier);
+      const lower = middle - (atr * multiplier);
+      const currentClose = candles[candles.length - 1].close;
+
+      if (currentClose >= upper) return { position: "upper" };
+      if (currentClose <= lower) return { position: "lower" };
+      return { position: "middle" };
     }
 
     function advancedPriceAction(candles) {
@@ -490,9 +632,11 @@
       return Math.abs(last.close - prev.close) > 0.0001 ? "STRONG" : "WEAK";
     }
 
+    // --- 4-CONFIRMATION STRICT STRATEGY LAYER ---
     function strategyLayer(candles) {
-      const ema = EMA(candles, 10);
+      const ema = EMA(candles, 20);
       const fractal = Fractal(candles);
+      const kc = KeltnerChannel(candles);
       const pa = advancedPriceAction(candles);
       const volume = volumeConfirmation(candles);
       
@@ -504,6 +648,9 @@
 
       if (ema.direction === "up") buyCount++;
       else if (ema.direction === "down") sellCount++;
+
+      if (kc.position === "lower" || kc.position === "middle") buyCount++;
+      else if (kc.position === "upper") sellCount++;
 
       if (pa === "BUY") { buyCount += 2; }
       else if (pa === "SELL") { sellCount += 2; }
@@ -567,7 +714,7 @@
       timingInfoEl.textContent = selectedTimingSeconds + "s";
       sourceInfoEl.textContent = quote.source;
 
-      signalPanel.classList.remove("glow-buy", "glow-sell");
+      signalPanel.classList.remove("glow-buy", "glow-sell", "glow-neutral");
       signalPanel.classList.add(result.direction === "BUY" ? "glow-buy" : "glow-sell");
 
       popupAlertEl.textContent = `${result.direction} | Score ${result.score}`;
@@ -599,6 +746,7 @@
       renderPairList(q === "" ? allPairs : allPairs.filter(p => p.label.toLowerCase().includes(q)));
     });
 
+    // Panel Dragging
     let isDragging = false, startX, startY, startLeft, startTop;
     glassHeader.addEventListener("mousedown", (e) => {
       isDragging = true;
