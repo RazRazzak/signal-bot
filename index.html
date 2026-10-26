@@ -751,15 +751,19 @@
       while (historyListEl.children.length > 20) { historyListEl.removeChild(historyListEl.lastChild); }
     }
 
-    // UPDATED STRATEGY LAYER FOR HIGH ACCURACY & RESPONSIVE SIGNALS
     function strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk) {
-      const randChoice = Math.random();
-      // Ensures high win-rate profile by matching primary trend signals
-      if (trend === "BUY" || pa === "BUY") {
-        return randChoice > 0.2 ? "BUY" : "SELL";
-      } else {
-        return randChoice > 0.2 ? "SELL" : "BUY";
-      }
+  // Trend er sathe signal match koranor strict logic
+  const trendArrowText = trendArrowEl ? trendArrowEl.textContent : "";
+  
+  if (trend === "BUY" || trendArrowText.includes("Uptrend")) {
+    return "BUY";
+  } else if (trend === "SELL" || trendArrowText.includes("Downtrend")) {
+    return "SELL";
+  }
+  
+  // Default fallback
+  return Math.random() > 0.5 ? "BUY" : "SELL";
+}
     }
 
     function updateMarketStatus(pairValue) {
