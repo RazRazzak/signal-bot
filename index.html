@@ -873,14 +873,15 @@
       historyListEl.insertBefore(li, historyListEl.firstChild);
       while (historyListEl.children.length > 20) { historyListEl.removeChild(historyListEl.lastChild); }
     }
-
-    function strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk) {
-      const buyCount = [trend === "BUY", indicator.ema20 === "up", pa === "BUY", liquidity === "BUY", obfvg === "BUY", smc === "BUY", snr === "STRONG_BUY_ZONE", timingOk].filter(Boolean).length;
-      const sellCount = [trend === "SELL", indicator.ema20 === "down", pa === "SELL", liquidity === "SELL", obfvg === "SELL", smc === "SELL", snr === "STRONG_SELL_ZONE", timingOk].filter(Boolean).length;
-      if (buyCount >= 4) return "BUY";
-      if (sellCount >= 4) return "SELL";
-      return "NEUTRAL";
-    }
+function strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk) {
+  const buyCount = [trend === "BUY", indicator.ema20 === "up", pa === "BUY", liquidity === "BUY", obfvg === "BUY", smc === "BUY", snr === "STRONG_BUY_ZONE"].filter(Boolean).length;
+  const sellCount = [trend === "SELL", indicator.ema20 === "down", pa === "SELL", liquidity === "SELL", obfvg === "SELL", smc === "SELL", snr === "STRONG_SELL_ZONE"].filter(Boolean).length;
+  
+  // শর্ত কমিয়ে ২টি মিললেই বাই বা সেল সিগন্যাল দেখাবে
+  if (buyCount >= 2 && buyCount > sellCount) return "BUY";
+  if (sellCount >= 2 && sellCount > buyCount) return "SELL";
+  return "NEUTRAL";
+}
 
     function updateMarketStatus(pairValue) {
       if (pairValue.includes("OTC")) {
