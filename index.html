@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -752,17 +753,16 @@
     }
 
     function strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk) {
-  // Trend er sathe signal match koranor strict logic
-  const trendArrowText = trendArrowEl ? trendArrowEl.textContent : "";
+  // Trend ebong Price Action er sathe signal-ke 100% sync korar jonno
+  const { trendArrow } = computeTrendAndVolatilityOptimized();
   
-  if (trend === "BUY" || trendArrowText.includes("Uptrend")) {
+  if (trendArrow.includes("Uptrend") || trend === "BUY" || pa === "BUY") {
     return "BUY";
-  } else if (trend === "SELL" || trendArrowText.includes("Downtrend")) {
+  } else if (trendArrow.includes("Downtrend") || trend === "SELL" || pa === "SELL") {
     return "SELL";
   }
   
-  // Default fallback
-  return Math.random() > 0.5 ? "BUY" : "SELL";
+  return "NEUTRAL";
 }
     }
 
