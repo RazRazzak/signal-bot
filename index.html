@@ -459,7 +459,6 @@
       return { structure: "SIDEWAYS" };
     }
 
-    // --- HIGH WEIGHT ADVANCED PRICE ACTION ENGINE (ENGULFING & PINBAR) ---
     function advancedPriceAction(candles) {
       if (!candles || candles.length < 2) return "NONE";
       const last = candles[candles.length - 1];
@@ -468,21 +467,18 @@
       const lastBody = Math.abs(last.close - last.open);
       const prevBody = Math.abs(prev.close - prev.open);
       
-      // Bullish Engulfing with higher weight condition
       if (last.close > last.open && prev.close < prev.open && last.close >= prev.open && lastBody > prevBody) {
         return "BUY";
       }
-      // Bearish Engulfing with higher weight condition
       if (last.close < last.open && prev.close > prev.open && last.close <= prev.open && lastBody > prevBody) {
         return "SELL";
       }
 
-      // Pinbar (Strong Wicks) detection
       const upperWick = last.high - Math.max(last.open, last.close);
       const lowerWick = Math.min(last.open, last.close) - last.low;
       
-      if (lowerWick > lastBody * 2 && lowerWick > upperWick) return "BUY"; // Bullish Pinbar
-      if (upperWick > lastBody * 2 && upperWick > lowerWick) return "SELL"; // Bearish Pinbar
+      if (lowerWick > lastBody * 2 && lowerWick > upperWick) return "BUY";
+      if (upperWick > lastBody * 2 && upperWick > lowerWick) return "SELL";
 
       return "NONE";
     }
@@ -494,7 +490,6 @@
       return Math.abs(last.close - prev.close) > 0.0001 ? "STRONG" : "WEAK";
     }
 
-    // --- STRATEGY LAYER WITH ENHANCED PA WEIGHTING ---
     function strategyLayer(candles) {
       const ema = EMA(candles, 10);
       const fractal = Fractal(candles);
@@ -510,7 +505,6 @@
       if (ema.direction === "up") buyCount++;
       else if (ema.direction === "down") sellCount++;
 
-      // Heavy weight for Advanced Price Action (Engulfing / Pinbar gets extra score)
       if (pa === "BUY") { buyCount += 2; }
       else if (pa === "SELL") { sellCount += 2; }
 
@@ -550,7 +544,6 @@
         }
       }
       
-      // Construct realistic candle with random open, high, low, close for PA calculation
       const openPrice = prevPrice || currentPrice;
       const highPrice = Math.max(openPrice, currentPrice) + Math.random() * 0.0004;
       const lowPrice = Math.min(openPrice, currentPrice) - Math.random() * 0.0004;
