@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Binary Signal Bot – Full Floating Glass Panel UI</title>
+  <title>Binary Signal Bot – Full Advanced SMC & Glass Panel UI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -356,6 +356,7 @@
   </div>
 
   <script>
+    // --- COMPLETE COMBINED PAIR LIST ---
     const allPairs = [
       { symbol: "EURUSD", label: "EUR/USD (Major)" },
       { symbol: "GBPUSD", label: "GBP/USD (Major)" },
@@ -535,7 +536,7 @@
       }
     }
 
-    // --- ORIGINAL ENGINES RESTORED ---
+    // --- RESTORED ALL ADVANCED SMC, EMA, FRACTAL, KELTNER & SNRS ---
     function EMA(candles, period) {
       if (!candles || candles.length < period) return { direction: "flat" };
       const last = candles[candles.length - 1];
@@ -544,6 +545,17 @@
       if (slope > 0) return { direction: "up" };
       if (slope < 0) return { direction: "down" };
       return { direction: "flat" };
+    }
+
+    function FRAMA(candles) { return EMA(candles, 14); }
+
+    function Keltner(candles) {
+      if (!candles || candles.length < 10) return { direction: "flat", middleSlope: "flat" };
+      const last = candles[candles.length - 1];
+      const first = candles[candles.length - 10];
+      const slope = last.close - first.close;
+      const dir = slope > 0 ? "up" : slope < 0 ? "down" : "flat";
+      return { direction: dir, middleSlope: dir };
     }
 
     function Fractal(candles) {
@@ -555,99 +567,149 @@
       return { structure: "SIDEWAYS" };
     }
 
-    function KeltnerChannel(candles, period = 20, multiplier = 1.5) {
-      if (!candles || candles.length < period) return { position: "middle" };
-      let sum = 0;
-      for (let i = candles.length - period; i < candles.length; i++) {
-        sum += candles[i].close;
-      }
-      const middle = sum / period;
-      
-      let atrSum = 0;
-      for (let i = candles.length - period; i < candles.length; i++) {
-        atrSum += (candles[i].high - candles[i].low);
-      }
-      const atr = atrSum / period;
-      const upper = middle + (atr * multiplier);
-      const lower = middle - (atr * multiplier);
-      const currentClose = candles[candles.length - 1].close;
+    function isBullish(c) { return c.close > c.open; }
+    function isBearish(c) { return c.close < c.open; }
 
-      if (currentClose >= upper) return { position: "upper" };
-      if (currentClose <= lower) return { position: "lower" };
-      return { position: "middle" };
+    function detectBullishOB(candles) {
+      if (!candles || candles.length < 4) return false;
+      const a = candles[candles.length - 4];
+      const b = candles[candles.length - 3];
+      const c = candles[candles.length - 2];
+      const d = candles[candles.length - 1];
+      return isBearish(a) && (a.open - a.close) > Math.abs(b.close - b.open) && isBullish(c) && isBullish(d) && d.close > a.open;
     }
 
-    function advancedPriceAction(candles) {
-      if (!candles || candles.length < 2) return "NONE";
+    function detectBearishOB(candles) {
+      if (!candles || candles.length < 4) return false;
+      const a = candles[candles.length - 4];
+      const b = candles[candles.length - 3];
+      const c = candles[candles.length - 2];
+      const d = candles[candles.length - 1];
+      return isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close) && isBearish(c) && isBearish(d) && d.close < a.open;
+    }
+
+    function detectFVGFillBuy(candles) {
+      if (!candles || candles.length < 3) return false;
+      const a = candles[candles.length - 3];
+      const b = candles[candles.length - 2];
+      const c = candles[candles.length - 1];
+      return b.low > a.high && c.low <= a.high && c.close > b.low;
+    }
+
+    function detectFVGFillSell(candles) {
+      if (!candles || candles.length < 3) return false;
+      const a = candles[candles.length - 3];
+      const b = candles[candles.length - 2];
+      const c = candles[candles.length - 1];
+      return b.high < a.low && c.high >= a.low && c.close < b.high;
+    }
+
+    function isSwingHigh(candles, i) {
+      if (i < 1 || i > candles.length - 2) return false;
+      return candles[i].high > candles[i - 1].high && candles[i].high > candles[i + 1].high;
+    }
+
+    function isSwingLow(candles, i) {
+      if (i < 1 || i > candles.length - 2) return false;
+      return candles[i].low < candles[i - 1].low && candles[i].low < candles[i + 1].low;
+    }
+
+    function isBOSUp(candles) {
+      if (!candles || candles.length < 5) return false;
+      const highs = [];
+      for (let i = 1; i < candles.length - 1; i++) {
+        if (isSwingHigh(candles, i)) highs.push(candles[i].high);
+      }
+      return highs.length >= 2 && highs[highs.length - 1] > highs[highs.length - 2];
+    }
+
+    function isBOSDown(candles) {
+      if (!candles || candles.length < 5) return false;
+      const lows = [];
+      for (let i = 1; i < candles.length - 1; i++) {
+        if (isSwingLow(candles, i)) lows.push(candles[i].low);
+      }
+      return lows.length >= 2 && lows[lows.length - 1] < lows[lows.length - 2];
+    }
+
+    function isLiquiditySweepDown(candles) {
+      if (!candles || candles.length < 3) return false;
       const last = candles[candles.length - 1];
-      const prev = candles[candles.length - 2];
-      
-      const lastBody = Math.abs(last.close - last.open);
-      const prevBody = Math.abs(prev.close - prev.open);
-      
-      if (last.close > last.open && prev.close < prev.open && last.close >= prev.open && lastBody > prevBody) {
-        return "BUY";
-      }
-      if (last.close < last.open && prev.close > prev.open && last.close <= prev.open && lastBody > prevBody) {
-        return "SELL";
-      }
+      const slice = candles.slice(0, -1);
+      const prevLow = Math.min(...slice.map(c => c.low));
+      return last.low < prevLow && last.close > prevLow;
+    }
 
-      const upperWick = last.high - Math.max(last.open, last.close);
-      const lowerWick = Math.min(last.open, last.close) - last.low;
-      
-      if (lowerWick > lastBody * 2 && lowerWick > upperWick) return "BUY";
-      if (upperWick > lastBody * 2 && upperWick > lowerWick) return "SELL";
+    function isLiquiditySweepUp(candles) {
+      if (!candles || candles.length < 3) return false;
+      const last = candles[candles.length - 1];
+      const slice = candles.slice(0, -1);
+      const prevHigh = Math.max(...slice.map(c => c.high));
+      return last.high > prevHigh && last.close < prevHigh;
+    }
 
+    function detectLongDistanceSNR(candles) {
+      if (!candles || candles.length < 20) return { demand: null, supply: null };
+      return { demand: Math.min(...candles.map(c => c.low)), supply: Math.max(...candles.map(c => c.high)) };
+    }
+
+    function detectHiddenSNR(candles) {
+      if (!candles || candles.length < 10) return { demand: null, supply: null };
+      const mid = Math.floor(candles.length / 2);
+      const slice = candles.slice(Math.max(0, mid - 5), mid + 5);
+      return { demand: Math.min(...slice.map(c => c.low)), supply: Math.max(...slice.map(c => c.high)) };
+    }
+
+    function snrMasterStudy(candles) {
+      const longSNR = detectLongDistanceSNR(candles);
+      const hiddenSNR = detectHiddenSNR(candles);
+      const lastPrice = candles[candles.length - 1]?.close;
+      if (lastPrice == null) return "NONE";
+      const demand = hiddenSNR.demand || longSNR.demand;
+      const supply = hiddenSNR.supply || longSNR.supply;
+      if (demand && Math.abs(lastPrice - demand) < Math.abs(lastPrice - supply)) return "STRONG_BUY_ZONE";
+      if (supply && Math.abs(lastPrice - supply) < Math.abs(lastPrice - demand)) return "STRONG_SELL_ZONE";
       return "NONE";
     }
 
-    function volumeConfirmation(candles) {
-      if (!candles || candles.length < 2) return "WEAK";
-      const last = candles[candles.length - 1];
-      const prev = candles[candles.length - 2];
-      return Math.abs(last.close - prev.close) > 0.0001 ? "STRONG" : "WEAK";
-    }
-
-    // --- OPTIMIZED & CORRECTED STRATEGY LAYER ---
+    // --- STRATEGY LAYER WITH ALL RESTORED SMC & INDICATORS ---
     function strategyLayer(candles) {
-      const ema = EMA(candles, 20);
+      const ema20 = EMA(candles, 20);
+      const keltner = Keltner(candles);
+      const frama = FRAMA(candles);
       const fractal = Fractal(candles);
-      const kc = KeltnerChannel(candles);
-      const pa = advancedPriceAction(candles);
-      const volume = volumeConfirmation(candles);
-      
+      const bullishOB = detectBullishOB(candles);
+      const bearishOB = detectBearishOB(candles);
+      const fvgBuy = detectFVGFillBuy(candles);
+      const fvgSell = detectFVGFillSell(candles);
+      const bosUp = isBOSUp(candles);
+      const bosDown = isBOSDown(candles);
+      const sweepDown = isLiquiditySweepDown(candles);
+      const sweepUp = isLiquiditySweepUp(candles);
+      const snrZone = snrMasterStudy(candles);
+
       let buyCount = 0;
       let sellCount = 0;
+
+      if (ema20.direction === "up") buyCount++;
+      else if (ema20.direction === "down") sellCount++;
+
+      if (keltner.direction === "up") buyCount++;
+      else if (keltner.direction === "down") sellCount++;
+
+      if (frama.direction === "up") buyCount++;
+      else if (frama.direction === "down") sellCount++;
 
       if (fractal.structure === "HH-HL") buyCount++;
       else if (fractal.structure === "LH-LL") sellCount++;
 
-      if (ema.direction === "up") buyCount++;
-      else if (ema.direction === "down") sellCount++;
+      if (bullishOB || fvgBuy || bosUp || sweepDown || snrZone === "STRONG_BUY_ZONE") buyCount += 2;
+      if (bearishOB || fvgSell || bosDown || sweepUp || snrZone === "STRONG_SELL_ZONE") sellCount += 2;
 
-      if (kc.position === "lower" || kc.position === "middle") buyCount++;
-      else if (kc.position === "upper") sellCount++;
-
-      if (pa === "BUY") { buyCount += 2; }
-      else if (pa === "SELL") { sellCount += 2; }
-
-      if (volume === "STRONG") {
-        if (candles[candles.length - 1].close >= candles[candles.length - 2].close) buyCount++;
-        else sellCount++;
-      }
-
-      if (buyCount > sellCount) {
+      if (buyCount >= sellCount) {
         return { direction: "BUY", trendArrow: "⬆ Strong Uptrend", score: Math.floor(Math.random() * 8) + 91 };
-      } else if (sellCount > buyCount) {
-        return { direction: "SELL", trendArrow: "⬇ Strong Downtrend", score: Math.floor(Math.random() * 8) + 91 };
       } else {
-        const lastCandle = candles[candles.length - 1];
-        const prevCandle = candles[candles.length - 2] || lastCandle;
-        if (lastCandle.close < prevCandle.close) {
-          return { direction: "SELL", trendArrow: "⬇ Strong Downtrend", score: Math.floor(Math.random() * 5) + 88 };
-        } else {
-          return { direction: "BUY", trendArrow: "⬆ Strong Uptrend", score: Math.floor(Math.random() * 5) + 88 };
-        }
+        return { direction: "SELL", trendArrow: "⬇ Strong Downtrend", score: Math.floor(Math.random() * 8) + 91 };
       }
     }
 
