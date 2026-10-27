@@ -494,6 +494,28 @@
     setInterval(updateClock, 1000);
     updateClock();
 
+    function renderPairList(pairs) {
+    if (!pairListWrapper) return;
+    pairListWrapper.innerHTML = "";
+    pairs.forEach(pair => {
+      const item = document.createElement("div");
+      item.className = "pair-item";
+      item.textContent = pair.label;
+      item.addEventListener("click", () => {
+        currentPairValue = pair.symbol;
+        currentPairText = pair.label;
+        if (selectedPairDisplay) selectedPairDisplay.textContent = currentPairText;
+        if (pairSearchInput) pairSearchInput.value = "";
+        renderPairList(allPairs);
+        priceWindow = [];
+        prevPrice = null;
+        updateMarketStatus(currentPairValue);
+      });
+      pairListWrapper.appendChild(item);
+    });
+  }
+  renderPairList(allPairs);
+    
     document.querySelectorAll("#timingButtons button").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll("#timingButtons button").forEach(b => b.classList.remove("active"));
