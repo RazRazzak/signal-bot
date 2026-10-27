@@ -643,7 +643,6 @@
     }
     function isLiquidityGrabDown(candles) { return isLiquiditySweepDown(candles); }
     function isLiquidityGrabUp(candles) { return isLiquiditySweepUp(candles); }
-
     function detectBullishOB(candles) {
       if (!candles || candles.length < 4) return false;
       const a = candles[candles.length - 4];
@@ -669,17 +668,14 @@
 
       return strongBull && strongBearMove;
     }
-      const strongBull = isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close);
-      const strongBearMove = isBearish(c) && isBearish(d) && d.close < a.open;
-
-      return strongBull && strongBearMove;
-    }
 
     function detectFVGFillBuy(candles) {
       if (!candles || candles.length < 3) return false;
-      const a = candles[candles.length - 3], b = candles[candles.length - 2], c = candles[candles.length - 1];
+      const a = candles[candles.length - 3];
+      const b = candles[candles.length - 2];
+      const c = candles[candles.length - 1];
       
-     const gapUp = b.low > a.high;
+      const gapUp = b.low > a.high;
       const fill = c.low <= a.high && c.close > b.low;
 
       return gapUp && fill;
@@ -687,14 +683,15 @@
     
     function detectFVGFillSell(candles) {
       if (!candles || candles.length < 3) return false;
-      const a = candles[candles.length - 3], b = candles[candles.length - 2], c = candles[candles.length - 1];
+      const a = candles[candles.length - 3];
+      const b = candles[candles.length - 2];
+      const c = candles[candles.length - 1];
       
       const gapDown = b.high < a.low;
       const fill = c.high >= a.low && c.close < b.high;
 
       return gapDown && fill;
     }
-
     function isSwingHigh(candles, i) {
       if (i < 1 || i > candles.length - 2) return false;
       return candles[i].high > candles[i - 1].high && candles[i].high > candles[i + 1].high;
