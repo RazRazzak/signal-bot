@@ -933,9 +933,13 @@
       return "NONE";
     }
 
+    function isOTC(pairValue) {
+      return pairValue ? pairValue.includes("OTC") : false;
+    }
+
     function otcBoosterDecision(pairValue, candles, baseDirection, baseScore) {
       if (!isOTC(pairValue)) return { direction: baseDirection, score: baseScore };
-
+     
       const patternBoost = otcPatternBoost(candles);
       const liqBoost = otcLiquidityBoost(candles);
       const snrBoost = otcSNRBoost(candles);
