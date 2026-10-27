@@ -714,39 +714,98 @@
     }
 
     async function fetchQuote(pairValue) {
-      let currentPrice = prevPrice != null ? prevPrice : 1.1000;
-      let source = "Live API";
-      const cleanSymbol = pairValue.replace("_OTC", "").replace("/", "");
 
-      if (pairValue.includes("OTC")) {
-        currentPrice += (Math.random() - 0.49) * 0.0020;
-        source = "OTC Market";
-      } else {
-        try {
-          const res = await fetch(`https://open.er-api.com/v6/latest/${cleanSymbol.slice(0, 3)}`);
-          if (res.ok) {
-            const data = await res.json();
-            const target = cleanSymbol.slice(3, 6);
-            if (data && data.rates && data.rates[target]) {
-              currentPrice = data.rates[target] + (Math.random() - 0.5) * 0.0005;
-            }
-          }
-        } catch (e) {
-          currentPrice += (Math.random() - 0.5) * 0.001;
-          source = "Live (Fallback)";
+  let currentPrice =
+    prevPrice != null ? prevPrice : 1.10000;
+
+  let source = "Fallback";
+
+  try {
+
+    if (pairValue.includes("_OTC")) {
+
+      currentPrice =
+        prevPrice != null
+          ? prevPrice +
+            (Math.random() - 0.5) * 0.002
+          : 1 + Math.random();
+
+      source = "OTC Market";
+
+    } else {
+
+      const base =
+        pairValue.substring(0, 3);
+
+      const quote =
+        pairValue.substring(3, 6);
+
+      const res = await fetch(
+        `https://open.er-api.com/v6/latest/${base}`
+      );
+
+      if (res.ok) {
+
+        const data =
+          await res.json();
+
+        if (
+          data &&
+          data.rates &&
+          data.rates[quote]
+        ) {
+
+          currentPrice =
+            data.rates[quote];
+
+          source = "Live API";
         }
+
       }
-      
-      const openPrice = prevPrice || currentPrice;
-      const highPrice = Math.max(openPrice, currentPrice) + Math.random() * 0.0004;
-      const lowPrice = Math.min(openPrice, currentPrice) - Math.random() * 0.0004;
 
-      priceWindow.push({ open: openPrice, high: highPrice, low: lowPrice, close: currentPrice });
-      if (priceWindow.length > 50) priceWindow.shift();
-
-      prevPrice = currentPrice;
-      return { currentPrice: Number(currentPrice.toFixed(5)), source };
     }
+
+  } catch (err) {
+
+    currentPrice =
+      prevPrice != null
+        ? prevPrice +
+          (Math.random() - 0.5) * 0.001
+        : 1 + Math.random();
+
+    source = "Fallback";
+
+  }
+
+  const openPrice =
+    prevPrice || currentPrice;
+
+  const highPrice =
+    Math.max(openPrice, currentPrice);
+
+  const lowPrice =
+    Math.min(openPrice, currentPrice);
+
+  priceWindow.push({
+    open: openPrice,
+    high: highPrice,
+    low: lowPrice,
+    close: currentPrice
+  });
+
+  if (priceWindow.length > 50) {
+    priceWindow.shift();
+  }
+
+  prevPrice = currentPrice;
+
+  return {
+    currentPrice:
+      Number(currentPrice.toFixed(5)),
+    source
+  };
+
+}
 
     async function generateSignal(triggerMode) {
       const quote = await fetchQuote(currentPairValue);
