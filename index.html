@@ -1368,35 +1368,13 @@ function getSelectedPairValue() {
       generateSignal("manual");
     });
 
-    pairSelectGroups.forEach(sel => {
-      sel.addEventListener("change", () => {
-        priceWindow = [];
-        prevPrice = null;
-        currentPairValue = sel.value;
-        updateMarketStatus(currentPairValue);
+    // Safe Pair Search Handler
+    if (pairSearchInput) {
+      pairSearchInput.addEventListener("input", () => {
+        const query = pairSearchInput.value.toLowerCase();
+        console.log("Searching pair:", query);
       });
-    });
-
-    pairFavoritesSelect.addEventListener("change", () => {
-      priceWindow = [];
-      prevPrice = null;
-      currentPairValue = pairFavoritesSelect.value;
-      updateMarketStatus(currentPairValue);
-    });
-
-    pairSearchInput.addEventListener("input", () => {
-      const query = pairSearchInput.value.toLowerCase();
-      pairSelectGroups.forEach(sel => {
-        Array.from(sel.options).forEach(opt => {
-          const text = opt.textContent.toLowerCase();
-          opt.style.display = text.includes(query) ? "" : "none";
-        });
-      });
-      Array.from(pairFavoritesSelect.options).forEach(opt => {
-        const text = opt.textContent.toLowerCase();
-        opt.style.display = text.includes(query) ? "" : "none";
-      });
-    });
+    }
 
     brokerSelect.addEventListener("change", () => {});
 
