@@ -706,12 +706,33 @@
       if (bullishOB || fvgBuy || bosUp || sweepDown || snrZone === "STRONG_BUY_ZONE") buyCount += 2;
       if (bearishOB || fvgSell || bosDown || sweepUp || snrZone === "STRONG_SELL_ZONE") sellCount += 2;
 
-      if (buyCount >= sellCount) {
-        return { direction: "BUY", trendArrow: "⬆ Strong Uptrend", score: Math.floor(Math.random() * 8) + 91 };
-      } else {
-        return { direction: "SELL", trendArrow: "⬇ Strong Downtrend", score: Math.floor(Math.random() * 8) + 91 };
-      }
-    }
+      if (buyCount > sellCount) {
+
+  return {
+    direction: "BUY",
+    trendArrow: "⬆ Strong Uptrend",
+    score: Math.min(99, 70 + (buyCount * 5))
+  };
+
+}
+else if (sellCount > buyCount) {
+
+  return {
+    direction: "SELL",
+    trendArrow: "⬇ Strong Downtrend",
+    score: Math.min(99, 70 + (sellCount * 5))
+  };
+
+}
+else {
+
+  return {
+    direction: "NEUTRAL",
+    trendArrow: "→ Sideways",
+    score: 50
+  };
+
+}
 
     async function fetchQuote(pairValue) {
 
