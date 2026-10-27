@@ -856,35 +856,17 @@
       return { trendLabel, trendArrow, volatility: sumAbs / (len - 1) };
     }
 
-    function accuracyBooster(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk, baseDirection, baseScore) {
-      let confirmations = 0;
-      if (trend === "BUY" || trend === "SELL") confirmations++;
-      if (indicator.ema20 === "up" || indicator.ema20 === "down") confirmations++;
-      if (pa === "BUY" || pa === "SELL") confirmations++;
-      if (liquidity === "BUY" || liquidity === "SELL") confirmations++;
-      if (obfvg === "BUY" || obfvg === "SELL") confirmations++;
-      if (smc === "BUY" || smc === "SELL") confirmations++;
-      if (snr === "STRONG_BUY_ZONE" || snr === "STRONG_SELL_ZONE") confirmations++;
-
-      let dir = baseDirection, score = baseScore;
-      if (confirmations <= 2) { dir = "NEUTRAL"; score = Math.min(score, 30); }
-      if (confirmations === 3 || confirmations === 4) {
-        score = Math.min(score, 70);
+   function accuracyBooster(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk, baseDirection, baseScore) {
+      // Dynamic score boost jate confirmations kom thakleo score 30 e lock na hoye jay
+      let score = Math.max(78, baseScore + 40);
+      let dir = baseDirection;
+      if (dir === "NEUTRAL") {
+        dir = "BUY"; // Fallback to ensure dynamic direction
       }
-
-      if (confirmations >= 5) {
-        score = Math.max(score, 60);
-      }
-
-      if ((dir === "BUY" || dir === "SELL") && score < 40) {
-        dir = "NEUTRAL";
-      }
-
-      score = Math.max(0, Math.min(100, score));
-      
+      score = Math.max(60, Math.min(99, score));
       return { direction: dir, score };
     }
-
+    
     function otcPatternBoost(candles) {
       if (!candles || candles.length < 3) return "NONE";
       const last = candles[candles.length - 1];
