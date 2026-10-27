@@ -457,11 +457,9 @@
       { symbol: "GBPNZD_OTC", label: "GBP/NZD (OTC)" },
       { symbol: "EURNZD_OTC", label: "EUR/NZD (OTC)" }
     ];
-    const FINNHUB_API_KEY = "db9n5p9r01qkqqs3cflgdb9n5p9r01qkqqs3cfm0";
     const clockEl = document.getElementById("clock");
     const brokerSelect = document.getElementById("brokerSelect");
     const marketStatusEl = document.getElementById("marketStatus");
-    const timingButtonsEl = document.getElementById("timingButtons");
     const createSignalBtn = document.getElementById("createSignalBtn");
     const autoToggleBtn = document.getElementById("autoToggleBtn");
     const signalPanel = document.getElementById("signalPanel");
@@ -475,24 +473,13 @@
     const sourceInfoEl = document.getElementById("sourceInfo");
     const historyListEl = document.getElementById("historyList");
     const popupAlertEl = document.getElementById("popupAlert");
-
     const pairSearchInput = document.getElementById("pairSearchInput");
-    const pairFavoritesSelect = document.getElementById("pairFavoritesSelect");
-
-    const pairSelectGroups = [
-      document.getElementById("pairMajorSelect"),
-      document.getElementById("pairMinorSelect"),
-      document.getElementById("pairMetalsSelect"),
-      document.getElementById("pairCryptoSelect"),
-      document.getElementById("pairIndicesSelect"),
-      document.getElementById("pairStocksSelect"),
-      document.getElementById("pairOtcQuotexSelect"),
-      document.getElementById("pairOtcBinolaSelect")
-    ];
-
+    const pairListWrapper = document.getElementById("pairListWrapper");
+    const selectedPairDisplay = document.getElementById("selectedPairDisplay");
     const glassPanel = document.getElementById("glassPanel");
     const glassHeader = document.getElementById("glassHeader");
-
+    ];
+    
     let prevPrice = null;
     let priceWindow = [];
     let selectedTimingSeconds = 0;
