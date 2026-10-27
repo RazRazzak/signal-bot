@@ -1049,35 +1049,42 @@
   }
 }
 
+   const FINNHUB_API_KEY = "db9n5p9r01qkqqs3cflgdb9n5p9r01qkqqs3cfm0";
+
     async function fetchQuote(pairValue) {
       let currentPrice = prevPrice != null ? prevPrice : 1.10000;
-      let source = "Live API";
+      let source = "Finnhub Live";
 
       try {
-        if (pairValue.includes("_OTC")) {
-          currentPrice = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.002 : 1 + Math.random();
-          source = "OTC Market";
-        } else {
-          const base = pairValue.substring(0, 3);
-          const quoteSymbol = pairValue.substring(3, 6);
-          const res = await fetch(`https://open.er-api.com/v6/latest/${base}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.rates && data.rates[quoteSymbol]) {
-              currentPrice = data.rates[quoteSymbol];
-              source = "Live API";
-            }
+        let symbolForApi = pairValue.replace("_OTC", "");
+        let apiEndpoint = `https://finnhub.io/api/v1/forex/symbol?exchange=oanda`; // ba proper forex quote endpoint
+        
+        // Jodi crypto ba forex hoy
+        let url = `https://finnhub.io/api/v1/quote?symbol=OANDA:${symbolForApi}&token=${FINNHUB_API_KEY}`;
+        if (pairValue.includes("BTC") || pairValue.includes("ETH")) {
+          url = `https://finnhub.io/api/v1/quote?symbol=BINANCE:${symbolForApi}&token=${FINNHUB_API_KEY}`;
+        }
+
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.c > 0) {
+            currentPrice = data.c;
+            source = "Finnhub API";
+          } else {
+            // Fallback to open exchange rate jodi finnhub data na dey
+            currentPrice = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.002 : 1.10000;
+            source = "Simulated Live";
           }
         }
       } catch (err) {
-        currentPrice = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.001 : 1 + Math.random();
+        currentPrice = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.002 : 1.10000;
         source = "Fallback";
       }
 
       prevPrice = currentPrice;
       return { currentPrice: Number(currentPrice.toFixed(5)), source };
     }
-
     function getSelectedPairValue() { return currentPairValue || "EURUSD"; }
     function getSelectedPairText() { return currentPairText || "EUR/USD (Major)"; }
     function addFavoritePair(pairValue, pairText) {}
