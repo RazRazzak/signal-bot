@@ -641,28 +641,34 @@
       const prevHigh = getRecentHigh(candles.slice(0, -1), 10);
       return last.high > prevHigh && last.close < prevHigh;
     }
-     
     function isLiquidityGrabDown(candles) { return isLiquiditySweepDown(candles); }
-     function isLiquidityGrabUp(candles) { return isLiquiditySweepUp(candles); }
+    function isLiquidityGrabUp(candles) { return isLiquiditySweepUp(candles); }
 
     function detectBullishOB(candles) {
       if (!candles || candles.length < 4) return false;
-      const a = candles[candles.length - 4], b = candles[candles.length - 3], c = candles[candles.length - 2], d = candles[candles.length - 1];
-      return isBearish(a) && (a.open - a.close) > Math.abs(b.close - b.open) && isBullish(c) && isBullish(d) && d.close > a.open;
-    }
-    
+      const a = candles[candles.length - 4];
+      const b = candles[candles.length - 3];
+      const c = candles[candles.length - 2];
+      const d = candles[candles.length - 1];
+
       const strongBear = isBearish(a) && (a.open - a.close) > Math.abs(b.close - b.open);
       const strongBullMove = isBullish(c) && isBullish(d) && d.close > a.open;
 
       return strongBear && strongBullMove;
     }
-    
+
     function detectBearishOB(candles) {
       if (!candles || candles.length < 4) return false;
-      const a = candles[candles.length - 4], b = candles[candles.length - 3], c = candles[candles.length - 2], d = candles[candles.length - 1];
-      return isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close) && isBearish(c) && isBearish(d) && d.close < a.open;
+      const a = candles[candles.length - 4];
+      const b = candles[candles.length - 3];
+      const c = candles[candles.length - 2];
+      const d = candles[candles.length - 1];
+
+      const strongBull = isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close);
+      const strongBearMove = isBearish(c) && isBearish(d) && d.close < a.open;
+
+      return strongBull && strongBearMove;
     }
-    
       const strongBull = isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close);
       const strongBearMove = isBearish(c) && isBearish(d) && d.close < a.open;
 
