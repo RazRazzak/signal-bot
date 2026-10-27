@@ -513,6 +513,7 @@
           priceWindow = [];
           prevPrice = null;
           updateMarketStatus(currentPairValue);
+          generateSignal("manual"); // Pair change korar sathei shonge shonge signal generate korbe
         });
         pairListWrapper.appendChild(item);
       });
@@ -879,15 +880,18 @@
     }
 
     function updateMarketStatus(pairValue) {
-      if (!marketStatusEl) return;
-      if (pairValue.includes("OTC")) {
-        marketStatusEl.textContent = "OTC";
-        marketStatusEl.className = "badge badge-otc";
-      } else {
-        marketStatusEl.textContent = "Live";
-        marketStatusEl.className = "badge badge-live";
-      }
-    }
+  if (!marketStatusEl) return;
+  if (pairValue.includes("OTC")) {
+    marketStatusEl.textContent = "OTC";
+    marketStatusEl.className = "badge badge-otc";
+  } else if (pairValue.includes("USDT") || pairValue.includes("BTC") || pairValue.includes("ETH")) {
+    marketStatusEl.textContent = "Crypto";
+    marketStatusEl.className = "badge badge-custom";
+  } else {
+    marketStatusEl.textContent = "Live";
+    marketStatusEl.className = "badge badge-live";
+  }
+}
 
     async function fetchQuote(pairValue) {
       let currentPrice = prevPrice != null ? prevPrice : 1.10000;
