@@ -464,6 +464,7 @@
     const clockEl = document.getElementById("clock");
     const brokerSelect = document.getElementById("brokerSelect");
     const marketStatusEl = document.getElementById("marketStatus");
+    const timingButtonsEl = document.getElementById("timingButtons");
     const createSignalBtn = document.getElementById("createSignalBtn");
     const autoToggleBtn = document.getElementById("autoToggleBtn");
     const signalPanel = document.getElementById("signalPanel");
@@ -640,26 +641,52 @@
       const prevHigh = getRecentHigh(candles.slice(0, -1), 10);
       return last.high > prevHigh && last.close < prevHigh;
     }
+     
+    function isLiquidityGrabDown(candles) { return isLiquiditySweepDown(candles); }
+     function isLiquidityGrabUp(candles) { return isLiquiditySweepUp(candles); }
 
     function detectBullishOB(candles) {
       if (!candles || candles.length < 4) return false;
       const a = candles[candles.length - 4], b = candles[candles.length - 3], c = candles[candles.length - 2], d = candles[candles.length - 1];
       return isBearish(a) && (a.open - a.close) > Math.abs(b.close - b.open) && isBullish(c) && isBullish(d) && d.close > a.open;
     }
+    
+      const strongBear = isBearish(a) && (a.open - a.close) > Math.abs(b.close - b.open);
+      const strongBullMove = isBullish(c) && isBullish(d) && d.close > a.open;
+
+      return strongBear && strongBullMove;
+    }
+    
     function detectBearishOB(candles) {
       if (!candles || candles.length < 4) return false;
       const a = candles[candles.length - 4], b = candles[candles.length - 3], c = candles[candles.length - 2], d = candles[candles.length - 1];
       return isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close) && isBearish(c) && isBearish(d) && d.close < a.open;
     }
+    
+      const strongBull = isBullish(a) && (a.close - a.open) > Math.abs(b.open - b.close);
+      const strongBearMove = isBearish(c) && isBearish(d) && d.close < a.open;
+
+      return strongBull && strongBearMove;
+    }
+
     function detectFVGFillBuy(candles) {
       if (!candles || candles.length < 3) return false;
       const a = candles[candles.length - 3], b = candles[candles.length - 2], c = candles[candles.length - 1];
-      return b.low > a.high && c.low <= a.high && c.close > b.low;
+      
+     const gapUp = b.low > a.high;
+      const fill = c.low <= a.high && c.close > b.low;
+
+      return gapUp && fill;
     }
+    
     function detectFVGFillSell(candles) {
       if (!candles || candles.length < 3) return false;
       const a = candles[candles.length - 3], b = candles[candles.length - 2], c = candles[candles.length - 1];
-      return b.high < a.low && c.high >= a.low && c.close < b.high;
+      
+      const gapDown = b.high < a.low;
+      const fill = c.high >= a.low && c.close < b.high;
+
+      return gapDown && fill;
     }
 
     function isSwingHigh(candles, i) {
@@ -674,15 +701,32 @@
       if (!candles || candles.length < 5) return false;
       const highs = [];
       for (let i = 1; i < candles.length - 1; i++) { if (isSwingHigh(candles, i)) highs.push(candles[i].high); }
-      return highs.length >= 2 && highs[highs.length - 1] > highs[highs.length - 2];
+      if (highs.length < 2) return false;
+      const lastHigh = highs[highs.length - 1];
+      const prevHigh = highs[highs.length - 2];
+      return lastHigh > prevHigh;
     }
     function isBOSDown(candles) {
       if (!candles || candles.length < 5) return false;
       const lows = [];
       for (let i = 1; i < candles.length - 1; i++) { if (isSwingLow(candles, i)) lows.push(candles[i].low); }
-      return lows.length >= 2 && lows[lows.length - 1] < lows[lows.length - 2];
+     if (lows.length < 2) return false;
+      const lastLow = lows[lows.length - 1];
+      const prevLow = lows[lows.length - 2];
+      return lastLow < prevLow;
     }
 
+    function isCHoCHUp(candles) { return isBOSUp(candles); }
+    function isCHoCHDown(candles) { return isBOSDown(candles); }
+
+    function isMMCModelBuy(candles) {
+      return isBOSUp(candles) && isLiquiditySweepDown(candles);
+    }
+
+    function isMMCModelSell(candles) {
+      return isBOSDown(candles) && isLiquiditySweepUp(candles);
+    }
+    
     function detectLongDistanceSNR(candles) {
       if (!candles || candles.length < 20) return { demand: null, supply: null };
       return { demand: Math.min(...candles.map(c => c.low)), supply: Math.max(...candles.map(c => c.high)) };
@@ -745,6 +789,8 @@
     function liquidityEngine(candles) {
       if (isLiquiditySweepDown(candles)) return "BUY";
       if (isLiquiditySweepUp(candles)) return "SELL";
+      if (isLiquidityGrabDown(candles)) return "BUY";
+      if (isLiquidityGrabUp(candles)) return "SELL";
       return "NONE";
     }
 
@@ -759,6 +805,10 @@
     function smcEngine(candles) {
       if (isBOSUp(candles)) return "BUY";
       if (isBOSDown(candles)) return "SELL";
+      if (isCHoCHUp(candles)) return "BUY";
+      if (isCHoCHDown(candles)) return "SELL";
+      if (isMMCModelBuy(candles)) return "BUY";
+      if (isMMCModelSell(candles)) return "SELL";
       return "NONE";
     }
 
@@ -815,16 +865,92 @@
 
       let dir = baseDirection, score = baseScore;
       if (confirmations <= 2) { dir = "NEUTRAL"; score = Math.min(score, 30); }
+      if (confirmations === 3 || confirmations === 4) {
+        score = Math.min(score, 70);
+      }
+
+      if (confirmations >= 5) {
+        score = Math.max(score, 60);
+      }
+
+      if ((dir === "BUY" || dir === "SELL") && score < 40) {
+        dir = "NEUTRAL";
+      }
+
+      score = Math.max(0, Math.min(100, score));
+      
+      return { direction: dir, score };
+    }
+
+    function otcPatternBoost(candles) {
+      if (!candles || candles.length < 3) return "NONE";
+      const last = candles[candles.length - 1];
+      const prev = candles[candles.length - 2];
+      const prev2 = candles[candles.length - 3];
+
+      if (isBearish(prev2) && isBullish(prev) && isBearish(last)) {
+        return "SELL";
+      }
+      if (isBullish(prev2) && isBearish(prev) && isBullish(last)) {
+        return "BUY";
+      }
+
+      if (hasStrongWickUp(prev) && hasStrongWickUp(last)) return "SELL";
+      if (hasStrongWickDown(prev) && hasStrongWickDown(last)) return "BUY";
+
+      return "NONE";
+    }
+
+    function otcLiquidityBoost(candles) {
+      if (!candles || candles.length < 2) return "NONE";
+      const last = candles[candles.length - 1];
+      if (isLiquiditySweepDown(candles) && hasStrongWickDown(last)) {
+        return "BUY";
+      }
+      if (isLiquiditySweepUp(candles) && hasStrongWickUp(last)) {
+        return "SELL";
+      }
+      return "NONE";
+    }
+
+    function otcSNRBoost(candles) {
+      if (!candles || candles.length < 10) return "NONE";
+      const last = candles[candles.length - 1];
+      const lows = candles.slice(-10).map(c => c.low);
+      const highs = candles.slice(-10).map(c => c.high);
+      const minLow = Math.min(...lows);
+      const maxHigh = Math.max(...highs);
+      const tol = (maxHigh - minLow) * 0.1 || 0.0005;
+
+      if (Math.abs(last.close - minLow) < tol) return "STRONG_BUY_ZONE";
+      if (Math.abs(last.close - maxHigh) < tol) return "STRONG_SELL_ZONE";
+      return "NONE";
+    }
+
+    function otcBoosterDecision(pairValue, candles, baseDirection, baseScore) {
+      if (!isOTC(pairValue)) return { direction: baseDirection, score: baseScore };
+
+      const patternBoost = otcPatternBoost(candles);
+      const liqBoost = otcLiquidityBoost(candles);
+      const snrBoost = otcSNRBoost(candles);
+
+      let dir = baseDirection;
+      let score = baseScore;
+
+      if (patternBoost === "BUY" || liqBoost === "BUY" || snrBoost === "STRONG_BUY_ZONE") {
+        if (dir === "BUY") score += 10;
+        else if (dir === "NEUTRAL") { dir = "BUY"; score += 8; }
+      }
+
+      if (patternBoost === "SELL" || liqBoost === "SELL" || snrBoost === "STRONG_SELL_ZONE") {
+        if (dir === "SELL") score += 10;
+        else if (dir === "NEUTRAL") { dir = "SELL"; score += 8; }
+      }
+
       score = Math.max(0, Math.min(100, score));
       return { direction: dir, score };
     }
 
-    function isOTC(pairValue) { return pairValue && pairValue.includes("OTC"); }
-
-    function otcBoosterDecision(pairValue, candles, baseDirection, baseScore) {
-      if (!isOTC(pairValue)) return { direction: baseDirection, score: baseScore };
-      return { direction: baseDirection, score: baseScore };
-    }
 
     function detectBreakoutAndRetest(current) {
       if (priceWindow.length < 5 || current == null) return { isBreakout: false, isRetest: false };
@@ -836,14 +962,18 @@
     }
 
     function computeRiskLevel(volatility, percentChange, isBreakout, isRetest) {
+      const v = volatility || 0;
+      const p = Math.abs(percentChange || 0);
       let score = 0;
-      if (volatility > 0.5) score += 2;
+      if (v > 0.5 || p > 0.5) score += 2;
+      if (v > 0.2 || p > 0.2) score += 1;
       if (isBreakout) score += 2;
+      if (isRetest) score -= 1;
       if (score <= 1) return "Low Risk";
       if (score === 2) return "Medium Risk";
       return "High Risk";
     }
-
+    
     function showPopupAlert(text) {
       if (!popupAlertEl) return;
       popupAlertEl.textContent = text;
@@ -868,14 +998,33 @@
     }
 
     function strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk) {
-      const recentSlice = priceWindow.slice(-5);
-      let cumulativeSlope = 0;
-      for (let i = 1; i < recentSlice.length; i++) {
-        cumulativeSlope += recentSlice[i].close - recentSlice[i - 1].close;
-      }
+      const buySignals = [
+        trend === "BUY",
+        indicator.ema20 === "up",
+        pa === "BUY",
+        liquidity === "BUY",
+        obfvg === "BUY",
+        smc === "BUY",
+        snr === "STRONG_BUY_ZONE",
+        timingOk === true
+      ];
 
-      if (cumulativeSlope < 0) return "SELL";
-      if (cumulativeSlope > 0) return "BUY";
+      const sellSignals = [
+        trend === "SELL",
+        indicator.ema20 === "down",
+        pa === "SELL",
+        liquidity === "SELL",
+        obfvg === "SELL",
+        smc === "SELL",
+        snr === "STRONG_SELL_ZONE",
+        timingOk === true
+      ];
+
+      const buyMatch = buySignals.filter(x => x === true).length;
+      const sellMatch = sellSignals.filter(x => x === true).length;
+
+      if (buyMatch >= 4) return "BUY";
+      if (sellMatch >= 4) return "SELL";
       return "NEUTRAL";
     }
 
