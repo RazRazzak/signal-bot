@@ -481,14 +481,16 @@
       
     let prevPrice = null;
     let priceWindow = [];
-    let selectedTimingSeconds = 0;
+    let selectedTimingSeconds = 60;
     let autoTimer = null;
-    let currentPairValue = pairSelectGroups[0].value;
+    let currentPairValue = allPairs[0].symbol;
+    let currentPairText = allPairs[0].label;
 
     function updateClock() {
       const now = new Date();
       clockEl.textContent = now.toLocaleString();
     }
+   }
     setInterval(updateClock, 1000);
     updateClock();
 
