@@ -1393,10 +1393,11 @@ function getSelectedPairValue() {
     // Safe Pair Search Handler
     if (pairSearchInput) {
       pairSearchInput.addEventListener("input", () => {
-        const query = pairSearchInput.value.toLowerCase();
-        console.log("Searching pair:", query);
-      });
-    }
+        const q = pairSearchInput.value.toLowerCase().trim();
+        const filtered = q === "" ? allPairs : allPairs.filter(p => p.label.toLowerCase().includes(q) || p.symbol.toLowerCase().includes(q));
+        renderPairList(filtered);
+     }); 
+   } 
 
     brokerSelect.addEventListener("change", () => {});
 
