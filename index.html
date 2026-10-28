@@ -1061,6 +1061,16 @@
 
     let symbolForApi = pairValue.replace("_OTC", "");
 
+    if (
+  symbolForApi.length === 6 &&
+  !symbolForApi.includes("_")
+) {
+  symbolForApi =
+    symbolForApi.substring(0, 3) +
+    "_" +
+    symbolForApi.substring(3);
+}
+
     let url =
       `https://finnhub.io/api/v1/quote?symbol=OANDA:${symbolForApi}&token=${FINNHUB_API_KEY}`;
 
