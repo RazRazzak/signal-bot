@@ -1061,8 +1061,9 @@
         let apiEndpoint = `https://finnhub.io/api/v1/forex/symbol?exchange=oanda`; // ba proper forex quote endpoint
         
         // Jodi crypto ba forex hoy
-        let url = `https://finnhub.io/api/v1/quote?symbol=OANDA:${symbolForApi}&token=${FINNHUB_API_KEY}`;
-        if (pairValue.includes("BTC") || pairValue.includes("ETH")) {
+         url =
+          `https://finnhub.io/api/v1/quote?symbol=BINANCE:${symbolForApi}&token=${FINNHUB_API_KEY}`;
+          if (pairValue.includes("BTC") || pairValue.includes("ETH")) {
           url = `https://finnhub.io/api/v1/quote?symbol=BINANCE:${symbolForApi}&token=${FINNHUB_API_KEY}`;
         }
 
