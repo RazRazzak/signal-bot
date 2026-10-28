@@ -916,7 +916,7 @@
       return "NONE";
     }
 
-    function otcSNRBoost(candles) {
+      function otcSNRBoost(candles) {
       if (!candles || candles.length < 10) return "NONE";
       const last = candles[candles.length - 1];
       const lows = candles.slice(-10).map(c => c.low);
@@ -930,11 +930,11 @@
       return "NONE";
     }
 
-    function isOTC(pairValue) {
+      function isOTC(pairValue) {
       return pairValue ? pairValue.includes("OTC") : false;
     }
 
-    function otcBoosterDecision(pairValue, candles, baseDirection, baseScore) {
+      function otcBoosterDecision(pairValue, candles, baseDirection, baseScore) {
       if (!isOTC(pairValue)) return { direction: baseDirection, score: baseScore };
      
       const patternBoost = otcPatternBoost(candles);
@@ -944,12 +944,12 @@
       let dir = baseDirection;
       let score = baseScore;
 
-      if (patternBoost === "BUY" || liqBoost === "BUY" || snrBoost === "STRONG_BUY_ZONE") {
+        if (patternBoost === "BUY" || liqBoost === "BUY" || snrBoost === "STRONG_BUY_ZONE") {
         if (dir === "BUY") score += 10;
         else if (dir === "NEUTRAL") { dir = "BUY"; score += 8; }
       }
 
-      if (patternBoost === "SELL" || liqBoost === "SELL" || snrBoost === "STRONG_SELL_ZONE") {
+        if (patternBoost === "SELL" || liqBoost === "SELL" || snrBoost === "STRONG_SELL_ZONE") {
         if (dir === "SELL") score += 10;
         else if (dir === "NEUTRAL") { dir = "SELL"; score += 8; }
       }
@@ -968,7 +968,7 @@
       return { isBreakout, isRetest };
     }
 
-    function computeRiskLevel(volatility, percentChange, isBreakout, isRetest) {
+     function computeRiskLevel(volatility, percentChange, isBreakout, isRetest) {
       const v = volatility || 0;
       const p = Math.abs(percentChange || 0);
       let score = 0;
@@ -1036,8 +1036,8 @@
     }
 
     function updateMarketStatus(pairValue) {
-  if (!marketStatusEl) return;
-  if (pairValue.includes("OTC")) {
+    if (!marketStatusEl) return;
+    if (pairValue.includes("OTC")) {
     marketStatusEl.textContent = "OTC";
     marketStatusEl.className = "badge badge-otc";
   } else if (pairValue.includes("USDT") || pairValue.includes("BTC") || pairValue.includes("ETH")) {
