@@ -867,14 +867,17 @@
       if (snr === "STRONG_BUY_ZONE" || snr === "STRONG_SELL_ZONE") confirmations++;
 
       let dir = baseDirection, score = baseScore;
-      if (confirmations <= 2) { dir = "NEUTRAL"; score = Math.min(score, 30); }
-      if (confirmations === 3 || confirmations === 4) {
-        score = Math.min(score, 70);
-      }
+      if (confirmations <= 2) {dir = "NEUTRAL";
+          score = 50;
+    }
 
-      if (confirmations >= 5) {
-        score = Math.max(score, 60);
-      }
+      if (confirmations === 3 || confirmations === 4) {
+        score = Math.max(score, 65);
+   }
+
+    if (confirmations >= 5) {
+     score = Math.max(score, 80);
+   } 
 
       if ((dir === "BUY" || dir === "SELL") && score < 40) {
         dir = "NEUTRAL";
