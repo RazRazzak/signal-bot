@@ -1052,69 +1052,78 @@
   }
 }
 
-      async function fetchQuote(pairValue) {
-      let currentPrice = prevPrice != null ? prevPrice : 1.10000;
-      let source = "Finnhub Live";
+     async function fetchQuote(pairValue) {
 
-      try {
-        let symbolForApi = pairValue.replace("_OTC", "");
-        let apiEndpoint = `https://finnhub.io/api/v1/forex/symbol?exchange=oanda`; // ba proper forex quote endpoint
-        
-        // Jodi crypto ba forex hoy
-         url =
-          `https://finnhub.io/api/v1/quote?symbol=BINANCE:${symbolForApi}&token=${FINNHUB_API_KEY}`;
-          if (pairValue.includes("BTC") || pairValue.includes("ETH")) {
-          url = `https://finnhub.io/api/v1/quote?symbol=BINANCE:${symbolForApi}&token=${FINNHUB_API_KEY}`;
-        }
-            
-         console.log("PAIR =", pairValue);
-         console.log("URL =", url);
-         try {
+  let currentPrice = prevPrice != null ? prevPrice : 1.10000;
+  let source = "Finnhub Live";
 
-               const res = await fetch(url);
+  try {
 
-                if (res.ok) {
+    let symbolForApi = pairValue.replace("_OTC", "");
 
-                   const data = await res.json();
+    let url =
+      `https://finnhub.io/api/v1/quote?symbol=OANDA:${symbolForApi}&token=${FINNHUB_API_KEY}`;
 
-                 if (data && data.c > 0) {
+    if (pairValue.includes("BTC") || pairValue.includes("ETH")) {
 
-                 currentPrice = data.c;
-                 source = "Finnhub API";
-
-              } else {
-
-                currentPrice =
-                 prevPrice != null
-                ? prevPrice + (Math.random() - 0.5) * 0.002
-                 : 1.10000;
-
-                   source = "Simulated Live";
-
-                }
-               }
-
-              } catch (err) {
-
-                   console.log("Finnhub Error:", err);
-                   console.log("PriceWindow:", priceWindow.length);
-
-                    currentPrice =
-                     prevPrice != null
-                    ? prevPrice + (Math.random() - 0.5) * 0.002
-                    : 1.10000;
-
-                    source = "Fallback";
+      url =
+        `https://finnhub.io/api/v1/quote?symbol=BINANCE:${symbolForApi}&token=${FINNHUB_API_KEY}`;
 
     }
-      prevPrice = currentPrice;
-      return { currentPrice: Number(currentPrice.toFixed(5)), source };
-    }
-    function getSelectedPairValue() { return currentPairValue || "EURUSD"; }
-    function getSelectedPairText() { return currentPairText || "EUR/USD (Major)"; }
-    function addFavoritePair(pairValue, pairText) {}
 
-    async function generateSignal(triggerMode) {
+    console.log("PAIR =", pairValue);
+    console.log("URL =", url);
+
+    const res = await fetch(url);
+
+    if (res.ok) {
+
+      const data = await res.json();
+
+      if (data && data.c > 0) {
+
+        currentPrice = data.c;
+        source = "Finnhub API";
+
+      } else {
+
+        currentPrice =
+          prevPrice != null
+          ? prevPrice + (Math.random() - 0.5) * 0.002
+          : 1.10000;
+
+        source = "Simulated Live";
+
+      }
+
+    }
+
+  } catch (err) {
+
+    console.log("Finnhub Error:", err);
+
+    currentPrice =
+      prevPrice != null
+      ? prevPrice + (Math.random() - 0.5) * 0.002
+      : 1.10000;
+
+    source = "Fallback";
+
+  }
+
+  prevPrice = currentPrice;
+
+  return {
+    currentPrice: Number(currentPrice.toFixed(5)),
+    source
+  };
+
+}
+     function getSelectedPairValue() { return currentPairValue || "EURUSD"; }
+     function getSelectedPairText() { return currentPairText || "EUR/USD (Major)"; }
+     function addFavoritePair(pairValue, pairText) {}
+
+     async function generateSignal(triggerMode) {
       const pairValue = getSelectedPairValue();
       currentPairValue = pairValue;
       if (!pairValue) return;
