@@ -1069,23 +1069,44 @@
             
          console.log("PAIR =", pairValue);
          console.log("URL =", url);
-         const res = await fetch(url);
-         if (res.ok) {
-          const data = await res.json();
-          if (data && data.c > 0) {
-            currentPrice = data.c;
-            source = "Finnhub API";
-          } else {
-            // Fallback to open exchange rate jodi finnhub data na dey
-            currentPrice = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.002 : 1.10000;
-            source = "Simulated Live";
-          }
-        }
-      } cconsole.log("Finnhub Error:", err);console.log("PriceWindow:", priceWindow.length); {
-        currentPrice = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.002 : 1.10000;
-        source = "Fallback";
-      }
+         try {
 
+               const res = await fetch(url);
+
+                if (res.ok) {
+
+                   const data = await res.json();
+
+                 if (data && data.c > 0) {
+
+                 currentPrice = data.c;
+                 source = "Finnhub API";
+
+              } else {
+
+                currentPrice =
+                 prevPrice != null
+                ? prevPrice + (Math.random() - 0.5) * 0.002
+                 : 1.10000;
+
+                   source = "Simulated Live";
+
+                }
+               }
+
+              } catch (err) {
+
+                   console.log("Finnhub Error:", err);
+                   console.log("PriceWindow:", priceWindow.length);
+
+                    currentPrice =
+                     prevPrice != null
+                    ? prevPrice + (Math.random() - 0.5) * 0.002
+                    : 1.10000;
+
+                    source = "Fallback";
+
+    }
       prevPrice = currentPrice;
       return { currentPrice: Number(currentPrice.toFixed(5)), source };
     }
