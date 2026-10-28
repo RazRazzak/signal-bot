@@ -1066,9 +1066,11 @@
           if (pairValue.includes("BTC") || pairValue.includes("ETH")) {
           url = `https://finnhub.io/api/v1/quote?symbol=BINANCE:${symbolForApi}&token=${FINNHUB_API_KEY}`;
         }
-
-        const res = await fetch(url);
-        if (res.ok) {
+            
+         console.log("PAIR =", pairValue);
+         console.log("URL =", url);
+         const res = await fetch(url);
+         if (res.ok) {
           const data = await res.json();
           if (data && data.c > 0) {
             currentPrice = data.c;
@@ -1079,7 +1081,7 @@
             source = "Simulated Live";
           }
         }
-      } catch (err) {
+      } cconsole.log("Finnhub Error:", err);console.log("PriceWindow:", priceWindow.length); {
         currentPrice = prevPrice != null ? prevPrice + (Math.random() - 0.5) * 0.002 : 1.10000;
         source = "Fallback";
       }
