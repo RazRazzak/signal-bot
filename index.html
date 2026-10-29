@@ -836,6 +836,10 @@
         low: Math.min(prevPrice != null ? prevPrice : price, price)
       };
       priceWindow.push(candle);
+      console.log(
+  "LAST CANDLE",
+  priceWindow[priceWindow.length - 1]
+);
       if (priceWindow.length > PRICE_WINDOW_MAX) {
         priceWindow.splice(0, priceWindow.length - PRICE_WINDOW_MAX);
       }
