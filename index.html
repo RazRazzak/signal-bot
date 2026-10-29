@@ -1149,6 +1149,17 @@ async function fetchQuote(pairValue) {
       const smc = smcEngine(priceWindow);
       const snr = snrMasterStudy(priceWindow);
 
+       console.log({
+  trend,
+  indicator,
+  pa,
+  liquidity,
+  obfvg,
+  smc,
+  snr,
+  candles: priceWindow.length
+});
+
       const timingOk = timingEngine("LIVE", new Date().getSeconds());
       let direction = strategyLayer(trend, indicator, pa, liquidity, obfvg, smc, snr, timingOk);
 
