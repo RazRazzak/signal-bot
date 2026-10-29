@@ -1063,6 +1063,8 @@ async function fetchQuote(pairValue) {
 
   let source = "TwelveData";
 
+  let latest = null;
+  
   try {
 
     let symbol = pairValue.replace("_OTC", "");
@@ -1094,7 +1096,9 @@ if (
     data.values.length > 0
 ) {
 
-    const latest = data.values[0];
+ latest = data.values[0];
+
+  console.log("LATEST =", latest);
 
     currentPrice =
         Number(latest.close);
@@ -1125,6 +1129,18 @@ if (
   }
 
   prevPrice = currentPrice;
+  
+  if (!latest) {
+
+    return {
+        open: currentPrice,
+        high: currentPrice,
+        low: currentPrice,
+        close: currentPrice,
+        source
+    };
+
+}
 
   return {
     open: Number(latest.open),
