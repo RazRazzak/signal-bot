@@ -1073,22 +1073,30 @@ async function fetchQuote(pairValue) {
         symbol.substring(3);
     }
 
-    const url =
-      `https://api.twelvedata.com/price?symbol=${symbol}&apikey=${TWELVEDATA_API_KEY}`;
+     const url =
+     `https://api.twelvedata.com/time_series?
+     symbol=${symbol}&interval=1min&outputsize=50&apikey=${TWELVEDATA_API_KEY}`;bol=${symbol}&apikey=${TWELVEDATA_API_KEY}`;
 
     console.log("PAIR =", pairValue);
     console.log("URL =", url);
 
     const res = await fetch(url);
 
-    const data = await res.json();
+   const data = await res.json();
 
-    if (data.price) {
+if (
+    data.values &&
+    data.values.length > 0
+) {
 
-      currentPrice =
-        Number(data.price);
+    const latest = data.values[0];
 
-      source = "TwelveData API";
+    currentPrice =
+        Number(latest.close);
+
+    source = "TwelveData OHLC";
+
+}
 
     } else {
 
@@ -1149,7 +1157,9 @@ async function fetchQuote(pairValue) {
       const smc = smcEngine(priceWindow);
       const snr = snrMasterStudy(priceWindow);
 
-       console.log({
+    console.log("PRICE WINDOW =", priceWindow.length);
+
+console.log({
   trend,
   indicator,
   pa,
