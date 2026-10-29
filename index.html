@@ -358,7 +358,7 @@
   </div>
 
   <script>
-    const FINNHUB_API_KEY = "dbhfe8hr01qjpoc7gdi0dbhfe8hr01qjpoc7gdig";
+    const FINNHUB_API_KEY = "0c069b8b41284d9ab6cedab13c2074fb";
 
     const allPairs = [
       { symbol: "EURUSD", label: "EUR/USD (Major)" },
@@ -1054,63 +1054,56 @@
 
      async function fetchQuote(pairValue) {
 
-  let currentPrice = prevPrice != null ? prevPrice : 1.10000;
-  let source = "Finnhub Live";
+  let currentPrice =
+    prevPrice != null ? prevPrice : 1.10000;
+
+  let source = "TwelveData";
 
   try {
 
-    let symbolForApi = pairValue.replace("_OTC", "");
+    let symbol = pairValue.replace("_OTC", "");
 
     if (
-  symbolForApi.length === 6 &&
-  !symbolForApi.includes("_")
-) {
-  symbolForApi =
-    symbolForApi.substring(0, 3) +
-    "_" +
-    symbolForApi.substring(3);
-}
-
-    let url =
-      `https://finnhub.io/api/v1/quote?symbol=OANDA:${symbolForApi}&token=${FINNHUB_API_KEY}`;
-
-    if (pairValue.includes("BTC") || pairValue.includes("ETH")) {
-
-      url =
-        `https://finnhub.io/api/v1/quote?symbol=BINANCE:${symbolForApi}&token=${FINNHUB_API_KEY}`;
-
+      symbol.length === 6 &&
+      !symbol.includes("/")
+    ) {
+      symbol =
+        symbol.substring(0, 3) +
+        "/" +
+        symbol.substring(3);
     }
+
+    const url =
+      `https://api.twelvedata.com/price?symbol=${symbol}&apikey=${TWELVEDATA_API_KEY}`;
 
     console.log("PAIR =", pairValue);
     console.log("URL =", url);
 
     const res = await fetch(url);
 
-    if (res.ok) {
+    const data = await res.json();
 
-      const data = await res.json();
+    if (data.price) {
 
-      if (data && data.c > 0) {
+      currentPrice =
+        Number(data.price);
 
-        currentPrice = data.c;
-        source = "Finnhub API";
+      source = "TwelveData API";
 
-      } else {
+    } else {
 
-        currentPrice =
-          prevPrice != null
-          ? prevPrice + (Math.random() - 0.5) * 0.002
-          : 1.10000;
-
-        source = "Simulated Live";
-
-      }
+      throw new Error(
+        JSON.stringify(data)
+      );
 
     }
 
   } catch (err) {
 
-    console.log("Finnhub Error:", err);
+    console.log(
+      "TwelveData Error:",
+      err
+    );
 
     currentPrice =
       prevPrice != null
@@ -1124,7 +1117,8 @@
   prevPrice = currentPrice;
 
   return {
-    currentPrice: Number(currentPrice.toFixed(5)),
+    currentPrice:
+      Number(currentPrice.toFixed(5)),
     source
   };
 
